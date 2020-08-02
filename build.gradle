@@ -1,0 +1,175 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url "https://plugins.gradle.org/m2/" }
+        mavenCentral()
+        maven { url = 'https://dist.creeper.host/Sponge/maven' }
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.1.0'
+        classpath 'com.wynprice.cursemaven:CurseMaven:2.1.3'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+    }
+}
+
+plugins {
+    id "com.wynprice.cursemaven" version "2.1.3"
+    id 'com.github.johnrengelman.shadow' version '4.0.2'
+}
+
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.matthewprenger.cursegradle'
+apply plugin: 'com.wynprice.cursemaven'
+
+apply plugin: 'org.spongepowered.mixin'
+apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/generic/markdown-git-changelog.gradle'
+
+version = '0.1.8'
+group = 'com.sturdycobble.creategenrev'
+archivesBaseName = 'create_generator_revision'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+minecraft {
+    mappings channel: 'snapshot', version: '20200301-mixed-1.15.2'
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                create_generator_revision {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run/server')
+            property 'forge.logging.console.level', 'info'
+            mods {
+                create {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'create_generator_revision', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                create_generator_revision {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+configurations {
+    shade
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+shadowJar {
+    configurations = [project.configurations.shade]
+    relocate 'com.tterrag.registrate', 'com.sturdycobble.creategenrev.repack.registrate'
+}
+
+
+repositories {
+    mavenLocal()
+    maven { url "http://www.wynprice.com/dummycursemaven/curse/maven/create/2926732_mapped_snapshot_20190719-1.14.3/create-2926732_mapped_snapshot_20190719-1.14.3.pom" }
+    maven {
+        // location of the maven that hosts JEI files
+        name "Progwml6 maven"
+        url "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name "ModMaven"
+        url "https://modmaven.k-4u.nl"
+    }
+    maven { // Registrate
+        url "http://maven.tterrag.com/"
+    }
+    maven { 
+        url= "https://dist.creeper.host/Sponge/maven"
+    }
+
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.9'
+
+    implementation fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
+    implementation fg.deobf("curse.maven:create:2979593")
+
+    def registrate = "com.tterrag.registrate:Registrate:MC1.15.2-0.0.3.17"
+    implementation fg.deobf(registrate)
+    shade registrate
+
+    compile "org.spongepowered:mixin:0.8-SNAPSHOT"
+}
+
+mixin {
+    add sourceSets.main, "mixins.creategenrev.refmap.json"
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "create generator revision addon",
+                "Specification-Vendor"    : "SturdyCobble",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "SturdyCobble",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"), 
+                "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+                "MixinConfigs": "mixins.myplugin.json",
+                "FMLCorePluginContainsFMLMod": "true"
+        ])
+    }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier 'deobf'
+}
+
+build.dependsOn deobfJar
+
+
+def reobfFile = file("$buildDir/reobfJar/output.jar")
+def reobfArtifact = artifacts.add('default', reobfFile) {
+    type 'jar'
+    builtBy 'reobfJar'
+}
+
+
+artifacts {
+    archives deobfJar
+}

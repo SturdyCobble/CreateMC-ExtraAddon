@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.sturdycobble.creategenrev.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.creategenrev.refmap.json",
+  "mixins": [
+    "MixinMechanicalBearingTileEntity",
+    "MixinWaterWheelTileEntity",
+    "MixinBearingContraption"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
