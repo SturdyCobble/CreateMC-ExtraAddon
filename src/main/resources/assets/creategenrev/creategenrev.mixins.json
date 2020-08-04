@@ -6,7 +6,6 @@
   "mixins": [
     "MixinMechanicalBearingTileEntity",
     "MixinWaterWheelTileEntity",
-    "MixinBearingContraption"
   ],
   "injectors": {
     "defaultRequire": 1

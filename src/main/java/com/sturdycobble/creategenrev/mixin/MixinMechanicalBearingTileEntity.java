@@ -28,7 +28,8 @@ public abstract class MixinMechanicalBearingTileEntity  extends GeneratingKineti
 	public MixinMechanicalBearingTileEntity(TileEntityType<? extends MixinMechanicalBearingTileEntity> type) {
 		super(type);
 	}
-	
+
+	/**@author StdCobble**/
 	@Overwrite(remap = false)
 	public float getGeneratedSpeed() {
 		if (!running || !isWindmill)
