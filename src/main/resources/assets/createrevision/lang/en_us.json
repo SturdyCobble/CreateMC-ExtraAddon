@@ -1,0 +1,6 @@
+{
+	"block.createrevision.compact_wool" : "Compact Wool",
+	"block.createrevision.geo_transformer" : "Geothermal Transformer",
+	"block.createrevision.geothermal_fan" : "Geothermal Fan",
+	"itemGroup.createrevision" : "Create MC Revision Addon"
+}

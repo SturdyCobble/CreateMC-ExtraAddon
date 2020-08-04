@@ -1,4 +1,4 @@
-package com.sturdycobble.creategenrev.init;
+package com.sturdycobble.createrevision.init;
 
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.repack.registrate.builders.BlockBuilder;
@@ -16,9 +16,11 @@ import net.minecraft.tags.TagCollection;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * 
+ * Tag Registrations.
  * Slightly Modified Version of com.simibubi.create.AllTags
- *
+ * 
+ * @author SturdyCobble
+ * 
  */
 public class ModTags{
 	/*private static final CreateRegistrate REGISTRATE = Create.registrate()

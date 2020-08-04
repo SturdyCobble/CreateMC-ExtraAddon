@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"###",
+		"iwi",
+		"###"
+	],
+	"key": {
+		"#": {
+			"item": "minecraft:white_wool"
+		}, 
+		"i": {
+			"item": "create:andesite_alloy"
+		},
+		"w": {
+			"item": "create:zinc_nugget"
+		}
+	},
+	"result": {
+		"item": "createrevision:compact_wool",
+		"count": 5
+	}
+}

@@ -1,4 +1,4 @@
-package com.sturdycobble.creategenrev.mixin;
+package com.sturdycobble.createrevision.mixin;
 
 import java.util.Map;
 
@@ -12,7 +12,12 @@ import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheel
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.world.biome.Biome;
-
+/**
+ * Mixin Code for Water Wheel Tile Entity
+ * 
+ * @author SturdyCobble
+ *
+ */
 @Mixin(WaterWheelTileEntity.class)
 public abstract class MixinWaterWheelTileEntity extends GeneratingKineticTileEntity{
 	

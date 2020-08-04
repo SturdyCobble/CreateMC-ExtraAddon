@@ -1,12 +1,12 @@
-package com.sturdycobble.creategenrev;
+package com.sturdycobble.createrevision;
 
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
 
-import com.sturdycobble.creategenrev.init.ModBlocks;
-import com.sturdycobble.creategenrev.init.ModItems;
-import com.sturdycobble.creategenrev.init.ModTags;
-import com.sturdycobble.creategenrev.init.ModTileEntities;
+import com.sturdycobble.createrevision.init.ModBlocks;
+import com.sturdycobble.createrevision.init.ModItems;
+import com.sturdycobble.createrevision.init.ModTags;
+import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -16,20 +16,20 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 /**
  * Main Class for the Mod
  * 
- * @author StdCobble
+ * @author SturdyCobble
  *
  */
 
-@Mod(CreateGeneratorRevision.MODID)
-public class CreateGeneratorRevision{
+@Mod(CreateRevision.MODID)
+public class CreateRevision{
 	
-	public static final String MODID = "create_generator_revision";
-	public static final String NAME = "Create MC Generator Revision Addon";
+	public static final String MODID = "createrevision";
+	public static final String NAME = "Create MC Revision Addon";
 	public static final String VERSION = "0.0.1";
 	
-	public CreateGeneratorRevision() {
+	public CreateRevision() {
 		MixinBootstrap.init();
-		Mixins.addConfiguration("assets/creategenrev/creategenrev.mixins.json");
+		Mixins.addConfiguration("assets/createrevision/createrevision.mixins.json");
 		
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -37,7 +37,7 @@ public class CreateGeneratorRevision{
 		// Register to ModEventBus
 		ModBlocks.BLOCKS.register(modEventBus);
 		ModItems.ITEMS.register(modEventBus);
-		ModTileEntities.TILE_ENTITY_TYPES.register(modEventBus);
+		ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
 	}
 	
 }

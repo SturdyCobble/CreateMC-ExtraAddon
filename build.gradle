@@ -31,8 +31,8 @@ apply plugin: 'org.spongepowered.mixin'
 apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/generic/markdown-git-changelog.gradle'
 
 version = '0.1.8'
-group = 'com.sturdycobble.creategenrev'
-archivesBaseName = 'create_generator_revision'
+group = 'com.sturdycobble.createrevision'
+archivesBaseName = 'createrevision'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -49,7 +49,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                create_generator_revision {
+                createrevision {
                     source sourceSets.main
                 }
             }
@@ -74,10 +74,10 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'create_generator_revision', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'createrevision', '--all', '--output', file('src/generated/resources/')
 
             mods {
-                create_generator_revision {
+                createrevision {
                     source sourceSets.main
                 }
             }
@@ -95,7 +95,7 @@ configurations.all {
 
 shadowJar {
     configurations = [project.configurations.shade]
-    relocate 'com.tterrag.registrate', 'com.sturdycobble.creategenrev.repack.registrate'
+    relocate 'com.tterrag.registrate', 'com.sturdycobble.createrevision.repack.registrate'
 }
 
 
@@ -141,7 +141,7 @@ mixin {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "create generator revision addon",
+                "Specification-Title"     : "Create MC Revision Addon",
                 "Specification-Vendor"    : "SturdyCobble",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,

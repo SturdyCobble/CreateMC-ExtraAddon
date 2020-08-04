@@ -1,4 +1,4 @@
-package com.sturdycobble.creategenrev.mixin;
+package com.sturdycobble.createrevision.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -15,7 +15,12 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
-
+/**
+ * Mixin Code for Mechanical Bearing Tile Entity
+ * 
+ * @author SturdyCobble
+ *
+ */
 @Mixin(MechanicalBearingTileEntity.class)
 public abstract class MixinMechanicalBearingTileEntity  extends GeneratingKineticTileEntity implements IBearingTileEntity {
 
