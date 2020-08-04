@@ -22,7 +22,8 @@ public abstract class MixinWaterWheelTileEntity extends GeneratingKineticTileEnt
 	public MixinWaterWheelTileEntity(TileEntityType<? extends WaterWheelTileEntity> type) {
 		super(type);
 	}
-	
+
+	/**@author StdCobble**/
 	@Overwrite(remap = false)
 	public float getGeneratedSpeed() {
 		float speed = 0;
