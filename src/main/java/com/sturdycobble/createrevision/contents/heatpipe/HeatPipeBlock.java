@@ -39,9 +39,9 @@ public class HeatPipeBlock extends Block {
 	@Override
 	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult rayTraceResult) {
 		if(hand == Hand.MAIN_HAND)
-			Utils.getHeatContainer(Utils.getTileEntity(world, pos)).applyHeat(100);
+			Utils.getHeatContainer(world.getTileEntity(pos)).applyHeat(100);
 		else
-			Utils.getHeatContainer(Utils.getTileEntity(world, pos)).applyHeat(-100);
+			Utils.getHeatContainer(world.getTileEntity(pos)).applyHeat(-100);
 		return ActionResultType.SUCCESS;
 	}
 

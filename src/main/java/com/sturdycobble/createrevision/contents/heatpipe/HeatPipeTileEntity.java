@@ -1,9 +1,8 @@
 package com.sturdycobble.createrevision.contents.heatpipe;
 
-import com.sturdycobble.createrevision.contents.heatSystem.CapabilityHeat;
-import com.sturdycobble.createrevision.contents.heatSystem.HeatContainer;
+import com.sturdycobble.createrevision.contents.heatsystem.CapabilityHeat;
+import com.sturdycobble.createrevision.contents.heatsystem.HeatContainer;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
-import com.sturdycobble.createrevision.utils.Utils;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -33,16 +32,15 @@ public class HeatPipeTileEntity extends TileEntity implements ITickableTileEntit
 
 	@Override
 	public void tick() {
-		HeatContainer h = Utils.getHeatContainer(this);
+		HeatContainer h = this.getCapability(CapabilityHeat.HEAT_CAPABILITY, null).orElse(null);
 		BlockPos.Mutable mpos = new BlockPos.Mutable();
-		for(Direction d : Direction.values()){
+		for (Direction d : Direction.values()) {
 			mpos.setPos(pos).move(d);
-			HeatContainer ex = Utils.getHeatContainer(this.world.getTileEntity(mpos));
-			h.exchangeHeat(ex);
+			TileEntity te = this.world.getTileEntity(mpos);
+			if (te != null) {
+				HeatContainer ex = te.getCapability(CapabilityHeat.HEAT_CAPABILITY, null).orElse(null);
+				h.exchangeHeat(ex);
+			}
 		}
 	}
-
-
-
-
 }

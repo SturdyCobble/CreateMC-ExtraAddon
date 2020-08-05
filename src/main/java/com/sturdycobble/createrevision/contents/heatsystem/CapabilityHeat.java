@@ -1,4 +1,4 @@
-package com.sturdycobble.createrevision.contents.heatSystem;
+package com.sturdycobble.createrevision.contents.heatsystem;
 
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;

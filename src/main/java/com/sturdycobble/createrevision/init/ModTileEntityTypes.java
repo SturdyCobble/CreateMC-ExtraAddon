@@ -18,11 +18,9 @@ public class ModTileEntityTypes {
 	public static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, CreateRevision.MODID);
 
 	public static final RegistryObject<TileEntityType<GeothermalFanTileEntity>> GEOTHERMAL_FAN = 
-			TILE_ENTITY_TYPES.register("geothermal_fan", () -> TileEntityType.Builder.create(GeothermalFanTileEntity::new, 
-					ModBlocks.GEOTHERMAL_FAN.get()).build(null));
+			TILE_ENTITY_TYPES.register("geothermal_fan", () -> TileEntityType.Builder.create(GeothermalFanTileEntity::new, ModBlocks.GEOTHERMAL_FAN.get()).build(null));
 	public static final RegistryObject<TileEntityType<HeatPipeTileEntity>> HEAT_PIPE =
-			TILE_ENTITY_TYPES.register("heat_pipe", () -> TileEntityType.Builder.create(HeatPipeTileEntity::new,
-					ModBlocks.HEAT_PIPE.get()).build(null));
+			TILE_ENTITY_TYPES.register("heat_pipe", () -> TileEntityType.Builder.create(HeatPipeTileEntity::new, ModBlocks.HEAT_PIPE.get()).build(null));
 	/*public static final RegistryObject<TileEntityType<GeoTransformerTileEntity>> GEO_TRANSFORMER = 
 			TILE_ENTITY_TYPES.register("geo_transformer", () -> TileEntityType.Builder.create(GeoTransformerTileEntity::new, 
 					ModBlocks.GEO_TRANSFORMER.get()).build(null));*/

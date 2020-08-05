@@ -1,6 +1,6 @@
 package com.sturdycobble.createrevision;
 
-import com.sturdycobble.createrevision.contents.heatSystem.CapabilityHeat;
+import com.sturdycobble.createrevision.contents.heatsystem.CapabilityHeat;
 import com.sturdycobble.createrevision.init.*;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;

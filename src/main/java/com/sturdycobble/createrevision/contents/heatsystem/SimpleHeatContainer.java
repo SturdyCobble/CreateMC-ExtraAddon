@@ -1,4 +1,4 @@
-package com.sturdycobble.createrevision.contents.heatSystem;
+package com.sturdycobble.createrevision.contents.heatsystem;
 
 public class SimpleHeatContainer implements HeatContainer {
 	protected double heatCapacity;
@@ -9,25 +9,6 @@ public class SimpleHeatContainer implements HeatContainer {
 		this.heatCapacity=cap;
 		this.temp=temp;
 		this.conductivity=con;
-	}
-
-	@Override
-	public void exchangeHeat(HeatContainer ex) {
-		if (this.getTemp() > ex.getTemp()) {
-			double transHeat = this.getConductivity() * ex.getConductivity() * (this.getTemp() - ex.getTemp());
-			this.applyHeat(-transHeat);
-			ex.applyHeat(transHeat);
-		}
-	}
-
-	@Override
-	public void applyHeat(double heat) {
-		temp = (getHeatEnergy() + heat) < 0 ? 0 : (getHeatEnergy() + heat) / heatCapacity;
-	}
-
-	@Override
-	public double getHeatEnergy() {
-		return heatCapacity * temp;
 	}
 
 	@Override
