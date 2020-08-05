@@ -1,12 +1,9 @@
 package com.sturdycobble.createrevision;
 
+import com.sturdycobble.createrevision.contents.heat.CapabilityHeat;
+import com.sturdycobble.createrevision.init.*;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
-
-import com.sturdycobble.createrevision.init.ModBlocks;
-import com.sturdycobble.createrevision.init.ModItems;
-import com.sturdycobble.createrevision.init.ModTags;
-import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -38,6 +35,7 @@ public class CreateRevision{
 		ModBlocks.BLOCKS.register(modEventBus);
 		ModItems.ITEMS.register(modEventBus);
 		ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+		CapabilityHeat.register();
 	}
 	
 }
