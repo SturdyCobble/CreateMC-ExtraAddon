@@ -9,22 +9,21 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import javax.annotation.Nullable;
 
 public class CapabilityHeat {
-    @CapabilityInject(HeatContainer.class)
-    public static Capability<HeatContainer> HEAT_CAPABILITY = null;
+	@CapabilityInject(HeatContainer.class)
+	public static Capability<HeatContainer> HEAT_CAPABILITY = null;
 
-    public static void register(){
-        CapabilityManager.INSTANCE.register(HeatContainer.class, new Capability.IStorage<HeatContainer>()
-        {
-            @Nullable
-            @Override
-            public INBT writeNBT(Capability<HeatContainer> capability, HeatContainer instance, Direction side) {
-                return null;
-            }
+	public static void register() {
+		CapabilityManager.INSTANCE.register(HeatContainer.class, new Capability.IStorage<HeatContainer>() {
+			@Nullable
+			@Override
+			public INBT writeNBT(Capability<HeatContainer> capability, HeatContainer instance, Direction side) {
+				return null;
+			}
 
-            @Override
-            public void readNBT(Capability<HeatContainer> capability, HeatContainer instance, Direction side, INBT nbt) {
+			@Override
+			public void readNBT(Capability<HeatContainer> capability, HeatContainer instance, Direction side, INBT nbt) {
 
-            }
-        },()->new SimpleHeatContainer(30,300,10));
-    }
+			}
+		}, () -> new SimpleHeatContainer(30, 300, 10));
+	}
 }

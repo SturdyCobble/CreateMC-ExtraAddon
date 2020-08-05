@@ -1,6 +1,6 @@
 package com.sturdycobble.createrevision.contents.heatpipe;
 
-import com.sturdycobble.createrevision.utils.Utils;
+import com.sturdycobble.createrevision.contents.heatsystem.CapabilityHeat;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,15 +33,17 @@ public class HeatPipeBlock extends Block {
 
 	@Override
 	public int getStrongPower(BlockState state, IBlockReader reader, BlockPos pos, Direction direction) {
-		return (int)Utils.getHeatContainer(reader.getTileEntity(pos)).getHeatEnergy()/20;
+		TileEntity te = reader.getTileEntity(pos);
+		return (int) te.getCapability(CapabilityHeat.HEAT_CAPABILITY, null).orElse(null).getHeatEnergy() / 20;
 	}
 
 	@Override
 	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult rayTraceResult) {
-		if(hand == Hand.MAIN_HAND)
-			Utils.getHeatContainer(world.getTileEntity(pos)).applyHeat(100);
+		TileEntity te = world.getTileEntity(pos);
+		if (hand == Hand.MAIN_HAND)
+			te.getCapability(CapabilityHeat.HEAT_CAPABILITY, null).orElse(null).applyHeat(100);
 		else
-			Utils.getHeatContainer(world.getTileEntity(pos)).applyHeat(-100);
+			te.getCapability(CapabilityHeat.HEAT_CAPABILITY, null).orElse(null).applyHeat(-100);
 		return ActionResultType.SUCCESS;
 	}
 

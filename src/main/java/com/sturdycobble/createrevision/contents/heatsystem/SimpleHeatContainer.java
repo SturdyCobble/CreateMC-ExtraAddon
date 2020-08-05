@@ -5,10 +5,10 @@ public class SimpleHeatContainer implements HeatContainer {
 	protected double temp;
 	protected double conductivity;
 
-	public SimpleHeatContainer(double cap, double temp,double con){
-		this.heatCapacity=cap;
-		this.temp=temp;
-		this.conductivity=con;
+	public SimpleHeatContainer(double cap, double temp, double con) {
+		this.heatCapacity = cap;
+		this.temp = temp;
+		this.conductivity = con;
 	}
 
 	@Override

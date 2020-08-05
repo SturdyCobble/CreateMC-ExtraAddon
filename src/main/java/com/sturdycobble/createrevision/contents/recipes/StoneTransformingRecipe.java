@@ -1,14 +1,14 @@
 package com.sturdycobble.createrevision.contents.recipes;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * StoneTransforming Recipes
- * 
- * @author SturdyCobble
  *
+ * @author SturdyCobble
  */
 @ParametersAreNonnullByDefault
-public class StoneTransformingRecipe /*extends ProcessingRecipe<RecipeWrapper>*/{
+public class StoneTransformingRecipe /*extends ProcessingRecipe<RecipeWrapper>*/ {
 /*
 	public StoneTransformingRecipe(ResourceLocation id, String group, List<ProcessingIngredient> ingredients,
 			List<ProcessingOutput> results, int processingDuration) {
