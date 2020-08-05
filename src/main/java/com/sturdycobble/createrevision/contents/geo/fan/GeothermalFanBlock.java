@@ -3,7 +3,6 @@ package com.sturdycobble.createrevision.contents.geo.fan;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import com.sturdycobble.createrevision.contents.heat.HeatContainer;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -15,7 +14,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * Geothermal Fan Block

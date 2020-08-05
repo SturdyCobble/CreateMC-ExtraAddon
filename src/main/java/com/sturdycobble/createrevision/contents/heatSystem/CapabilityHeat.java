@@ -1,4 +1,4 @@
-package com.sturdycobble.createrevision.contents.heat;
+package com.sturdycobble.createrevision.contents.heatSystem;
 
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -25,6 +25,6 @@ public class CapabilityHeat {
             public void readNBT(Capability<HeatContainer> capability, HeatContainer instance, Direction side, INBT nbt) {
 
             }
-        },()->new SimpleHeatContainer());
+        },()->new SimpleHeatContainer(30,300,10));
     }
 }
