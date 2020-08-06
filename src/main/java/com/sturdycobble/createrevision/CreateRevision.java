@@ -7,6 +7,7 @@ import com.sturdycobble.createrevision.init.ModTags;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
@@ -37,6 +38,10 @@ public class CreateRevision {
 		ModBlocks.BLOCKS.register(modEventBus);
 		ModItems.ITEMS.register(modEventBus);
 		ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+		modEventBus.addListener(this::preInit);
+	}
+
+	public void preInit(FMLCommonSetupEvent evt) {
 		CapabilityHeat.register();
 	}
 
