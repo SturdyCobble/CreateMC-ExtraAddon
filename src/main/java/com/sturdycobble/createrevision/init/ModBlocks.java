@@ -5,27 +5,22 @@ import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-/**
- * Block Registration
- * 
- * @author SturdyCobble
- *
- */
 
 public class ModBlocks {
-	public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, CreateRevision.MODID);
-	public static final RegistryObject<Block> GEOTHERMAL_FAN = BLOCKS.register("geothermal_fan", 
-			() -> new GeothermalFanBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(2.5F,3.5F)));
-	public static final RegistryObject<Block> COMPACT_WOOL = BLOCKS.register("compact_wool", 
-			() -> new Block(Block.Properties.create(Material.WOOL).hardnessAndResistance(0.5F,1.5F)));
-	/*public static final RegistryObject<Block> GEO_TRANSFORMER = BLOCKS.register("geo_transformer", 
-			() -> new GeoTransformerBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(3F,3F)));*/
-	
-	public ModBlocks() {
+	public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS,
+			CreateRevision.MODID);
+	public static final RegistryObject<Block> GEOTHERMAL_FAN = BLOCKS.register("geothermal_fan",
+			() -> new GeothermalFanBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(2.5F, 3.5F)));
+	public static final RegistryObject<Block> COMPACT_WOOL = BLOCKS.register("compact_wool",
+			() -> new Block(Block.Properties.create(Material.WOOL).hardnessAndResistance(0.5F, 1.5F)));
 
+	public static final void blockRenderLayer() {
+		RenderTypeLookup.setRenderLayer(ModBlocks.GEOTHERMAL_FAN.get(), RenderType.getCutoutMipped());
 	}
 
 }

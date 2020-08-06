@@ -12,30 +12,26 @@ import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheel
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.world.biome.Biome;
-/**
- * Mixin Code for Water Wheel Tile Entity
- * 
- * @author SturdyCobble
- *
- */
+
 @Mixin(WaterWheelTileEntity.class)
-public abstract class MixinWaterWheelTileEntity extends GeneratingKineticTileEntity{
-	
+public abstract class MixinWaterWheelTileEntity extends GeneratingKineticTileEntity {
+
 	@Shadow
 	private Map<Direction, Float> flows;
-	
+
 	public MixinWaterWheelTileEntity(TileEntityType<? extends WaterWheelTileEntity> type) {
 		super(type);
 	}
 
-	/**@author StdCobble**/
+	/** @author SturdyCobble */
 	@Overwrite(remap = false)
 	public float getGeneratedSpeed() {
 		float speed = 0;
 		for (Float f : flows.values())
 			speed += f;
 		Biome biome = world.getBiome(pos);
-		return biome.getCategory() == Biome.Category.RIVER && Math.abs(pos.getY() - 63) < 1 && speed != 0 ? Math.signum(speed)*12 : speed;
+		return biome.getCategory() == Biome.Category.RIVER && Math.abs(pos.getY() - 63) < 1 && speed != 0
+				? Math.signum(speed) * 12 : speed;
 	}
 
 }
