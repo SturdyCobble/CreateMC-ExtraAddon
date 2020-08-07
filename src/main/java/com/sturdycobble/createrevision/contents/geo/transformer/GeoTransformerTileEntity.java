@@ -97,7 +97,7 @@ public class GeoTransformerTileEntity /* extends  KineRMticTileEntity*/{
 
 			BlockPos nextPos = pos.add(itemMovement.x, itemMovement.y, itemMovement.z);
 			if (AllBlocks.BELT.has(world.getBlockState(nextPos))) {
-				TileEntity te = world.getTileEntity(nextPos);
+				TileEntity te = world.getTE(nextPos);
 				if (te != null && te instanceof BeltTileEntity) {
 					for (int slot = 0; slot < inventory.getSlots(); slot++) {
 						ItemStack stack = inventory.getStackInSlot(slot);
@@ -118,7 +118,7 @@ public class GeoTransformerTileEntity /* extends  KineRMticTileEntity*/{
 			}
 			// Try moving items onto next saw
 			if (ModBlocks.GEO_TRANSFORMER.get() == world.getBlockState(nextPos).getBlock()) {
-				TileEntity te = world.getTileEntity(nextPos);
+				TileEntity te = world.getTE(nextPos);
 				if (te != null && te instanceof GeoTransformerTileEntity) {
 					GeoTransformerTileEntity geoTileEntity = (GeoTransformerTileEntity) te;
 					Vec3d otherMovement = geoTileEntity.getItemMovementVec();

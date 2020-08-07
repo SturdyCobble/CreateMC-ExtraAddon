@@ -28,21 +28,22 @@ public class HeatPipeBlock extends Block {
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
 		System.out.println("placed");
-		if (world.getTileEntity(pos) != null) {
-			HeatContainer cap = world.getTileEntity(pos).getCapability(CapabilityHeat.HEAT_CAPABILITY, null).orElse(null);
-			System.out.println("temp : " + cap.getTemp());
+		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof HeatPipeTileEntity) {
+			LazyOptional<HeatContainer> cap = world.getTileEntity(pos).getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
+			if (cap.isPresent())
+				System.out.println("temp : " + cap.orElse(null).getTemp());
 		}
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
 	}
 
 	@Nullable
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new HeatPipeTileEntity();
+	}
+
+	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class HeatPipeBlock extends Block {
 
 	@Override
 	public int getStrongPower(BlockState state, IBlockReader reader, BlockPos pos, Direction direction) {
-		return this.getWeakPower(state,reader,pos,direction);
+		return this.getWeakPower(state, reader, pos, direction);
 	}
 
 	@Override
@@ -83,9 +84,6 @@ public class HeatPipeBlock extends Block {
 			else
 				cap.orElse(null).applyHeat(-100);
 			System.out.println(cap.orElse(null).getTemp());
-			if(world.getTileEntity(pos) instanceof HeatPipeTileEntity){
-				((HeatPipeTileEntity) world.getTileEntity(pos)).sendData();
-			}
 		}
 		return ActionResultType.SUCCESS;
 	}
