@@ -43,11 +43,7 @@ public class GeothermalFanRenderer extends KineticTileEntityRenderer {
 			speed = MathHelper.clamp(speed, 80, 64 * 20);
 		if (speed < 0)
 			speed = MathHelper.clamp(speed, -64 * 20, -80);
-<<<<<<< HEAD
 		float angle = (time * speed * 3 / 30f) % 360;
-=======
-		float angle = (time * speed * 3 / 10f) % 360;
->>>>>>> 5cb49036360913cadc52633304987234009010f1
 		angle = angle / 180f * (float) Math.PI;
 
 		standardKineticRotationTransform(shaftHalf, te, lightBehind).renderInto(ms, vb);
