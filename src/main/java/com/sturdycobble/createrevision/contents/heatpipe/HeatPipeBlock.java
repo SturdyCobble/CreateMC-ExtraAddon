@@ -7,6 +7,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -23,6 +25,13 @@ import javax.annotation.Nullable;
 public class HeatPipeBlock extends Block {
 	public HeatPipeBlock(Properties properties) {
 		super(properties);
+	}
+
+	public static final IntegerProperty POWER = IntegerProperty.create("power",0,15);
+
+	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		builder.add(POWER);
 	}
 
 	@Override
@@ -48,21 +57,13 @@ public class HeatPipeBlock extends Block {
 
 	@Override
 	public boolean canProvidePower(BlockState state) {
-		System.out.println("providing");
+		//System.out.println("providing");
 		return true;
 	}
 
 	@Override
 	public int getWeakPower(BlockState state, IBlockReader reader, BlockPos pos, Direction direction) {
-		System.out.println("unlimited power!!!!");
-		if (reader.getTileEntity(pos) != null) {
-			HeatContainer cap = reader.getTileEntity(pos).getCapability(CapabilityHeat.HEAT_CAPABILITY, null).orElse(null);
-			if (cap != null) {
-				System.out.println("power : " + cap.getTemp() / 40);
-				return (int) cap.getTemp() / 40;
-			}
-		}
-		return 15;
+		return state.get(POWER);
 	}
 
 	@Override

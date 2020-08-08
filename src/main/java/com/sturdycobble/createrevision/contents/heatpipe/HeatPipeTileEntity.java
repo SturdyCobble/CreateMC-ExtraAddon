@@ -24,7 +24,7 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		if (cap == CapabilityHeat.HEAT_CAPABILITY) {
-			return this.getHeatContainer();
+			return heatContainer.cast();
 		}
 		return super.getCapability(cap,null);
 	}
@@ -33,10 +33,5 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 	@Override
 	public TileEntity getTE() {
 		return this.getTileEntity();
-	}
-
-	@Override
-	public <T> LazyOptional<T> getHeatContainer() {
-		return this.heatContainer.cast();
 	}
 }

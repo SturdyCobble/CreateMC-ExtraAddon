@@ -1,5 +1,7 @@
 package com.sturdycobble.createrevision.contents.heatsystem;
 
+import com.sturdycobble.createrevision.contents.heatpipe.HeatPipeBlock;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -12,7 +14,7 @@ public interface IHeatableTileEntity extends ITickableTileEntity, ICapabilityPro
 
 	@Override
 	default void tick() {
-		if (this.getTE().getWorld().getWorldInfo().getGameTime() % 100 == 0) {
+		if (this.getTE().getWorld().isRemote() && this.getTE().getWorld().getWorldInfo().getGameTime() % 20 == 0) {
 			LazyOptional<HeatContainer> cap1 = this.getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
 			BlockPos.Mutable mpos = new BlockPos.Mutable();
 			for (Direction d : Direction.values()) {
@@ -28,7 +30,4 @@ public interface IHeatableTileEntity extends ITickableTileEntity, ICapabilityPro
 	}
 
 	TileEntity getTE();
-
-	<T> LazyOptional<T> getHeatContainer();
-
 }

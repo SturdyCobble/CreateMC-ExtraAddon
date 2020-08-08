@@ -2,7 +2,7 @@ package com.sturdycobble.createrevision.contents.heatsystem;
 
 public class HeatUtils {
 	public static void exchangeHeat(HeatContainer from, HeatContainer to) {
-		if ((int) from.getTemp() > (int) to.getTemp()) {
+		if ((int) from.getTemp() > (int)to.getTemp()) {
 			System.out.println("START");
 			System.out.println("    FROM : " + from.getTemp());
 			System.out.println("    TO : " + to.getTemp());

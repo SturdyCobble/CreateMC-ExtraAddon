@@ -1,6 +1,7 @@
 package com.sturdycobble.createrevision.contents.geo.fan;
 
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.sturdycobble.createrevision.contents.heatsystem.CapabilityHeat;
 import com.sturdycobble.createrevision.contents.heatsystem.HeatContainer;
 import com.sturdycobble.createrevision.contents.heatsystem.IHeatableTileEntity;
 import com.sturdycobble.createrevision.contents.heatsystem.SimpleHeatContainer;
@@ -8,8 +9,13 @@ import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Geothermal Fan Tile Entity
@@ -33,9 +39,13 @@ public class GeothermalFanTileEntity extends GeneratingKineticTileEntity impleme
 		return this;
 	}
 
+	@Nonnull
 	@Override
-	public <T> LazyOptional<T> getHeatContainer() {
-		return this.heatContainer.cast();
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+		if (cap == CapabilityHeat.HEAT_CAPABILITY) {
+			return heatContainer.cast();
+		}
+		return super.getCapability(cap,null);
 	}
 
 	@Override
