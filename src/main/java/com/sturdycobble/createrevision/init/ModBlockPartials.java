@@ -36,12 +36,14 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class ModBlockPartials {
 
-	public static final Compartment<Pair<Direction, ModBlockPartials>> DIRECTIONAL_PARTIAL = new Compartment<Pair<Direction, ModBlockPartials>>();
+	public static final Compartment<Pair<Direction, ModBlockPartials>> DIRECTIONAL_PARTIAL = new Compartment<>();
+	public static final Compartment<ModBlockPartials> PARTIAL = new Compartment<>();
 	private static final List<ModBlockPartials> all = new ArrayList<>();
 	private ResourceLocation modelLocation;
 	private IBakedModel bakedModel;
 	
 	public static final ModBlockPartials OBSIDIAN_DRILL_HEAD = getBlockPartial("obsidian_drill_head");
+	public static final ModBlockPartials BEDROCK_ANVIL_PRESS = getBlockPartial("bedrock_anvil_press");
 	
 	public static void onModelRegistry(ModelRegistryEvent event) {
 		for (ModBlockPartials partial : all)
@@ -70,6 +72,11 @@ public class ModBlockPartials {
 		return CreateRevisionClient.bufferCache.get(DIRECTIONAL_PARTIAL, Pair.of(dir, this),
 				() -> new SuperByteBuffer(renderDirectionalPartial(this, state)));
 	}
+	
+	public SuperByteBuffer renderOn(BlockState state) {
+		return CreateRevisionClient.bufferCache.get(PARTIAL, this,
+				() -> new SuperByteBuffer(renderPartial(this, state)));
+	}
 
 	public BufferBuilder renderDirectionalPartial(ModBlockPartials partial, BlockState state) {
 		Direction facing = state.get(FACING);
@@ -78,6 +85,20 @@ public class ModBlockPartials {
 
 		MatrixStacker.of(ms).centre().rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(AngleHelper.verticalAngle(facing)).unCentre();
+
+		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
+		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
+		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
+		Random random = new Random();
+		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		blockRenderer.renderModelFlat(Minecraft.getInstance().world, partial.getModel(), state, BlockPos.ZERO.up(255),
+				ms, builder, true, random, 42, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+		builder.finishDrawing();
+		return builder;
+	}
+	
+	public BufferBuilder renderPartial(ModBlockPartials partial, BlockState state) {
+		MatrixStack ms = new MatrixStack();
 
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();

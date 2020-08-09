@@ -29,6 +29,7 @@ public class CreateRevisionClient {
 
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(ModBlockPartials.DIRECTIONAL_PARTIAL);
+		bufferCache.registerCompartment(ModBlockPartials.PARTIAL);
 
 		ModTileEntityTypes.registerRenderers();
 		ModBlocks.blockRenderLayer();

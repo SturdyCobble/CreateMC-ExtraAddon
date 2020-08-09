@@ -3,6 +3,7 @@ package com.sturdycobble.createrevision.contents.geo.bedrock;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
+import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -93,7 +94,7 @@ public class BedrockAnvilBlock extends KineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState paramBlockState, IBlockReader paramIBlockReader) {
-		return null;
+		return ModTileEntityTypes.BEDROCK_ANVIL.get().create();
 	}
 
 	@Override
