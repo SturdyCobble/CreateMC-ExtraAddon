@@ -37,4 +37,5 @@ public class BedrockAnvilPressRenderer extends KineticTileEntityRenderer {
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
 		return shaft(getRotationAxisOf(te));
 	}
+	
 }

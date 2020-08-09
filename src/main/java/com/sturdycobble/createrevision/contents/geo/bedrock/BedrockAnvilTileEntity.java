@@ -4,14 +4,13 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BedrockAnvilTileEntity extends KineticTileEntity {
 
-	private final int anvilTime = 3000;
-	private int anvilProgress;
+	private final int processTime = 3000;
+	private int processTimeLeft;
 	private boolean isRunning = true;
 	private int runningTicks;
 
@@ -20,20 +19,20 @@ public class BedrockAnvilTileEntity extends KineticTileEntity {
 	public BedrockAnvilTileEntity() {
 		super(ModTileEntityTypes.BEDROCK_ANVIL.get());
 		inventory = new ItemStackHandler(1);
-		anvilProgress = 0;
+		processTimeLeft = processTime;
 		runningTicks = 0;
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		compound.putInt("Progress", anvilProgress);
+		compound.putInt("ProcessTimeLeft", processTimeLeft);
 		compound.put("Inventory", inventory.serializeNBT());
 		return super.write(compound);
 	}
 
 	@Override
 	public void read(CompoundNBT compound) {
-		anvilProgress = compound.getInt("Progress");
+		processTimeLeft = compound.getInt("ProcessTimeLeft");
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		super.read(compound);
 	}

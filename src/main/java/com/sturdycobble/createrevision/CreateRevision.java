@@ -10,9 +10,11 @@ import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(CreateRevision.MODID)
+@Mod.EventBusSubscriber(modid = CreateRevision.MODID, bus = Bus.MOD)
 public class CreateRevision {
 
 	public static final String MODID = "createrevision";
@@ -27,7 +29,6 @@ public class CreateRevision {
 		ModBlocks.BLOCKS.register(modEventBus);
 		ModItems.ITEMS.register(modEventBus);
 		ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
-		CreateRevisionClient.addClientListeners(modEventBus);
 	}
 
 }

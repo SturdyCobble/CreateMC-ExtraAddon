@@ -5,7 +5,6 @@ import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -43,7 +42,7 @@ public class ObsidianDrillBlock extends DirectionalKineticBlock implements ITE<O
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
 			withTileEntityDo(world, pos, te -> {
-				ItemHelper.dropContents(world, pos, te.inventory);
+				ItemHelper.dropContents(world, pos, te.outputInventory);
 			});
 			
 			world.removeTileEntity(pos);
@@ -79,8 +78,7 @@ public class ObsidianDrillBlock extends DirectionalKineticBlock implements ITE<O
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		blockUpdate(state, worldIn, pos);
 	}
 
@@ -101,7 +99,7 @@ public class ObsidianDrillBlock extends DirectionalKineticBlock implements ITE<O
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader paramIBlockReader) {
-		return ModTileEntityTypes.OBSIDIAN_DRILL.get().create();
+		return new ObsidianDrillTileEntity();
 	}
 
 	@Override

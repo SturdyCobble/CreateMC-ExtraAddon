@@ -14,8 +14,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModBlocks {
-	public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS,
-			CreateRevision.MODID);
+	
+	public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, CreateRevision.MODID);
+	
 	public static final RegistryObject<Block> GEOTHERMAL_FAN = BLOCKS.register("geothermal_fan",
 			() -> new GeothermalFanBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(2F, 3.5F)));
 	public static final RegistryObject<Block> COMPACT_WOOL = BLOCKS.register("compact_wool",

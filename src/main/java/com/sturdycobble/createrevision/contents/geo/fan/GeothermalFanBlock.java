@@ -3,7 +3,6 @@ package com.sturdycobble.createrevision.contents.geo.fan;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -22,13 +21,6 @@ public class GeothermalFanBlock extends DirectionalKineticBlock implements ITE<G
 
 	public GeothermalFanBlock(final Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
-			world.removeTileEntity(pos);
-		}
 	}
 
 	@Override
@@ -85,7 +77,7 @@ public class GeothermalFanBlock extends DirectionalKineticBlock implements ITE<G
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return ModTileEntityTypes.GEOTHERMAL_FAN.get().create();
+		return new GeothermalFanTileEntity();
 	}
 
 	@Override

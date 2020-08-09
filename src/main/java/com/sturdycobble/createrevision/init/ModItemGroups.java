@@ -9,8 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
 public class ModItemGroups {
-	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(CreateRevision.MODID,
-			() -> new ItemStack(Items.DAYLIGHT_DETECTOR));
+	
+	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(
+			CreateRevision.MODID, () -> new ItemStack(Items.DAYLIGHT_DETECTOR));
 
 	public static class ModItemGroup extends ItemGroup {
 		private final Supplier<ItemStack> iconSupplier;
@@ -25,4 +26,5 @@ public class ModItemGroups {
 			return iconSupplier.get();
 		}
 	}
+	
 }

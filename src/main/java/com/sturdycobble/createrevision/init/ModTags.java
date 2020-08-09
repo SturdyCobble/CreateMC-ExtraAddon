@@ -1,6 +1,7 @@
 package com.sturdycobble.createrevision.init;
 
 import com.simibubi.create.foundation.utility.Lang;
+import com.sturdycobble.createrevision.CreateRevision;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,13 +12,12 @@ import net.minecraft.util.ResourceLocation;
 public class ModTags {
 
 	public static enum ModBlockTags {
-
 		;
 
 		public Tag<Block> tag;
 
 		private ModBlockTags() {
-			this.tag = new BlockTags.Wrapper(new ResourceLocation("createrevision", Lang.asId(name())));
+			this.tag = new BlockTags.Wrapper(new ResourceLocation(CreateRevision.MODID, Lang.asId(name())));
 		}
 
 		public boolean matches(BlockState block) {
@@ -27,6 +27,6 @@ public class ModTags {
 	}
 
 	public static void register() {
-
 	}
+	
 }

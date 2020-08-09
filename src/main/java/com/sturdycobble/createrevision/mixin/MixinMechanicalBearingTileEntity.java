@@ -54,9 +54,9 @@ public abstract class MixinMechanicalBearingTileEntity extends GeneratingKinetic
 		for (int parmX = orgX - 10; parmX <= orgX + 10; parmX++) {
 			for (int parmY = Math.max(orgY - 10, 0); parmY <= Math.min(orgY + 10, 255); parmY++) {
 				for (int parmZ = orgZ - 10; parmZ <= orgZ + 10; parmZ++) {
-					BlockPos focusedPos = new BlockPos(parmX, parmY, parmZ);
 					if (parmX == orgX && parmY == orgY && parmZ == orgZ)
 						continue;
+					BlockPos.Mutable focusedPos = new BlockPos.Mutable(parmX, parmY, parmZ);
 					if (world.getBlockState(focusedPos).getBlock() == AllBlocks.MECHANICAL_BEARING.get()) {
 						return true;
 					}

@@ -3,7 +3,7 @@ package com.sturdycobble.createrevision.contents.geo.bedrock;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
-import com.sturdycobble.createrevision.init.ModTileEntityTypes;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -22,7 +22,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-public class BedrockAnvilBlock extends KineticBlock {
+public class BedrockAnvilBlock extends KineticBlock implements ITE<BedrockAnvilTileEntity> {
 
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
@@ -61,7 +61,7 @@ public class BedrockAnvilBlock extends KineticBlock {
 		Direction preferred = context.getPlacementHorizontalFacing();
 		if (preferred == null || (context.getPlayer() != null && context.getPlayer().isSneaking())) {
 			Direction nearestLookingDirection = context.getNearestLookingDirection();
-			return getDefaultState().with(FACING, context.getPlayer() != null && context.getPlayer()
+			return getDefaultState().with(FACING, context.getPlayer()
 					.isSneaking() ? nearestLookingDirection : nearestLookingDirection.getOpposite());
 		}
 		return getDefaultState().with(FACING, preferred.getOpposite());
@@ -94,12 +94,17 @@ public class BedrockAnvilBlock extends KineticBlock {
 
 	@Override
 	public TileEntity createTileEntity(BlockState paramBlockState, IBlockReader paramIBlockReader) {
-		return ModTileEntityTypes.BEDROCK_ANVIL.get().create();
+		return new BedrockAnvilTileEntity();
 	}
 
 	@Override
 	protected boolean hasStaticPart() {
 		return true;
+	}
+
+	@Override
+	public Class<BedrockAnvilTileEntity> getTileEntityClass() {
+		return BedrockAnvilTileEntity.class;
 	}
 
 }

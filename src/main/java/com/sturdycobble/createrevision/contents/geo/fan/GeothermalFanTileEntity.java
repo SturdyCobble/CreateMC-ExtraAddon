@@ -83,4 +83,5 @@ public class GeothermalFanTileEntity extends GeneratingKineticTileEntity {
 	@Override
 	public void tick() {
 	}
+	
 }
