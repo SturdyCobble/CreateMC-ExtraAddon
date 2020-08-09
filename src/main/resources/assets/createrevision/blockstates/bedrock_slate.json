@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"": {
+			"model": "createrevision:block/bedrock_slate"
+		}
+	}
+}

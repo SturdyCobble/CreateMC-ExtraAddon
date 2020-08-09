@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"CBC",
+		"BWB",
+		"CBC"
+	],
+	"key": {
+		"C": {
+			"item": "minecraft:gray_concrete_powder"
+		},
+		"B": {
+			"item": "createrevision:bedrock_powder"
+		},
+		"W": {
+			"item": "minecraft:water_bucket"
+		}
+	},
+	"result": {
+		"item": "createrevision:bedrock_slate",
+		"count": 1
+	}
+}

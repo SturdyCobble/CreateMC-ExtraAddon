@@ -15,14 +15,10 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
-/**
- * Mixin Code for Mechanical Bearing Tile Entity
- * 
- * @author SturdyCobble
- *
- */
+
 @Mixin(MechanicalBearingTileEntity.class)
-public abstract class MixinMechanicalBearingTileEntity  extends GeneratingKineticTileEntity implements IBearingTileEntity {
+public abstract class MixinMechanicalBearingTileEntity extends GeneratingKineticTileEntity
+		implements IBearingTileEntity {
 
 	@Shadow
 	protected boolean isWindmill;
@@ -34,7 +30,7 @@ public abstract class MixinMechanicalBearingTileEntity  extends GeneratingKineti
 		super(type);
 	}
 
-	/**@author StdCobble**/
+	/** @author SturdyCobble */
 	@Overwrite(remap = false)
 	public float getGeneratedSpeed() {
 		if (!running || !isWindmill)
@@ -42,23 +38,25 @@ public abstract class MixinMechanicalBearingTileEntity  extends GeneratingKineti
 		if (movedContraption == null)
 			return lastGeneratedSpeed;
 		Biome biome = world.getBiome(pos);
-		int biomeDivisor =  biome.getCategory() == Biome.Category.OCEAN ? 1 : 2;
+		int biomeDivisor = biome.getCategory() == Biome.Category.OCEAN ? 1 : 2;
 		int heightDivisor = pos.getY() > 60 ? 1 : 4;
 		int spaceDivisor = isClearSpace() == true ? 5 : 1;
-		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks() / (8*biomeDivisor*heightDivisor*spaceDivisor);
+		int sails = ((BearingContraption) movedContraption.getContraption())
+				.getSailBlocks() / (8 * biomeDivisor * heightDivisor * spaceDivisor);
 		return MathHelper.clamp(sails, 1, 16);
 	}
-	
+
 	private boolean isClearSpace() {
 		int orgX = pos.getX();
 		int orgY = pos.getY();
 		int orgZ = pos.getZ();
-		
-		for (int parmX = orgX - 10; parmX <= orgX + 10; parmX++ ) {
-			for (int parmY = Math.max(orgY-10, 0) ; parmY <= Math.min(orgY +10, 255); parmY++) {
+
+		for (int parmX = orgX - 10; parmX <= orgX + 10; parmX++) {
+			for (int parmY = Math.max(orgY - 10, 0); parmY <= Math.min(orgY + 10, 255); parmY++) {
 				for (int parmZ = orgZ - 10; parmZ <= orgZ + 10; parmZ++) {
-					BlockPos focusedPos = new BlockPos(parmX, parmY, parmZ);
-					if (parmX == orgX && parmY == orgY && parmZ == orgZ) continue;
+					if (parmX == orgX && parmY == orgY && parmZ == orgZ)
+						continue;
+					BlockPos.Mutable focusedPos = new BlockPos.Mutable(parmX, parmY, parmZ);
 					if (world.getBlockState(focusedPos).getBlock() == AllBlocks.MECHANICAL_BEARING.get()) {
 						return true;
 					}
