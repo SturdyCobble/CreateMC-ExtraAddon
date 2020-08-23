@@ -3,6 +3,7 @@ package com.sturdycobble.createrevision.init;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -44,6 +45,18 @@ public class ModBlockPartials {
 	
 	public static final ModBlockPartials OBSIDIAN_DRILL_HEAD = getBlockPartial("obsidian_drill_head");
 	public static final ModBlockPartials BEDROCK_ANVIL_PRESS = getBlockPartial("bedrock_anvil_press");
+	public static final ModBlockPartials HEAT_PIPE_CASING = getBlockPartial("heat_pipe/casing");
+	
+	public static final Map<Direction, ModBlockPartials> HEAT_PIPE_RIMS = new HashMap<>();
+	
+	static {
+		populateMaps();
+	}
+	
+	private static void populateMaps() {
+		for (Direction d : Direction.values()) 
+			HEAT_PIPE_RIMS.put(d, getBlockPartial("heat_pipe/rim/" + d.getName()));
+	}
 	
 	public static void onModelRegistry(ModelRegistryEvent event) {
 		for (ModBlockPartials partial : all)

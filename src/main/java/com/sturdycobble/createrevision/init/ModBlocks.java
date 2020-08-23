@@ -4,6 +4,7 @@ import com.sturdycobble.createrevision.CreateRevision;
 import com.sturdycobble.createrevision.contents.geo.bedrock.BedrockAnvilBlock;
 import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillBlock;
 import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanBlock;
+import com.sturdycobble.createrevision.contents.heat.transfer.HeatPipeBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -27,6 +28,8 @@ public class ModBlocks {
 			() -> new BedrockAnvilBlock(Block.Properties.create(Material.ANVIL).hardnessAndResistance(9F, 1500F)));
 	public static final RegistryObject<Block> OBSIDIAN_DRILL = BLOCKS.register("obsidian_drill",
 			() -> new ObsidianDrillBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(6F, 1200F)));
+	public static final RegistryObject<Block> HEAT_PIPE = BLOCKS.register("heat_pipe",
+			() -> new HeatPipeBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(6F, 1200F)));
 
 	public static final void blockRenderLayer() {
 		RenderTypeLookup.setRenderLayer(ModBlocks.GEOTHERMAL_FAN.get(), RenderType.getCutoutMipped());

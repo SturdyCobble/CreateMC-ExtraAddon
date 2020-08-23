@@ -55,7 +55,7 @@ public class BedrockAnvilTileEntity extends KineticTileEntity {
 				return MathHelper.clamp(0.05f*runningTicks + partialTicks, 0, 0.5f);
 			}
 			if (runningTicks > 40) {
-				return MathHelper.clamp(((0.5f - 0.05f*runningTicks*runningTicks) - partialTicks), 0, 0.5f);
+				return MathHelper.clamp(((0.5f - 0.05f*runningTicks) - partialTicks), 0, 0.5f);
 			}
 		}
 		return 0;

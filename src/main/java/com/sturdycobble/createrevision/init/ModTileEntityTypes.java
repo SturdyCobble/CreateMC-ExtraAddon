@@ -4,6 +4,7 @@ import com.sturdycobble.createrevision.CreateRevision;
 import com.sturdycobble.createrevision.contents.geo.bedrock.BedrockAnvilTileEntity;
 import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillTileEntity;
 import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanTileEntity;
+import com.sturdycobble.createrevision.contents.heat.transfer.HeatPipeTileEntity;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
@@ -26,5 +27,9 @@ public class ModTileEntityTypes {
 	public static final RegistryObject<TileEntityType<BedrockAnvilTileEntity>> BEDROCK_ANVIL = TILE_ENTITY_TYPES
 			.register("bedrock_anvil", () -> TileEntityType.Builder
 			.create(BedrockAnvilTileEntity::new, ModBlocks.BEDROCK_ANVIL.get()).build(null));
+	
+	public static final RegistryObject<TileEntityType<HeatPipeTileEntity>> HEAT_PIPE = TILE_ENTITY_TYPES
+			.register("heat_pipe", () -> TileEntityType.Builder
+			.create(HeatPipeTileEntity::new, ModBlocks.HEAT_PIPE.get()).build(null));
 	
 }
