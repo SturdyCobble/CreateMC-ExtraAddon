@@ -1,11 +1,14 @@
 package com.sturdycobble.createrevision.contents.heat;
 
-public interface IHeatableTileEntity {
+import java.util.Map;
+
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+public interface IHeatableTileEntity extends ICapabilityProvider {
 	
-	public abstract double getTemp();
-	public abstract void setTemp(int tempIn);
-	public abstract double getCapacity();
-	public abstract double getPower();
 	public abstract void markConnection();
+	public abstract Map<IHeatableTileEntity, Long> findNeighborNode();
+	public abstract void updateConnection();
+	public abstract boolean isNode();
 
 }

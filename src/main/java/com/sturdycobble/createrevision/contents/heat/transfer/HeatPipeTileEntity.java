@@ -3,37 +3,50 @@ package com.sturdycobble.createrevision.contents.heat.transfer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sturdycobble.createrevision.CreateRevision;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.sturdycobble.createrevision.contents.heat.CapabilityHeat;
+import com.sturdycobble.createrevision.contents.heat.HeatContainer;
 import com.sturdycobble.createrevision.contents.heat.IHeatableTileEntity;
+import com.sturdycobble.createrevision.contents.heat.SimpleHeatContainer;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntity, ITickableTileEntity {
 	
 	public boolean checkConnection;
 	
-	private double temp;
 	private double heatCapacity;
 	private double conductivity;
 	private boolean isNode;
 	private Map<IHeatableTileEntity, Long> neighborMap;
-	private int tickCnt;
 
 	public HeatPipeTileEntity() {
 		super(ModTileEntityTypes.HEAT_PIPE.get());
-		temp = 300;
 		heatCapacity = 3;
 		conductivity = 0.7;
 		isNode = false;
 		checkConnection= true;
-		tickCnt = 0;
 		neighborMap = new HashMap<IHeatableTileEntity, Long>();
+	}
+	
+	private LazyOptional<HeatContainer> heatContainer = LazyOptional.of(() -> new SimpleHeatContainer(300, heatCapacity, conductivity));
+	
+	@Nonnull
+	@Override
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+		if (cap == CapabilityHeat.HEAT_CAPABILITY) {
+			return heatContainer.cast();
+		}
+		return super.getCapability(cap, null);
 	}
 	
 	@Override
@@ -42,14 +55,21 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 			updateConnection();
 			checkConnection = false;
 		}
-		
-		if(tickCnt > 10) {
+
+		if (world.getWorldInfo().getGameTime() % 5 == 0) {
+			double temp;
 			if (isNode) {
 				double heatCurrent = 0;
+				temp = this.heatContainer.orElse(null).getTemp();
 				for( IHeatableTileEntity node : neighborMap.keySet()) {
 					Long distance = neighborMap.get(node);
-					double neighborTemp = node.getTemp();
-					heatCurrent += (neighborTemp - temp)*conductivity/distance;
+					if ( node != null) {
+						LazyOptional<HeatContainer> nodeHeatContainer = node.getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
+						if (nodeHeatContainer.isPresent()) {
+							double neighborTemp = nodeHeatContainer.orElse(null).getTemp();
+							heatCurrent += (neighborTemp - temp)*conductivity/distance;
+						}
+					}
 				}
 				temp += heatCurrent/heatCapacity;
 				
@@ -58,58 +78,26 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 				} else if (world.getBlockState(pos.down()).getBlock() == Blocks.PACKED_ICE) {
 					temp = 100;
 				}
-				
 			} else {
 				temp = getEdgeTemp();
 			}
-			tickCnt = 0;		
+			this.heatContainer.orElse(null).setTemp(temp);
 		}
-		
-		tickCnt ++;
-	}
-	
-	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		compound.putDouble("temp", temp);
-		return super.write(compound);
 	}
 
-	@Override
-	public void read(CompoundNBT compound) {
-		temp = compound.getDouble("temp");
-		super.read(compound);
-	}
-
-	@Override
-	public double getTemp() {
-		return temp; 
-	}
-	
 	private double getEdgeTemp() {
 		int count = 0;
 		double sumTemp = 0;
 		for( IHeatableTileEntity node : neighborMap.keySet()) {
 			count++;
-			sumTemp += node.getTemp();
+			LazyOptional<HeatContainer> nodeHeatContainer = node.getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
+			double nodeTemp = nodeHeatContainer.orElse(null).getTemp();
+			sumTemp += nodeTemp;
 		}
 		return sumTemp / count;
 	}
-
-	@Override
-	public void setTemp(int tempIn) {
-		temp = tempIn;
-	}
-
-	@Override
-	public double getCapacity() {
-		return heatCapacity;
-	}
 	
 	@Override
-	public double getPower() {
-		return 0;
-	}
-	
 	public void updateConnection() {
 		isNode = isNode();
 		neighborMap = findNeighborNode();
@@ -117,17 +105,8 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 			neighbor.markConnection();
 	}
 	
-	public void infoPrinter() {
-		CreateRevision.logger.info("=====TEMP INFO=====");
-		CreateRevision.logger.info("Current Temp : " + Math.floor(getTemp()));
-		CreateRevision.logger.info("Is Node ? " + isNode );
-		CreateRevision.logger.info("Neighbors ");
-		for (Long dist : neighborMap.values())
-			CreateRevision.logger.info(" --"+dist);
-		CreateRevision.logger.info("===================");
-	}
-
-	private boolean isNode() {
+	@Override
+	public boolean isNode() {
 		int connectedDirection = 0;
 		int connectedAxis = 0;
 		BlockPos.Mutable mpos1 = new BlockPos.Mutable();
@@ -149,7 +128,8 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 		return false;
 	}
 	
-	private Map<IHeatableTileEntity, Long> findNeighborNode() {
+	@Override
+	public Map<IHeatableTileEntity, Long> findNeighborNode() {
 		BlockPos.Mutable mpos = new BlockPos.Mutable();
 		TileEntity te;
 		Map<IHeatableTileEntity, Long> nodeMap = new HashMap<IHeatableTileEntity, Long>();

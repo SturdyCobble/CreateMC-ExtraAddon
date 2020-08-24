@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "createrevision:block/thermometer", "x": 90},
+		"facing=east": { "model": "createrevision:block/thermometer", "y": 90, "x": 90 },
+		"facing=south": { "model": "createrevision:block/thermometer", "y": 180, "x": 90 },
+		"facing=west": { "model": "createrevision:block/thermometer", "y": 270, "x": 90 },
+		"facing=up": { "model": "createrevision:block/thermometer"},
+		"facing=down": { "model": "createrevision:block/thermometer", "x": 180 }
+	}
+}

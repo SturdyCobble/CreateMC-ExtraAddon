@@ -20,5 +20,6 @@ public class ModItems {
 	public static final RegistryObject<BlockItem> COMPACT_WOOL = ITEMS.register("compact_wool", () ->  new BlockItem(ModBlocks.COMPACT_WOOL.get(), new BlockItem.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
 	public static final RegistryObject<BlockItem> BEDROCK_SLATE = ITEMS.register("bedrock_slate", () ->  new BlockItem(ModBlocks.BEDROCK_SLATE.get(), new BlockItem.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
 	public static final RegistryObject<BlockItem> HEAT_PIPE = ITEMS.register("heat_pipe", () ->  new BlockItem(ModBlocks.HEAT_PIPE.get(), new BlockItem.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
+	public static final RegistryObject<BlockItem> THERMOMETER = ITEMS.register("thermometer", () ->  new BlockItem(ModBlocks.THERMOMETER.get(), new BlockItem.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
 	
 }

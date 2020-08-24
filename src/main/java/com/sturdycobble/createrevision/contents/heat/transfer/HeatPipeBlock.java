@@ -9,20 +9,16 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SixWayBlock;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.IWorld;
@@ -159,17 +155,6 @@ public class HeatPipeBlock extends SixWayBlock implements IWaterLoggable {
 		TileEntity te = world.getTileEntity(pos);
 		if(te instanceof HeatPipeTileEntity)
 			((HeatPipeTileEntity) te).updateConnection();
-	}
-	
-	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult rayTraceResult) {
-		if (! world.isRemote && hand == Hand.MAIN_HAND) {
-			TileEntity te = world.getTileEntity(pos);
-			if(te instanceof HeatPipeTileEntity)
-				((HeatPipeTileEntity) te).infoPrinter();
-			return ActionResultType.SUCCESS;
-		}
-		return ActionResultType.FAIL;
 	}
 	
 	@Override

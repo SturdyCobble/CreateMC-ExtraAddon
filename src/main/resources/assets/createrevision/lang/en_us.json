@@ -4,6 +4,7 @@
 	"block.createrevision.bedrock_slate" : "Bedrock Slate",
 	"block.createrevision.bedrock_anvil" : "Bedrock Anvil",
 	"block.createrevision.heat_pipe" : "Heat Pipe",
+	"block.createrevision.thermometer" : "Thermometer",
 	"item.createrevision.bedrock_powder" : "Bedrock Powder",
 	"block.createrevision.obsidian_drill" : "Obsidian Coated Mechanical Drill",
 	"itemGroup.createrevision" : "Create MC Revision Addon"
