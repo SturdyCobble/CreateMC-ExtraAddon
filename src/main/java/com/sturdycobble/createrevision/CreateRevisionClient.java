@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.sturdycobble.createrevision.contents.geo.bedrock.BedrockAnvilPressRenderer;
 import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillRenderer;
 import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanRenderer;
+import com.sturdycobble.createrevision.contents.heat.source.FrictionHeaterRenderer;
 import com.sturdycobble.createrevision.contents.heat.transfer.HeatPipeModel;
 import com.sturdycobble.createrevision.init.ModBlockPartials;
 import com.sturdycobble.createrevision.init.ModBlocks;
@@ -81,6 +82,7 @@ public class CreateRevisionClient {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.GEOTHERMAL_FAN.get(), GeothermalFanRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.OBSIDIAN_DRILL.get(), ObsidianDrillRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BEDROCK_ANVIL.get(), BedrockAnvilPressRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FRICTION_HEATER.get(), FrictionHeaterRenderer::new);
 	}
 	
 	@SubscribeEvent

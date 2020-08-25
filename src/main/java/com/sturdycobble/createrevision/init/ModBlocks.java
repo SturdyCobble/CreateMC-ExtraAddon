@@ -4,6 +4,7 @@ import com.sturdycobble.createrevision.CreateRevision;
 import com.sturdycobble.createrevision.contents.geo.bedrock.BedrockAnvilBlock;
 import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillBlock;
 import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanBlock;
+import com.sturdycobble.createrevision.contents.heat.source.FrictionHeaterBlock;
 import com.sturdycobble.createrevision.contents.heat.transfer.HeatPipeBlock;
 import com.sturdycobble.createrevision.contents.heat.transfer.ThermometerBlock;
 
@@ -33,7 +34,11 @@ public class ModBlocks {
 			() -> new HeatPipeBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(6F, 6F)));
 	public static final RegistryObject<Block> THERMOMETER = BLOCKS.register("thermometer",
 			() -> new ThermometerBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(0.5F, 0.5F)));
+	public static final RegistryObject<Block> FRICTION_HEATER = BLOCKS.register("friction_heater",
+			() -> new FrictionHeaterBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 1.0F)));
 
+	
+	
 	public static final void blockRenderLayer() {
 		RenderTypeLookup.setRenderLayer(ModBlocks.GEOTHERMAL_FAN.get(), RenderType.getCutoutMipped());
 	}

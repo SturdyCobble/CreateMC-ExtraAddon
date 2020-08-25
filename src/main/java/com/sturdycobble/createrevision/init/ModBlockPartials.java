@@ -46,6 +46,7 @@ public class ModBlockPartials {
 	public static final ModBlockPartials OBSIDIAN_DRILL_HEAD = getBlockPartial("obsidian_drill_head");
 	public static final ModBlockPartials BEDROCK_ANVIL_PRESS = getBlockPartial("bedrock_anvil_press");
 	public static final ModBlockPartials HEAT_PIPE_CASING = getBlockPartial("heat_pipe/casing");
+	public static final ModBlockPartials FRICTION_PLATE = getBlockPartial("friction_plate");
 	
 	public static final Map<Direction, ModBlockPartials> HEAT_PIPE_RIMS = new HashMap<>();
 	

@@ -10,5 +10,6 @@ public interface IHeatableTileEntity extends ICapabilityProvider {
 	public abstract Map<IHeatableTileEntity, Long> findNeighborNode();
 	public abstract void updateConnection();
 	public abstract boolean isNode();
+	public abstract Map<IHeatableTileEntity, Long> getNeighborMap();
 
 }

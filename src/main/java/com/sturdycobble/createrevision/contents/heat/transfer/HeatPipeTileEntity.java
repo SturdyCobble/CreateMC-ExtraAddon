@@ -121,6 +121,8 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 			}
 			if ((te1 != null && te1 instanceof IHeatableTileEntity)) {
 				connectedDirection++;
+				if (!(te1 instanceof HeatPipeTileEntity))
+					return true;
 			}
 		}
 		if (connectedAxis > 2 || connectedDirection < 2) 
@@ -141,7 +143,7 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 				mpos.move(d);
 				te = this.getWorld().getTileEntity(mpos);
 				if (te != null && te instanceof IHeatableTileEntity) {
-					if (((HeatPipeTileEntity) te).isNode() == true) {
+					if (((IHeatableTileEntity) te).isNode() == true) {
 						nodeMap.put((IHeatableTileEntity) world.getTileEntity(mpos), count);
 						break;
 					}
@@ -151,6 +153,10 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 			}
 		}
 		return nodeMap;
+	}
+	
+	public Map<IHeatableTileEntity, Long> getNeighborMap() {
+		return neighborMap;
 	}
 	
 	@Override	

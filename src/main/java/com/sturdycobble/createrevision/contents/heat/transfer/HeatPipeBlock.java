@@ -3,6 +3,7 @@ package com.sturdycobble.createrevision.contents.heat.transfer;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.utility.Iterate;
+import com.sturdycobble.createrevision.init.ModBlocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -36,7 +37,9 @@ public class HeatPipeBlock extends SixWayBlock implements IWaterLoggable {
     }
 	
 	public static boolean isSource(BlockState state) {
-        return (state.getBlock() == Blocks.MAGMA_BLOCK || state.getBlock() == Blocks.PACKED_ICE);
+        return (state.getBlock() == Blocks.MAGMA_BLOCK ||
+        		state.getBlock() == Blocks.PACKED_ICE || 
+        		state.getBlock() == ModBlocks.FRICTION_HEATER.get());
     }
 
     public static boolean canConnectTo(ILightReader world, BlockPos pos, BlockState neighbor, Direction blockFace) {
