@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.sturdycobble.createrevision.config.CreateRevisionConfig;
 import com.sturdycobble.createrevision.contents.heat.CapabilityHeat;
 import com.sturdycobble.createrevision.contents.heat.HeatContainer;
 import com.sturdycobble.createrevision.contents.heat.IHeatableTileEntity;
@@ -30,7 +31,6 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 	private double conductivity;
 	private double sourcePower;
 	private Map<IHeatableTileEntity, Long> neighborMap;
-	private Direction facing;
 	
 	public FrictionHeaterTileEntity() {
 		super(ModTileEntityTypes.FRICTION_HEATER.get());
@@ -39,7 +39,6 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 		checkConnection= true;
 		sourcePower = 0.2;
 		neighborMap = new HashMap<IHeatableTileEntity, Long>();
-		facing = Direction.NORTH;
 	}
 	
 	private LazyOptional<HeatContainer> heatContainer = LazyOptional.of(() -> new SimpleHeatContainer(300, heatCapacity, conductivity));
@@ -89,6 +88,7 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 	}
 	
 	public boolean isFrontBlocked() {
+		Direction facing = world.getBlockState(pos).get(FrictionHeaterBlock.FACING);
 		if (world.getBlockState(pos.offset(facing.getOpposite())).getBlock().isIn(Blocks.STONE) )
 			return true;
 		return false;
@@ -98,6 +98,7 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 	public Map<IHeatableTileEntity, Long> findNeighborNode() {
 		BlockPos.Mutable mpos = new BlockPos.Mutable();
 		TileEntity te;
+		Direction facing = world.getBlockState(pos).get(FrictionHeaterBlock.FACING);
 		Map<IHeatableTileEntity, Long> nodeMap = new HashMap<IHeatableTileEntity, Long>();
 		for (Direction d : Direction.values()) {
 			if (d != facing && d != facing.getOpposite()) {
@@ -128,7 +129,8 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 	
 	@Override
 	public float calculateStressApplied() {
-		return 16;
+		float impact = (float) CreateRevisionConfig.COMMON.friction_heater_stress_applied.get();
+		return impact;
 	}
 	
 	
@@ -136,8 +138,4 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 		return neighborMap;
 	}
 	
-	public void updateRotation(Direction facingIn) {
-		facing = facingIn;
-	}
-
 }

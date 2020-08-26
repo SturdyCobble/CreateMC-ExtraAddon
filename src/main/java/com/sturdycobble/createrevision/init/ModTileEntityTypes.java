@@ -6,6 +6,7 @@ import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillTileEnt
 import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanTileEntity;
 import com.sturdycobble.createrevision.contents.heat.source.FrictionHeaterTileEntity;
 import com.sturdycobble.createrevision.contents.heat.transfer.HeatPipeTileEntity;
+import com.sturdycobble.createrevision.contents.heat.transfer.ThermometerTileEntity;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
@@ -36,5 +37,9 @@ public class ModTileEntityTypes {
 	public static final RegistryObject<TileEntityType<FrictionHeaterTileEntity>> FRICTION_HEATER = TILE_ENTITY_TYPES
 			.register("friction_heater", () -> TileEntityType.Builder
 			.create(FrictionHeaterTileEntity::new, ModBlocks.FRICTION_HEATER.get()).build(null));
+	
+	public static final RegistryObject<TileEntityType<ThermometerTileEntity>> THERMOMETER = TILE_ENTITY_TYPES
+			.register("thermometer", () -> TileEntityType.Builder
+			.create(ThermometerTileEntity::new, ModBlocks.THERMOMETER.get()).build(null));
 	
 }

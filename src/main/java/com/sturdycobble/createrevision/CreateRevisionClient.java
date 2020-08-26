@@ -12,6 +12,7 @@ import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillRendere
 import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanRenderer;
 import com.sturdycobble.createrevision.contents.heat.source.FrictionHeaterRenderer;
 import com.sturdycobble.createrevision.contents.heat.transfer.HeatPipeModel;
+import com.sturdycobble.createrevision.contents.heat.transfer.ThermometerRenderer;
 import com.sturdycobble.createrevision.init.ModBlockPartials;
 import com.sturdycobble.createrevision.init.ModBlocks;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
@@ -83,6 +84,7 @@ public class CreateRevisionClient {
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.OBSIDIAN_DRILL.get(), ObsidianDrillRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BEDROCK_ANVIL.get(), BedrockAnvilPressRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FRICTION_HEATER.get(), FrictionHeaterRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.THERMOMETER.get(), ThermometerRenderer::new);
 	}
 	
 	@SubscribeEvent

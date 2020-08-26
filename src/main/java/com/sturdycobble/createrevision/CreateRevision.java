@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
 
+import com.sturdycobble.createrevision.config.CreateRevisionConfig;
 import com.sturdycobble.createrevision.init.ModBlocks;
 import com.sturdycobble.createrevision.init.ModItems;
 import com.sturdycobble.createrevision.init.ModTags;
@@ -14,6 +15,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 @Mod(CreateRevision.MODID)
 @Mod.EventBusSubscriber(modid = CreateRevision.MODID, bus = Bus.MOD)
@@ -26,6 +28,7 @@ public class CreateRevision {
 	public CreateRevision() {
 		MixinBootstrap.init();
 		Mixins.addConfiguration("assets/createrevision/createrevision.mixins.json");
+		CreateRevisionConfig.register();
 
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -33,6 +36,9 @@ public class CreateRevision {
 		ModBlocks.BLOCKS.register(modEventBus);
 		ModItems.ITEMS.register(modEventBus);
 		ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+		
+		CreateRevisionConfig.loadConfig(CreateRevisionConfig.COMMON_CONFIG, 
+				FMLPaths.CONFIGDIR.get().resolve("createrevision-common.toml"));
 	}
 	
 }

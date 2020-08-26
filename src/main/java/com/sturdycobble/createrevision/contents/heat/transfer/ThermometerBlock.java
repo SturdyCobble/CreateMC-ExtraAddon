@@ -9,6 +9,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -46,6 +47,16 @@ public class ThermometerBlock extends Block{
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
 		return  VoxelShaper.forDirectional(Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 2.0D, 13.0D), Direction.UP).get(state.get(FACING));
+	}
+	
+	@Override
+	public boolean hasTileEntity(final BlockState state) {
+		return true;
+	}
+	
+	@Override
+	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
+		return new ThermometerTileEntity();
 	}
 	
 	@Override

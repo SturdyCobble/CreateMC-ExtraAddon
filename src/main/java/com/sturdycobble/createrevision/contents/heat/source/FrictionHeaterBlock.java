@@ -57,7 +57,6 @@ public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<
 	protected void blockUpdate(BlockState state, World world, BlockPos pos) {
 		if (world instanceof WrappedWorld || world.isRemote)
 			return;
-		withTileEntityDo(world, pos, te -> te.updateRotation(state.get(FACING)));
 		withTileEntityDo(world, pos, te -> te.updateConnection());
 	}
 	

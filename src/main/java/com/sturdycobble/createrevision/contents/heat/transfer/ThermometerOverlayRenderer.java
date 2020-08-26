@@ -2,21 +2,15 @@ package com.sturdycobble.createrevision.contents.heat.transfer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.sturdycobble.createrevision.contents.heat.CapabilityHeat;
-import com.sturdycobble.createrevision.contents.heat.HeatContainer;
-import com.sturdycobble.createrevision.contents.heat.IHeatableTileEntity;
-import com.sturdycobble.createrevision.init.ModBlocks;
 import com.sturdycobble.createrevision.init.ModItems;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -24,7 +18,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -43,32 +36,24 @@ public class ThermometerOverlayRenderer {
 		Minecraft mc = Minecraft.getInstance();
 		ClientWorld world = mc.world;
 		BlockPos pos = result.getPos();
+		TileEntity te = world.getTileEntity(pos);
 		
 		List<String> tooltip = new ArrayList<>();
 		
-		if (!(world.getBlockState(pos).getBlock() == ModBlocks.THERMOMETER.get()))
+		if (!(te instanceof ThermometerTileEntity) || te == null)
 			return;
 		
 		tooltip.add("    Temperature Information");
 		
-		Direction facing = world.getBlockState(pos).get(ThermometerBlock.FACING);
-		TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
-		if (te != null) {
-			LazyOptional<HeatContainer> heatContainer = te.getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
-			if (heatContainer.isPresent()) {
-				double temp = heatContainer.orElse(null).getTemp();
-				tooltip.add("      "+(int)temp+" K");
-				tooltip.add("");
-				
-				// For Debug
-				tooltip.add("    Node Information");
-				Map<IHeatableTileEntity, Long> neighbors = ((IHeatableTileEntity) te).getNeighborMap();
-				if (((IHeatableTileEntity) te).isNode() == true)
-					tooltip.add("     Distance : 0");
-				for (Long dist : neighbors.values())
-					tooltip.add("     Distance : " + dist);			
-			}
-		}
+		ThermometerTileEntity thermoTE = (ThermometerTileEntity) te;
+		double temp = thermoTE.getTemp();
+		if ( temp >= 0  )
+			tooltip.add("      "+(int)temp+" K");
+		
+		tooltip.add("");
+		
+		for ( Long dist : thermoTE.getNodes() )
+			tooltip.add("     Distance : " + dist);		
 	
 		if (tooltip.isEmpty())
 			return;
