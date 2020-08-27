@@ -22,5 +22,6 @@ public class ModItems {
 	public static final RegistryObject<BlockItem> HEAT_PIPE = ITEMS.register("heat_pipe", () ->  new BlockItem(ModBlocks.HEAT_PIPE.get(), new BlockItem.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
 	public static final RegistryObject<BlockItem> THERMOMETER = ITEMS.register("thermometer", () ->  new BlockItem(ModBlocks.THERMOMETER.get(), new BlockItem.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
 	public static final RegistryObject<BlockItem> FRICTION_HEATER = ITEMS.register("friction_heater", () ->  new BlockItem(ModBlocks.FRICTION_HEATER.get(), new BlockItem.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
+	public static final RegistryObject<BlockItem> HEAT_EXCHANGER = ITEMS.register("heat_exchanger", () ->  new BlockItem(ModBlocks.HEAT_EXCHANGER.get(), new BlockItem.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
 	
 }

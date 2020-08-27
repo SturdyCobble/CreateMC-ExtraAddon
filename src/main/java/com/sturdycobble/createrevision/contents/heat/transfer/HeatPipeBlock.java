@@ -7,7 +7,6 @@ import com.sturdycobble.createrevision.init.ModBlocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SixWayBlock;
 import net.minecraft.fluid.Fluids;
@@ -33,12 +32,11 @@ public class HeatPipeBlock extends SixWayBlock implements IWaterLoggable {
 	}
 	
 	public static boolean isPipe(BlockState state) {
-        return state.getBlock() instanceof HeatPipeBlock;
+        return state.getBlock() == ModBlocks.HEAT_PIPE.get();
     }
 	
 	public static boolean isSource(BlockState state) {
-        return (state.getBlock() == Blocks.MAGMA_BLOCK ||
-        		state.getBlock() == Blocks.PACKED_ICE || 
+        return (state.getBlock() == ModBlocks.HEAT_EXCHANGER.get() || 
         		state.getBlock() == ModBlocks.FRICTION_HEATER.get());
     }
 

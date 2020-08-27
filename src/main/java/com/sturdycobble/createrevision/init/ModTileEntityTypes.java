@@ -5,6 +5,7 @@ import com.sturdycobble.createrevision.contents.geo.bedrock.BedrockAnvilTileEnti
 import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillTileEntity;
 import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanTileEntity;
 import com.sturdycobble.createrevision.contents.heat.source.FrictionHeaterTileEntity;
+import com.sturdycobble.createrevision.contents.heat.transfer.HeatExchangerTileEntity;
 import com.sturdycobble.createrevision.contents.heat.transfer.HeatPipeTileEntity;
 import com.sturdycobble.createrevision.contents.heat.transfer.ThermometerTileEntity;
 
@@ -41,5 +42,9 @@ public class ModTileEntityTypes {
 	public static final RegistryObject<TileEntityType<ThermometerTileEntity>> THERMOMETER = TILE_ENTITY_TYPES
 			.register("thermometer", () -> TileEntityType.Builder
 			.create(ThermometerTileEntity::new, ModBlocks.THERMOMETER.get()).build(null));
+
+	public static final RegistryObject<TileEntityType<HeatExchangerTileEntity>> HEAT_EXCHANGER = TILE_ENTITY_TYPES
+			.register("heat_exchanger", () -> TileEntityType.Builder
+			.create(HeatExchangerTileEntity::new, ModBlocks.HEAT_EXCHANGER.get()).build(null));
 	
 }

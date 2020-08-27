@@ -6,6 +6,7 @@
 	"block.createrevision.heat_pipe" : "Heat Pipe",
 	"block.createrevision.thermometer" : "Thermometer",
 	"block.createrevision.friction_heater" : "Friction Heater",
+	"block.createrevision.heat_exchanger" : "Heat Exchanger",
 	"item.createrevision.bedrock_powder" : "Bedrock Powder",
 	"block.createrevision.obsidian_drill" : "Obsidian Coated Mechanical Drill",
 	"itemGroup.createrevision" : "Create MC Revision Addon"

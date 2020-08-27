@@ -13,7 +13,6 @@ import com.sturdycobble.createrevision.contents.heat.IHeatableTileEntity;
 import com.sturdycobble.createrevision.contents.heat.SimpleHeatContainer;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -79,14 +78,6 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 				
 			} else {
 				temp = getEdgeTemp();
-			}
-			
-			if (world.getBlockState(pos.down()).getBlock() == Blocks.MAGMA_BLOCK) {
-				temp = 500;
-			} else if (world.getBlockState(pos.down()).getBlock() == Blocks.PACKED_ICE) {
-				temp = 100;
-			} else if (world.getBlockState(pos.down()).getBlock() == Blocks.NETHER_WART_BLOCK) {
-				temp = 3000;
 			}
 			
 			this.heatContainer.orElse(null).setTemp(temp);
