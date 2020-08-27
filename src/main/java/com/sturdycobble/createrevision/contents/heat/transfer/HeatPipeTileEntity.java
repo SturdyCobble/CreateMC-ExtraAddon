@@ -1,5 +1,6 @@
 package com.sturdycobble.createrevision.contents.heat.transfer;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 	private double heatCapacity;
 	private double conductivity;
 	private boolean isNode;
-	private Map<IHeatableTileEntity, Long> neighborMap;
+	private Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> neighborMap;
 
 	public HeatPipeTileEntity() {
 		super(ModTileEntityTypes.HEAT_PIPE.get());
@@ -37,7 +38,7 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 		conductivity = 0.7;
 		isNode = false;
 		checkConnection= true;
-		neighborMap = new HashMap<IHeatableTileEntity, Long>();
+		neighborMap = new HashMap<IHeatableTileEntity, SimpleEntry<Direction, Long>>();
 	}
 	
 	private LazyOptional<HeatContainer> heatContainer = LazyOptional.of(() -> new SimpleHeatContainer(300, heatCapacity, conductivity));
@@ -62,19 +63,8 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 			double temp;
 			
 			if (isNode) {
-				double heatCurrent = 0;
 				temp = this.heatContainer.orElse(null).getTemp();
-				for( IHeatableTileEntity node : neighborMap.keySet()) {
-					Long distance = neighborMap.get(node);
-					if ( node != null) {
-						LazyOptional<HeatContainer> nodeHeatContainer = node.getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
-						if (nodeHeatContainer.isPresent()) {
-							double neighborTemp = nodeHeatContainer.orElse(null).getTemp();
-							heatCurrent += (neighborTemp - temp)*conductivity/distance;
-						}
-					}
-				}
-				temp += heatCurrent/heatCapacity;
+				temp += getHeatCurrent(neighborMap, temp)/heatCapacity;
 				
 			} else {
 				temp = getEdgeTemp();
@@ -88,8 +78,9 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 		int count = 0;
 		double sumTemp = 0;
 		for( IHeatableTileEntity node : neighborMap.keySet()) {
+			Direction facingDirection = neighborMap.get(node).getKey().getOpposite();
 			count++;
-			LazyOptional<HeatContainer> nodeHeatContainer = node.getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
+			LazyOptional<HeatContainer> nodeHeatContainer = node.getCapability(CapabilityHeat.HEAT_CAPABILITY, facingDirection);
 			double nodeTemp = nodeHeatContainer.orElse(null).getTemp();
 			sumTemp += nodeTemp;
 		}
@@ -138,21 +129,22 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 		return false;
 	}
 	
-	@Override
-	public Map<IHeatableTileEntity, Long> findNeighborNode() {
+	public  Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> findNeighborNode() {
 		BlockPos.Mutable mpos = new BlockPos.Mutable();
 		TileEntity te;
-		Map<IHeatableTileEntity, Long> nodeMap = new HashMap<IHeatableTileEntity, Long>();
+		Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> nodeMap 
+				= new HashMap<IHeatableTileEntity, SimpleEntry<Direction, Long>>();
+		
 		for (Direction d : Direction.values()) {
 			long count = 0;
-			mpos.setPos(this.getPos());
+			mpos.setPos(pos);
 			while (count < 100) {
 				count++;
 				mpos.move(d);
-				te = this.getWorld().getTileEntity(mpos);
+				te = world.getTileEntity(mpos);
 				if (te != null && te instanceof IHeatableTileEntity) {
 					if (((IHeatableTileEntity) te).isNode() == true) {
-						nodeMap.put((IHeatableTileEntity) world.getTileEntity(mpos), count);
+						nodeMap.put((IHeatableTileEntity) world.getTileEntity(mpos), new SimpleEntry<Direction, Long>(d, count));
 						break;
 					}
 				} else {
@@ -163,13 +155,18 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 		return nodeMap;
 	}
 	
-	public Map<IHeatableTileEntity, Long> getNeighborMap() {
+	public Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> getNeighborMap() {
 		return neighborMap;
 	}
 	
 	@Override	
 	public void markConnection() {
 		checkConnection = true;
+	}
+
+	@Override
+	public double getConductivity() {
+		return conductivity;
 	}
 
 }

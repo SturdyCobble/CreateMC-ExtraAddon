@@ -1,8 +1,8 @@
 package com.sturdycobble.createrevision.contents.heat.transfer;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.sturdycobble.createrevision.contents.heat.CapabilityHeat;
 import com.sturdycobble.createrevision.contents.heat.HeatContainer;
@@ -31,18 +31,17 @@ public class ThermometerTileEntity extends TileEntity {
 		return -1;
 	}
 	
-	public List<Long> getNodes() {
-		List<Long> nodes = new LinkedList<Long>();
+	public List<SimpleEntry<Direction, Long>> getNodes() {
+		List<SimpleEntry<Direction, Long>> nodes = new LinkedList<SimpleEntry<Direction, Long>>();
 		Direction facing = world.getBlockState(pos).get(ThermometerBlock.FACING);
 		TileEntity te = world.getTileEntity(pos.offset(facing.getOpposite()));
 		if (te != null) {
 			LazyOptional<HeatContainer> heatContainer = te.getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
 			if (heatContainer.isPresent()) {
-				Map<IHeatableTileEntity, Long> neighbors = ((IHeatableTileEntity) te).getNeighborMap();
 				if (((IHeatableTileEntity) te).isNode() == true)
-					nodes.add(0L);
-				for (Long dist : neighbors.values())
-					nodes.add(dist);			
+					nodes.add(new SimpleEntry<Direction, Long>(Direction.UP, 0L));
+				for (SimpleEntry<Direction, Long> distVector : ((IHeatableTileEntity) te).getNeighborMap().values())
+					nodes.add(distVector);			
 			}
 		}
 		return nodes;

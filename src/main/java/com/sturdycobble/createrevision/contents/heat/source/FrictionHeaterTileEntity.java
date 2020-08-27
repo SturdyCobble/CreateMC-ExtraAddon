@@ -1,5 +1,6 @@
 package com.sturdycobble.createrevision.contents.heat.source;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 	private double heatCapacity;
 	private double conductivity;
 	private double sourcePower;
-	private Map<IHeatableTileEntity, Long> neighborMap;
+	private Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> neighborMap;
 	
 	public FrictionHeaterTileEntity() {
 		super(ModTileEntityTypes.FRICTION_HEATER.get());
@@ -38,7 +39,7 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 		conductivity = 0.3;
 		checkConnection= true;
 		sourcePower = 0.2;
-		neighborMap = new HashMap<IHeatableTileEntity, Long>();
+		neighborMap = new HashMap<IHeatableTileEntity, SimpleEntry<Direction, Long>>();
 	}
 	
 	private LazyOptional<HeatContainer> heatContainer = LazyOptional.of(() -> new SimpleHeatContainer(300, heatCapacity, conductivity));
@@ -46,7 +47,9 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-		if (cap == CapabilityHeat.HEAT_CAPABILITY) {
+		Direction facing = world.getBlockState(pos).get(FrictionHeaterBlock.FACING);
+		
+		if (cap == CapabilityHeat.HEAT_CAPABILITY && !(side == facing || side == facing.getOpposite())) {
 			return heatContainer.cast();
 		}
 		return super.getCapability(cap, null);
@@ -60,18 +63,9 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 		}
 
 		if (world.getWorldInfo().getGameTime() % 5 == 0) {
-			double temp;
-			double heatCurrent = 0;
-			temp = this.heatContainer.orElse(null).getTemp();
-			for( IHeatableTileEntity node : neighborMap.keySet()) {
-				if ( node != null) {
-					LazyOptional<HeatContainer> nodeHeatContainer = node.getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
-					if (nodeHeatContainer.isPresent()) {
-						double neighborTemp = nodeHeatContainer.orElse(null).getTemp();
-						heatCurrent += (neighborTemp - temp)*conductivity;
-					}
-				}
-			}
+			double temp = this.heatContainer.orElse(null).getTemp();;
+			double heatCurrent = getHeatCurrent(neighborMap, temp);
+			
 			temp += (heatCurrent + getPower())/heatCapacity;
 			
 			this.heatContainer.orElse(null).setTemp(temp);
@@ -95,11 +89,11 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 	}
 	
 	@Override
-	public Map<IHeatableTileEntity, Long> findNeighborNode() {
+	public Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> findNeighborNode() {
 		BlockPos.Mutable mpos = new BlockPos.Mutable();
 		TileEntity te;
 		Direction facing = world.getBlockState(pos).get(FrictionHeaterBlock.FACING);
-		Map<IHeatableTileEntity, Long> nodeMap = new HashMap<IHeatableTileEntity, Long>();
+		Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> nodeMap = new HashMap<IHeatableTileEntity, SimpleEntry<Direction, Long>>();
 		for (Direction d : Direction.values()) {
 			if (d != facing && d != facing.getOpposite()) {
 				mpos.setPos(this.getPos());
@@ -107,7 +101,8 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 				te = this.getWorld().getTileEntity(mpos);
 				if (te != null && te instanceof IHeatableTileEntity) {
 					if (((IHeatableTileEntity) te).isNode() == true) {
-						nodeMap.put((IHeatableTileEntity) world.getTileEntity(mpos), 1L);
+						nodeMap.put((IHeatableTileEntity) world.getTileEntity(mpos), 
+								new SimpleEntry<Direction, Long>(d, 1L));
 					}
 				}
 			}
@@ -134,8 +129,13 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 	}
 	
 	
-	public Map<IHeatableTileEntity, Long> getNeighborMap() {
+	public Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> getNeighborMap() {
 		return neighborMap;
+	}
+
+	@Override
+	public double getConductivity() {
+		return conductivity;
 	}
 	
 }

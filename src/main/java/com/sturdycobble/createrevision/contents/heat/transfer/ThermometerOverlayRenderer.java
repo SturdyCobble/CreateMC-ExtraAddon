@@ -1,5 +1,6 @@
 package com.sturdycobble.createrevision.contents.heat.transfer;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -52,8 +54,8 @@ public class ThermometerOverlayRenderer {
 		
 		tooltip.add("");
 		
-		for ( Long dist : thermoTE.getNodes() )
-			tooltip.add("     Distance : " + dist);		
+		for ( SimpleEntry<Direction, Long> distVector : thermoTE.getNodes())
+			tooltip.add("     Distance : " + distVector.getValue());		
 	
 		if (tooltip.isEmpty())
 			return;

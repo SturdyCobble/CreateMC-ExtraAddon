@@ -2,6 +2,7 @@ package com.sturdycobble.createrevision.contents.heat.transfer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.AbstractMap.SimpleEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,13 +30,13 @@ public class HeatExchangerTileEntity extends TileEntity implements IHeatableTile
 	
 	private double heatCapacity;
 	private double conductivity;
-	private Map<IHeatableTileEntity, Long> neighborMap;
+	private Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> neighborMap;
 	private double heatExchanged;
 	private int exchangeTime;
 
 	public HeatExchangerTileEntity() {
 		super(ModTileEntityTypes.HEAT_EXCHANGER.get());
-		neighborMap = new HashMap<IHeatableTileEntity, Long>();
+		neighborMap = new HashMap<IHeatableTileEntity, SimpleEntry<Direction, Long>>();
 		heatCapacity = 3;
 		conductivity = 0.7;
 		checkConnection= true;
@@ -63,18 +64,7 @@ public class HeatExchangerTileEntity extends TileEntity implements IHeatableTile
 		
 		if (world.getWorldInfo().getGameTime() % 5 == 0) {
 			double temp = this.heatContainer.orElse(null).getTemp();
-			double heatCurrent = 0;
-			
-			for( IHeatableTileEntity node : neighborMap.keySet()) {
-				Long distance = neighborMap.get(node);
-				if ( node != null) {
-					LazyOptional<HeatContainer> nodeHeatContainer = node.getCapability(CapabilityHeat.HEAT_CAPABILITY, null);
-					if (nodeHeatContainer.isPresent()) {
-						double neighborTemp = nodeHeatContainer.orElse(null).getTemp();
-						heatCurrent += (neighborTemp - temp)*conductivity/distance;
-					}
-				}
-			}
+			double heatCurrent = getHeatCurrent(neighborMap, temp);
 			
 			setPowerWithInteraction(temp);
 			double power = 0;
@@ -136,11 +126,12 @@ public class HeatExchangerTileEntity extends TileEntity implements IHeatableTile
 	}
 
 	@Override
-	public Map<IHeatableTileEntity, Long> findNeighborNode() {
-		Map<IHeatableTileEntity, Long> nodes = new HashMap<IHeatableTileEntity, Long>();
+	public Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> findNeighborNode() {
+		Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> nodes 
+				= new HashMap<IHeatableTileEntity, SimpleEntry<Direction, Long>>();
 		for (Direction direction : Direction.values()) {
 			if (world.getBlockState(pos.offset(direction)).getBlock() == ModBlocks.HEAT_PIPE.get())
-				nodes.put((IHeatableTileEntity) world.getTileEntity(pos.offset(direction)), 1L);
+				nodes.put((IHeatableTileEntity) world.getTileEntity(pos.offset(direction)), new SimpleEntry<Direction, Long>(direction, 1L));
 		}
 		return nodes;
 	}
@@ -158,8 +149,13 @@ public class HeatExchangerTileEntity extends TileEntity implements IHeatableTile
 	}
 
 	@Override
-	public Map<IHeatableTileEntity, Long> getNeighborMap() {
+	public Map<IHeatableTileEntity, SimpleEntry<Direction, Long>> getNeighborMap() {
 		return neighborMap;
+	}
+
+	@Override
+	public double getConductivity() {
+		return conductivity;
 	}
 	
 }
