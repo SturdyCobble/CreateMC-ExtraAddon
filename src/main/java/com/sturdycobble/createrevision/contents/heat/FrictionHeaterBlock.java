@@ -1,4 +1,4 @@
-package com.sturdycobble.createrevision.contents.heat.source;
+package com.sturdycobble.createrevision.contents.heat;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
@@ -20,12 +20,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<FrictionHeaterTileEntity>{
+public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<FrictionHeaterTileEntity> {
 
 	public FrictionHeaterBlock(Properties properties) {
 		super(properties);
-		BlockState defaultState = this.stateContainer.getBaseState().with(FACING, Direction.NORTH);
-		this.setDefaultState(defaultState);
+		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
 	}
 
 	@Override
@@ -34,14 +33,7 @@ public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<
 		if (preferredFacing == null)
 			preferredFacing = context.getNearestLookingDirection();
 		return getDefaultState().with(FACING, context.getPlayer() != 
-				null && context.getPlayer().isSneaking() ? preferredFacing.getOpposite() : preferredFacing);
-	}
-	
-	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
-			world.removeTileEntity(pos);
-		}
+				null && context.getPlayer().isSneaking() ? preferredFacing : preferredFacing.getOpposite());
 	}
 
 	@Override
@@ -51,7 +43,7 @@ public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(FACING);
+		return face == state.get(FACING).getOpposite();
 	}
 	
 	protected void blockUpdate(BlockState state, World world, BlockPos pos) {
@@ -102,7 +94,7 @@ public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<
 	}
 	
 	@Override
-	public boolean hasTileEntity() {
+	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
 	

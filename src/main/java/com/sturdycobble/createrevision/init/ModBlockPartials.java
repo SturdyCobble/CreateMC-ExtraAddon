@@ -51,15 +51,6 @@ public class ModBlockPartials {
 	
 	public static final Map<Direction, ModBlockPartials> HEAT_PIPE_RIMS = new HashMap<>();
 	
-	static {
-		populateMaps();
-	}
-	
-	private static void populateMaps() {
-		for (Direction d : Direction.values()) 
-			HEAT_PIPE_RIMS.put(d, getBlockPartial("heat_pipe/rim/" + d.getName()));
-	}
-	
 	public static void onModelRegistry(ModelRegistryEvent event) {
 		for (ModBlockPartials partial : all)
 			ModelLoader.addSpecialModel(partial.modelLocation);

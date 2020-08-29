@@ -1,0 +1,19 @@
+{
+	"type": "createrevision:heat_exchanger",
+	"ingredients": [
+		{
+			"item": "minecraft:magma_block",
+			"count": 1
+		}
+	],
+	"results": [
+		{
+			"item": "minecraft:cobblestone",
+			"count": 1
+		}
+	],
+	"heatProduction": 3,
+	"tempMin": 0,
+	"tempMax": 600,
+	"processingTime": 5
+}

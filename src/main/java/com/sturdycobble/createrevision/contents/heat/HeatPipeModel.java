@@ -1,4 +1,4 @@
-package com.sturdycobble.createrevision.contents.heat.transfer;
+package com.sturdycobble.createrevision.contents.heat;
 
 import java.util.Arrays;
 import java.util.List;

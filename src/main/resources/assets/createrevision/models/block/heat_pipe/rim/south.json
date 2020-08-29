@@ -1,5 +1,4 @@
 {
-	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "createrevision:block/heat_pipe",
 		"particle": "createrevision:block/heat_pipe"

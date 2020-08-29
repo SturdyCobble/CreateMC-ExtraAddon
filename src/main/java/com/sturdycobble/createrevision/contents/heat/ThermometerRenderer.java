@@ -1,4 +1,4 @@
-package com.sturdycobble.createrevision.contents.heat.transfer;
+package com.sturdycobble.createrevision.contents.heat;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 
@@ -26,12 +27,12 @@ public class ThermometerRenderer extends TileEntityRenderer<ThermometerTileEntit
 			IRenderTypeBuffer buffer, int light, int overlay) {
 		if (te.getBlockState().getBlock() != ModBlocks.THERMOMETER.get() || !te.hasWorld())
 			return;
-		if (te.getBlockState().get(ThermometerBlock.FACING) == Direction.DOWN 
-				|| te.getBlockState().get(ThermometerBlock.FACING) == Direction.UP)
+		if (te.getBlockState().get(BlockStateProperties.FACING) == Direction.DOWN 
+				|| te.getBlockState().get(BlockStateProperties.FACING) == Direction.UP)
 			return;
 		
 		BlockState state = te.getBlockState();
-		Direction facing = state.get(ThermometerBlock.FACING);
+		Direction facing = state.get(BlockStateProperties.FACING);
 		int lightCoords = WorldRenderer.getPackedLightmapCoords(te.getWorld(), state, te.getPos());
 		
 		double temp = te.getTemp();

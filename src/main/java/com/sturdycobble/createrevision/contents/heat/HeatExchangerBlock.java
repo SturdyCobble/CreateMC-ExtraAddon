@@ -1,4 +1,6 @@
-package com.sturdycobble.createrevision.contents.heat.transfer;
+package com.sturdycobble.createrevision.contents.heat;
+
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.VoxelShaper;
@@ -8,9 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
@@ -22,15 +22,12 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class HeatExchangerBlock extends Block implements ITE<HeatExchangerTileEntity> {
-	
-	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
 	public HeatExchangerBlock(Properties properties) {
 		super(properties);
-		BlockState defaultState = this.stateContainer.getBaseState().with(FACING, Direction.NORTH);
-		this.setDefaultState(defaultState);
+		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
 	}
-	
+
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(FACING);
@@ -39,23 +36,15 @@ public class HeatExchangerBlock extends Block implements ITE<HeatExchangerTileEn
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-			Direction preferredFacing = context.getNearestLookingDirection();
-		return getDefaultState().with(FACING, context.getPlayer() != 
-				null && context.getPlayer().isSneaking() ? preferredFacing.getOpposite() : preferredFacing);
-	}
-	
-	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
-			world.removeTileEntity(pos);
-		}
+		Direction preferredFacing = context.getNearestLookingDirection();
+		return getDefaultState().with(FACING, context.getPlayer() != null && context.getPlayer().isSneaking() ? preferredFacing.getOpposite() : preferredFacing);
 	}
 
 	@Override
 	public BlockRenderType getRenderType(BlockState iBlockState) {
 		return BlockRenderType.MODEL;
 	}
-	
+
 	protected void blockUpdate(BlockState state, World world, BlockPos pos) {
 		if (world instanceof WrappedWorld || world.isRemote)
 			return;
@@ -76,9 +65,9 @@ public class HeatExchangerBlock extends Block implements ITE<HeatExchangerTileEn
 	public TileEntity createTileEntity(BlockState state, IBlockReader blockReader) {
 		return new HeatExchangerTileEntity();
 	}
-	
+
 	@Override
-	public boolean hasTileEntity(final BlockState state) {
+	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
 
@@ -86,7 +75,7 @@ public class HeatExchangerBlock extends Block implements ITE<HeatExchangerTileEn
 	public Class<HeatExchangerTileEntity> getTileEntityClass() {
 		return HeatExchangerTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
 		return state.with(FACING, rot.rotate(state.get(FACING)));
@@ -96,10 +85,10 @@ public class HeatExchangerBlock extends Block implements ITE<HeatExchangerTileEn
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-		return  VoxelShaper.forDirectional(Block.makeCuboidShape(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D), Direction.UP).get(state.get(FACING));
+		return VoxelShaper.forDirectional(Block.makeCuboidShape(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D), Direction.UP).get(state.get(FACING));
 	}
 
 }

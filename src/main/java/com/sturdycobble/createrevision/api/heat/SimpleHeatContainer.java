@@ -1,15 +1,13 @@
-package com.sturdycobble.createrevision.contents.heat;
+package com.sturdycobble.createrevision.api.heat;
 
 public class SimpleHeatContainer implements HeatContainer {
 	
 	private double temp;
 	private double heatCapacity;
-	private double conductivity;
 	
-	public SimpleHeatContainer(double tempIn, double capac, double condt) {
-		heatCapacity = capac;
+	public SimpleHeatContainer(double tempIn, double capc) {
+		heatCapacity = capc;
 		temp = tempIn;
-		conductivity = condt;
 	}
 	
 	@Override
@@ -26,11 +24,5 @@ public class SimpleHeatContainer implements HeatContainer {
 	public double getCapacity() {
 		return heatCapacity;
 	}
-
-	@Override
-	public double getConductivity() {
-		return conductivity;
-	}
-	
 
 }

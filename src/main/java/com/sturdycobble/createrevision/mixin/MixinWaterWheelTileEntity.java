@@ -30,8 +30,8 @@ public abstract class MixinWaterWheelTileEntity extends GeneratingKineticTileEnt
 		for (Float f : flows.values())
 			speed += f;
 		Biome biome = world.getBiome(pos);
-		return biome.getCategory() == Biome.Category.RIVER && Math.abs(pos.getY() - 63) < 1 && speed != 0
-				? Math.signum(speed) * 12 : speed;
+		return biome.getCategory() == Biome.Category.RIVER && Math.abs(pos.getY() - 63) < 1 
+				&& speed != 0 ? Math.signum(speed) * 12 : speed;
 	}
 
 }

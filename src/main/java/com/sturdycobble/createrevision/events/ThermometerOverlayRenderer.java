@@ -1,18 +1,20 @@
-package com.sturdycobble.createrevision.contents.heat.transfer;
+package com.sturdycobble.createrevision.events;
 
-import java.util.AbstractMap.SimpleEntry;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.sturdycobble.createrevision.CreateRevision;
+import com.sturdycobble.createrevision.contents.heat.ThermometerTileEntity;
 import com.sturdycobble.createrevision.init.ModItems;
+import com.sturdycobble.createrevision.utils.HeatUtils.FacingDistance;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -23,7 +25,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(modid = CreateRevision.MODID, value = Dist.CLIENT)
 public class ThermometerOverlayRenderer {
 	@SubscribeEvent
 	public static void showThermometerTooltip(RenderGameOverlayEvent.Post event) {
@@ -48,14 +50,17 @@ public class ThermometerOverlayRenderer {
 		tooltip.add("    Temperature Information");
 		
 		ThermometerTileEntity thermoTE = (ThermometerTileEntity) te;
-		double temp = thermoTE.getTemp();
-		if ( temp >= 0  )
-			tooltip.add("      "+(int)temp+" K");
 		
+		DecimalFormat deciamlFormat = new DecimalFormat("#,###");
+		if (thermoTE.getTemp() == -1) {
+			tooltip.add("       No Temp Data");
+		} else {
+			tooltip.add("      " + deciamlFormat.format(thermoTE.getTemp()) + "K");
+		}
 		tooltip.add("");
 		
-		for ( SimpleEntry<Direction, Long> distVector : thermoTE.getNodes())
-			tooltip.add("     Distance : " + distVector.getValue());		
+		for ( FacingDistance distVector : thermoTE.getNodes())
+			tooltip.add("     Distance : " + distVector.getDistance());		
 	
 		if (tooltip.isEmpty())
 			return;

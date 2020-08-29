@@ -9,5 +9,6 @@
 	"block.createrevision.heat_exchanger" : "Heat Exchanger",
 	"item.createrevision.bedrock_powder" : "Bedrock Powder",
 	"block.createrevision.obsidian_drill" : "Obsidian Coated Mechanical Drill",
+	"createrevision.recipe.heat_exchanger": "Heat Exchanging",
 	"itemGroup.createrevision" : "Create MC Revision Addon"
 }

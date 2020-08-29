@@ -25,8 +25,7 @@ public class ObsidianDrillBlock extends DirectionalKineticBlock implements ITE<O
 	
 	public ObsidianDrillBlock(final Properties properties) {
 		super(properties);
-		BlockState defaultState = this.stateContainer.getBaseState().with(FACING, Direction.NORTH);
-		this.setDefaultState(defaultState);
+		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
 	}
 
 	@Override

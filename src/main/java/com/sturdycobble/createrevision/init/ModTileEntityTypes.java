@@ -4,10 +4,10 @@ import com.sturdycobble.createrevision.CreateRevision;
 import com.sturdycobble.createrevision.contents.geo.bedrock.BedrockAnvilTileEntity;
 import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillTileEntity;
 import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanTileEntity;
-import com.sturdycobble.createrevision.contents.heat.source.FrictionHeaterTileEntity;
-import com.sturdycobble.createrevision.contents.heat.transfer.HeatExchangerTileEntity;
-import com.sturdycobble.createrevision.contents.heat.transfer.HeatPipeTileEntity;
-import com.sturdycobble.createrevision.contents.heat.transfer.ThermometerTileEntity;
+import com.sturdycobble.createrevision.contents.heat.FrictionHeaterTileEntity;
+import com.sturdycobble.createrevision.contents.heat.HeatExchangerTileEntity;
+import com.sturdycobble.createrevision.contents.heat.HeatPipeTileEntity;
+import com.sturdycobble.createrevision.contents.heat.ThermometerTileEntity;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;

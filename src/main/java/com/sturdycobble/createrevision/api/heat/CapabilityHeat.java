@@ -1,4 +1,4 @@
-package com.sturdycobble.createrevision.contents.heat;
+package com.sturdycobble.createrevision.api.heat;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +26,7 @@ public class CapabilityHeat {
 				return;
 			}
 		
-		}, () -> new SimpleHeatContainer(300, 10, 0.7));
+		}, () -> new SimpleHeatContainer(300, 10));
 	}
 
 }

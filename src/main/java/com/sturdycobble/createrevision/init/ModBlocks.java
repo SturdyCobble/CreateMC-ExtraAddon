@@ -4,10 +4,10 @@ import com.sturdycobble.createrevision.CreateRevision;
 import com.sturdycobble.createrevision.contents.geo.bedrock.BedrockAnvilBlock;
 import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillBlock;
 import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanBlock;
-import com.sturdycobble.createrevision.contents.heat.source.FrictionHeaterBlock;
-import com.sturdycobble.createrevision.contents.heat.transfer.HeatExchangerBlock;
-import com.sturdycobble.createrevision.contents.heat.transfer.HeatPipeBlock;
-import com.sturdycobble.createrevision.contents.heat.transfer.ThermometerBlock;
+import com.sturdycobble.createrevision.contents.heat.FrictionHeaterBlock;
+import com.sturdycobble.createrevision.contents.heat.HeatExchangerBlock;
+import com.sturdycobble.createrevision.contents.heat.HeatPipeBlock;
+import com.sturdycobble.createrevision.contents.heat.ThermometerBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

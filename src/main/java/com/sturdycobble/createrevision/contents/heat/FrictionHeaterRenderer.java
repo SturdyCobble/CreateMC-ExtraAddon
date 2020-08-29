@@ -1,4 +1,4 @@
-package com.sturdycobble.createrevision.contents.heat.source;
+package com.sturdycobble.createrevision.contents.heat;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
