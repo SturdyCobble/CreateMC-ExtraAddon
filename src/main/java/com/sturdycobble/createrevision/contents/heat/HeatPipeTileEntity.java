@@ -6,43 +6,38 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.utility.Iterate;
 import com.sturdycobble.createrevision.api.heat.CapabilityHeat;
 import com.sturdycobble.createrevision.api.heat.HeatContainer;
 import com.sturdycobble.createrevision.api.heat.IHeatableTileEntity;
 import com.sturdycobble.createrevision.api.heat.SimpleHeatContainer;
+import com.sturdycobble.createrevision.init.ModConfigs;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 import com.sturdycobble.createrevision.utils.HeatUtils;
 import com.sturdycobble.createrevision.utils.HeatUtils.FacingDistance;
 
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntity, ITickableTileEntity {
 
-	public boolean checkConnection;
+	public boolean checkConnection = true;
 
-	private double heatCapacity = 3;
-	private double conductivity = 0.7;
+	private final double heatCapacity = ModConfigs.heatPipeHeatCapacity.get();
+	private final double conductivity = ModConfigs.heatPipeConductivity.get();
 	private boolean isNode = false;
+
 	private Map<IHeatableTileEntity, FacingDistance> neighborMap;
 
 	public HeatPipeTileEntity() {
 		super(ModTileEntityTypes.HEAT_PIPE.get());
-		heatCapacity = 3;
-		conductivity = 0.7;
-		isNode = false;
-		checkConnection = true;
 		neighborMap = new HashMap<IHeatableTileEntity, FacingDistance>();
 	}
-
-	private LazyOptional<HeatContainer> heatContainer = LazyOptional.of(() -> new SimpleHeatContainer(300, heatCapacity));
+	
+	private final LazyOptional<HeatContainer> heatContainer = LazyOptional.of(() -> new SimpleHeatContainer(heatCapacity));
 
 	@Nonnull
 	@Override
@@ -60,17 +55,16 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 			checkConnection = false;
 		}
 
-		if (world.getWorldInfo().getGameTime() % 5 == 0) {
+		if (world.getWorldInfo().getGameTime() % 3 == 0) {
 			double temp;
 
 			if (isNode) {
 				temp = this.heatContainer.orElse(null).getTemp();
 				temp += HeatUtils.getHeatCurrent(neighborMap, temp, conductivity) / heatCapacity;
-
 			} else {
 				temp = getEdgeTemp();
 			}
-
+			
 			this.heatContainer.orElse(null).setTemp(temp);
 		}
 	}
@@ -78,14 +72,18 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 	private double getEdgeTemp() {
 		int count = 0;
 		double sumTemp = 0;
+		double nodeTemp = 0;
 		for (IHeatableTileEntity node : neighborMap.keySet()) {
 			Direction facingDirection = neighborMap.get(node).getDirection().getOpposite();
-			count++;
-			LazyOptional<HeatContainer> nodeHeatContainer = node.getCapability(CapabilityHeat.HEAT_CAPABILITY, facingDirection);
-			double nodeTemp = nodeHeatContainer.orElse(null).getTemp();
-			sumTemp += nodeTemp;
+			HeatContainer nodeHeatContainer 
+					= node.getCapability(CapabilityHeat.HEAT_CAPABILITY, facingDirection).orElse(null);
+			if (nodeHeatContainer != null) {
+				nodeTemp = nodeHeatContainer.getTemp();
+				sumTemp += nodeTemp;
+				count++;
+			}
 		}
-		return sumTemp / count;
+		return count == 0 ? 300 : sumTemp / count;
 	}
 
 	@Override
@@ -98,35 +96,19 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 
 	@Override
 	public boolean isNode() {
-		int connectedAxis = 0;
-		int connectedDirection = 0;
+		return HeatUtils.isPipeNode(world, pos);
+	}
 
-		BlockPos.Mutable mpos = new BlockPos.Mutable();
-		for (Axis axis : Iterate.axes) {
-			Direction d1 = Direction.getFacingFromAxis(AxisDirection.NEGATIVE, axis);
-			mpos.setPos(pos.offset(d1));
-			TileEntity te1 = this.getWorld().getTileEntity(mpos);
-			Direction d2 = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-			mpos.setPos(pos.offset(d2));
-			TileEntity te2 = this.getWorld().getTileEntity(mpos);
-
-			if ((te1 != null && te1 instanceof IHeatableTileEntity) || (te2 != null && te2 instanceof IHeatableTileEntity)) {
-				connectedAxis++;
-				if ((te1 != null && te1 instanceof IHeatableTileEntity)) {
-					connectedDirection++;
-					if (!(te1 instanceof HeatPipeTileEntity))
-						return true;
-				} else {
-					connectedDirection++;
-					if (!(te2 instanceof HeatPipeTileEntity))
-						return true;
-				}
-			}
-		}
-
-		if (connectedAxis > 1 || connectedDirection < 2)
-			return true;
-		return false;
+	@Override
+    public CompoundNBT write(CompoundNBT tag) {
+		tag = heatContainer.orElse(null).serializeNBT();
+        return super.write(tag);
+    }
+    
+	@Override
+	public void read(CompoundNBT tag) {
+		super.read(tag);
+		heatContainer.orElse(null).deserializeNBT(tag);
 	}
 
 	public Map<IHeatableTileEntity, FacingDistance> findNeighborNode() {

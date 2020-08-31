@@ -38,7 +38,6 @@ public class CreateRevision {
 		ModBlocks.BLOCKS.register(modEventBus);
 		ModItems.ITEMS.register(modEventBus);
 		ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
-
 	}
 
 }

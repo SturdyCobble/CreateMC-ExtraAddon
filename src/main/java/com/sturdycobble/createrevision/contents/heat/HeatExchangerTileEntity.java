@@ -2,6 +2,7 @@ package com.sturdycobble.createrevision.contents.heat;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ import com.sturdycobble.createrevision.api.heat.CapabilityHeat;
 import com.sturdycobble.createrevision.api.heat.HeatContainer;
 import com.sturdycobble.createrevision.api.heat.IHeatableTileEntity;
 import com.sturdycobble.createrevision.api.heat.SimpleHeatContainer;
-import com.sturdycobble.createrevision.init.ModBlocks;
+import com.sturdycobble.createrevision.init.ModConfigs;
 import com.sturdycobble.createrevision.init.ModRecipeTypes;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 import com.sturdycobble.createrevision.utils.HeatUtils;
@@ -25,6 +26,7 @@ import com.sturdycobble.createrevision.utils.HeatUtils.FacingDistance;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -34,27 +36,22 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class HeatExchangerTileEntity extends TileEntity implements IHeatableTileEntity, ITickableTileEntity {
 
-	public boolean checkConnection;
+	public boolean checkConnection  = true;
 
 	private static final Object heatRecipesKey = new Object();
 	
-	private double heatCapacity;
-	private double conductivity;
+	private final double heatCapacity = ModConfigs.heatPipeHeatCapacity.get();
+	private final double conductivity = ModConfigs.heatPipeConductivity.get();
 	private Map<IHeatableTileEntity, FacingDistance> neighborMap;
-	private double heatExchanged;
-	private int exchangeTime;
+	private double heatExchanged = 0;
+	private int exchangeTime = 0;
 
 	public HeatExchangerTileEntity() {
 		super(ModTileEntityTypes.HEAT_EXCHANGER.get());
 		neighborMap = new HashMap<IHeatableTileEntity, FacingDistance>();
-		heatCapacity = 3;
-		conductivity = 0.7;
-		checkConnection = true;
-		heatExchanged = 0;
-		exchangeTime = 0;
 	}
-
-	private LazyOptional<HeatContainer> heatContainer = LazyOptional.of(() -> new SimpleHeatContainer(300, heatCapacity));
+	
+	private final LazyOptional<HeatContainer> heatContainer = LazyOptional.of(() -> new SimpleHeatContainer(heatCapacity));
 
 	@Nonnull
 	@Override
@@ -72,7 +69,7 @@ public class HeatExchangerTileEntity extends TileEntity implements IHeatableTile
 			checkConnection = false;
 		}
 
-		if (world.getWorldInfo().getGameTime() % 5 == 0) {
+		if (world.getWorldInfo().getGameTime() % 3 == 0) {
 			double temp = this.heatContainer.orElse(null).getTemp();
 			double heatCurrent = HeatUtils.getHeatCurrent(neighborMap, temp, conductivity);
 
@@ -121,15 +118,22 @@ public class HeatExchangerTileEntity extends TileEntity implements IHeatableTile
 	public void markConnection() {
 		checkConnection = true;
 	}
+	
+	@Override
+    public CompoundNBT write(CompoundNBT tag) {
+		tag = heatContainer.orElse(null).serializeNBT();
+        return super.write(tag);
+    }
+    
+	@Override
+	public void read(CompoundNBT tag) {
+		super.read(tag);
+		heatContainer.orElse(null).deserializeNBT(tag);
+	}
 
 	@Override
 	public Map<IHeatableTileEntity, FacingDistance> findNeighborNode() {
-		Map<IHeatableTileEntity, FacingDistance> nodes = new HashMap<IHeatableTileEntity, FacingDistance>();
-		for (Direction direction : Direction.values()) {
-			if (world.getBlockState(pos.offset(direction)).getBlock() == ModBlocks.HEAT_PIPE.get())
-				nodes.put((IHeatableTileEntity) world.getTileEntity(pos.offset(direction)), new FacingDistance(direction, 1L));
-		}
-		return nodes;
+		return HeatUtils.findAdjacentNeighborNodes(world, pos, Arrays.asList(Direction.values()));
 	}
 
 	@Override

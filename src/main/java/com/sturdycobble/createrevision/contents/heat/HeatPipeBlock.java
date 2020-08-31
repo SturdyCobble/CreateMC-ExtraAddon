@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.utility.Iterate;
 import com.sturdycobble.createrevision.api.heat.CapabilityHeat;
-import com.sturdycobble.createrevision.api.heat.IHeatableTileEntity;
 import com.sturdycobble.createrevision.init.ModBlocks;
 
 import net.minecraft.block.Block;
@@ -38,10 +37,8 @@ public class HeatPipeBlock extends SixWayBlock implements IWaterLoggable {
 	}
 
 	public static boolean isSource(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
-		boolean hasHeatCapability = false;
-		if (world.getTileEntity(pos) instanceof IHeatableTileEntity)
-			hasHeatCapability = world.getTileEntity(pos).getCapability(CapabilityHeat.HEAT_CAPABILITY, direction).isPresent();
-		return hasHeatCapability && !(isPipe(state));
+		TileEntity te = world.getTileEntity(pos);
+		return te != null && te.getCapability(CapabilityHeat.HEAT_CAPABILITY, direction).isPresent() && !(isPipe(state));
 	}
 
 	public static boolean canConnectTo(ILightReader world, BlockPos pos, BlockState neighbor, Direction blockFacing) {
@@ -78,7 +75,7 @@ public class HeatPipeBlock extends SixWayBlock implements IWaterLoggable {
 		boolean axisFound = false;
 		for (Axis axis : Axis.values()) {
 			Direction d1 = Direction.getFacingFromAxis(AxisDirection.NEGATIVE, axis);
-			Direction d2 = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
+			Direction d2 = d1.getOpposite();
 			if (state.get(FACING_TO_PROPERTY_MAP.get(d1)) && state.get(FACING_TO_PROPERTY_MAP.get(d2)))
 				if (axisFound)
 					return false;

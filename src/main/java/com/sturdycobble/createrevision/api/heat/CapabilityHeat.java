@@ -23,10 +23,8 @@ public class CapabilityHeat {
 			
 			@Override
 			public void readNBT(Capability<HeatContainer> capability, HeatContainer instance, Direction side, INBT nbt) {
-				return;
 			}
-		
-		}, () -> new SimpleHeatContainer(300, 10));
+		}, () -> new SimpleHeatContainer(10));
 	}
-
+	
 }

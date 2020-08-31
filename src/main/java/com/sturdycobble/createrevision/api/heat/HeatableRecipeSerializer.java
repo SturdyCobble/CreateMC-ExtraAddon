@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -22,8 +20,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class HeatableRecipeSerializer<T extends HeatableRecipe<?>> extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<T> {
 
 	protected final IRecipeFactory<T> factory;

@@ -36,7 +36,7 @@ public class ThermometerRenderer extends TileEntityRenderer<ThermometerTileEntit
 		int lightCoords = WorldRenderer.getPackedLightmapCoords(te.getWorld(), state, te.getPos());
 		
 		double temp = te.getTemp();
-		float angle = (float) (MathHelper.clamp(temp, 0, 5000)/5000 * 3 * Math.PI / 2);
+		float angle = (float) (MathHelper.clamp(temp, 0, 3000)/3000 * 4 * Math.PI / 3);
 
 		ModBlockPartials.THERMOMETER_NEEDLE.renderOn(state);
 		
