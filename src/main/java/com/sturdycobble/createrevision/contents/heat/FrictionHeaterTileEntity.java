@@ -72,6 +72,7 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
 			temp += (heatCurrent + getPower()) / heatCapacity;
 
 			this.heatContainer.orElse(null).setTemp(temp);
+			markDirty();
 		}
 	}
 
@@ -83,8 +84,8 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements IHeat
     
 	@Override
 	public void read(CompoundNBT tag) {
-		super.read(tag);
 		heatContainer.orElse(null).deserializeNBT(tag);
+		super.read(tag);
 	}
 
 	@Override

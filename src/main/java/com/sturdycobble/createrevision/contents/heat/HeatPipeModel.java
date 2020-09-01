@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.foundation.block.render.WrappedBakedModel;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.sturdycobble.createrevision.init.ModBlockPartials;
 
 import net.minecraft.block.BlockState;
@@ -29,7 +28,7 @@ public class HeatPipeModel extends WrappedBakedModel {
 	@Override
 	public IModelData getModelData(ILightReader world, BlockPos pos, BlockState state, IModelData tileData) {
 		PipeModelData data = new PipeModelData();
-		for (Direction d : Iterate.directions)
+		for (Direction d : Direction.values())
 			data.putRim(d, HeatPipeBlock.shouldDrawRim(world, pos, state, d));
 		data.setEncased(HeatPipeBlock.shouldDrawCasing(world, pos, state));
 		return new ModelDataMap.Builder().withInitial(PIPE_PROPERTY, data)
@@ -49,7 +48,7 @@ public class HeatPipeModel extends WrappedBakedModel {
 
 	private void addQuads(List<BakedQuad> quads, BlockState state, Direction side, Random rand, IModelData data,
 		PipeModelData pipeData) {
-		for (Direction d : Iterate.directions)
+		for (Direction d : Direction.values())
 			if (pipeData.getRim(d))
 				quads.addAll(ModBlockPartials.HEAT_PIPE_RIMS.get(d)
 					.getModel()

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.sturdycobble.createrevision.api.heat.CapabilityHeat;
@@ -28,13 +29,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class HeatExchangerTileEntity extends TileEntity implements IHeatableTileEntity, ITickableTileEntity {
+public class HeatExchangerTileEntity extends SyncedTileEntity implements IHeatableTileEntity, ITickableTileEntity {
 
 	public boolean checkConnection  = true;
 
@@ -82,6 +82,7 @@ public class HeatExchangerTileEntity extends TileEntity implements IHeatableTile
 
 			temp += (heatCurrent + power) / heatCapacity;
 			this.heatContainer.orElse(null).setTemp(temp);
+			markDirty();
 		}
 	}
 
@@ -127,8 +128,8 @@ public class HeatExchangerTileEntity extends TileEntity implements IHeatableTile
     
 	@Override
 	public void read(CompoundNBT tag) {
-		super.read(tag);
 		heatContainer.orElse(null).deserializeNBT(tag);
+		super.read(tag);
 	}
 
 	@Override

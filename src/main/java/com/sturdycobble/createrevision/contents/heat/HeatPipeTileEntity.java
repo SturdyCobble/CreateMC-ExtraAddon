@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 import com.sturdycobble.createrevision.api.heat.CapabilityHeat;
 import com.sturdycobble.createrevision.api.heat.HeatContainer;
 import com.sturdycobble.createrevision.api.heat.IHeatableTileEntity;
@@ -17,12 +18,11 @@ import com.sturdycobble.createrevision.utils.HeatUtils.FacingDistance;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntity, ITickableTileEntity {
+public class HeatPipeTileEntity extends SyncedTileEntity implements IHeatableTileEntity, ITickableTileEntity {
 
 	public boolean checkConnection = true;
 
@@ -66,6 +66,7 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
 			}
 			
 			this.heatContainer.orElse(null).setTemp(temp);
+			markDirty();
 		}
 	}
 
@@ -107,8 +108,8 @@ public class HeatPipeTileEntity extends TileEntity implements IHeatableTileEntit
     
 	@Override
 	public void read(CompoundNBT tag) {
-		super.read(tag);
 		heatContainer.orElse(null).deserializeNBT(tag);
+		super.read(tag);
 	}
 
 	public Map<IHeatableTileEntity, FacingDistance> findNeighborNode() {
