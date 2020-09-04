@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.google.common.collect.UnmodifiableIterator;
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.sturdycobble.createrevision.contents.geo.bedrock.BedrockAnvilPressRenderer;
@@ -58,8 +57,9 @@ public class CreateRevisionClient {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
 		ModBlockPartials.onModelBake(event);
 
-		customBlockModels.foreach((block, modelFunc) 
-				-> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
+		customBlockModels.foreach((block, modelFunc) -> 
+				swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
+	
 	}
 
 	private static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry, 
@@ -95,10 +95,10 @@ public class CreateRevisionClient {
 
 	private static List<ModelResourceLocation> getAllBlockStateModelLocations(Block block) {
 		List<ModelResourceLocation> models = new ArrayList<>();
-		UnmodifiableIterator<BlockState> iterator = block.getStateContainer().getValidStates().iterator();
-		while (iterator.hasNext())
+		for(BlockState state : block.getStateContainer().getValidStates()) {
 			models.add(new ModelResourceLocation(block.getRegistryName(), 
-					BlockModelShapes.getPropertyMapString(iterator.next().getValues())));
+					BlockModelShapes.getPropertyMapString(state.getValues())));
+		}
 		return models;
 	}
 

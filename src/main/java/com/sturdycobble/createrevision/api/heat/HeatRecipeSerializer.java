@@ -20,11 +20,11 @@ import net.minecraft.util.registry.Registry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class HeatableRecipeSerializer<T extends HeatableRecipe<?>> extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<T> {
+public class HeatRecipeSerializer<T extends HeatRecipe<?>> extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<T> {
 
 	protected final IRecipeFactory<T> factory;
 
-	public HeatableRecipeSerializer(IRecipeFactory<T> factoryIn) {
+	public HeatRecipeSerializer(IRecipeFactory<T> factoryIn) {
 		factory = factoryIn;
 	}
 
@@ -40,10 +40,7 @@ public class HeatableRecipeSerializer<T extends HeatableRecipe<?>> extends net.m
 			if (JSONUtils.hasField(entry, "fluid")) {
 				addFluidToList(fluidIngredients, entry);
 			} else {
-				int count = 1;
-				if (JSONUtils.hasField(entry, "count")) {
-					count = JSONUtils.getInt(entry, "count");
-				}
+				int count = JSONUtils.getInt(entry, "count", 1);
 				for (int i = 0; i < count; i++) {
 					ingredients.add(ProcessingIngredient.parse(entry));
 				}
@@ -58,7 +55,7 @@ public class HeatableRecipeSerializer<T extends HeatableRecipe<?>> extends net.m
 				addFluidToList(fluidResults, entry);
 			} else {
 				String s1 = JSONUtils.getString(entry, "item");
-				int i = JSONUtils.getInt(entry, "count");
+				int i = JSONUtils.getInt(entry, "count", 1);
 				float chance = 1;
 				if (JSONUtils.hasField(entry, "chance"))
 					chance = JSONUtils.getFloat(entry, "chance");
@@ -67,21 +64,10 @@ public class HeatableRecipeSerializer<T extends HeatableRecipe<?>> extends net.m
 			}
 		}
 
-		float heatProduction = 0;
-		if (JSONUtils.hasField(json, "heatProduction"))
-			heatProduction = JSONUtils.getFloat(json, "heatProduction");
-
-		float tempMin = 0;
-		if (JSONUtils.hasField(json, "tempMin"))
-			tempMin = JSONUtils.getFloat(json, "tempMin");
-
-		float tempMax = 10000;
-		if (JSONUtils.hasField(json, "tempMax"))
-			tempMax = JSONUtils.getFloat(json, "tempMax");
-		
-		int processingDuration = 0;
-		if (JSONUtils.hasField(json, "processingTime"))
-			processingDuration = JSONUtils.getInt(json, "processingTime");
+		float heatProduction = JSONUtils.getFloat(json, "heatProduction", 0);
+		float tempMin = JSONUtils.getFloat(json, "tempMin", 0);
+		float tempMax = JSONUtils.getFloat(json, "tempMax", 10000);
+		int processingDuration = JSONUtils.getInt(json, "processingTime", 0);
 		
 		return this.factory.create(recipeId, s, ingredients, results, fluidIngredients, fluidResults, heatProduction, tempMin, tempMax, processingDuration);
 	}
@@ -134,7 +120,7 @@ public class HeatableRecipeSerializer<T extends HeatableRecipe<?>> extends net.m
 
 		buffer.writeInt(recipe.ingredients.size());
 		recipe.ingredients.forEach(i -> i.write(buffer));
-		if (recipe.canHaveFluidIngredient() && recipe.fluidIngredients != null) {
+		if (recipe.fluidIngredients != null) {
 			buffer.writeInt(recipe.fluidIngredients.size());
 			recipe.fluidIngredients.forEach(fluidStack -> fluidStack.writeToPacket(buffer));
 		} else {
@@ -143,7 +129,7 @@ public class HeatableRecipeSerializer<T extends HeatableRecipe<?>> extends net.m
 
 		buffer.writeInt(recipe.getRollableItemResults().size());
 		recipe.getRollableItemResults().forEach(i -> i.write(buffer));
-		if (recipe.canHaveFluidOutput() && recipe.fluidResults != null) {
+		if (recipe.fluidResults != null) {
 			buffer.writeInt(recipe.fluidResults.size());
 			recipe.fluidResults.forEach(fluidStack -> fluidStack.writeToPacket(buffer));
 		} else {
@@ -157,7 +143,7 @@ public class HeatableRecipeSerializer<T extends HeatableRecipe<?>> extends net.m
 		
 	}
 
-	public interface IRecipeFactory<T extends HeatableRecipe<?>> {
+	public interface IRecipeFactory<T extends HeatRecipe<?>> {
 		
 		T create(ResourceLocation recipeId, String s, List<ProcessingIngredient> ingredients,
 			List<ProcessingOutput> results, @Nullable List<FluidStack> fluidIngredients,

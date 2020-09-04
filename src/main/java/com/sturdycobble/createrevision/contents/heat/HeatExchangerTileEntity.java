@@ -2,10 +2,7 @@ package com.sturdycobble.createrevision.contents.heat;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -16,62 +13,64 @@ import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.sturdycobble.createrevision.api.heat.CapabilityHeat;
 import com.sturdycobble.createrevision.api.heat.HeatContainer;
-import com.sturdycobble.createrevision.api.heat.IHeatableTileEntity;
 import com.sturdycobble.createrevision.api.heat.SimpleHeatContainer;
 import com.sturdycobble.createrevision.init.ModConfigs;
 import com.sturdycobble.createrevision.init.ModRecipeTypes;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 import com.sturdycobble.createrevision.utils.HeatUtils;
-import com.sturdycobble.createrevision.utils.HeatUtils.FacingDistance;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class HeatExchangerTileEntity extends SyncedTileEntity implements IHeatableTileEntity, ITickableTileEntity {
-
-	public boolean checkConnection  = true;
+public class HeatExchangerTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
 	private static final Object heatRecipesKey = new Object();
 	
-	private final double heatCapacity = ModConfigs.heatPipeHeatCapacity.get();
-	private final double conductivity = ModConfigs.heatPipeConductivity.get();
-	private Map<IHeatableTileEntity, FacingDistance> neighborMap;
+	private final double conductivity = ModConfigs.getHeatPipeConductivity();
 	private double heatExchanged = 0;
 	private int exchangeTime = 0;
 
 	public HeatExchangerTileEntity() {
 		super(ModTileEntityTypes.HEAT_EXCHANGER.get());
-		neighborMap = new HashMap<IHeatableTileEntity, FacingDistance>();
 	}
 	
-	private final LazyOptional<HeatContainer> heatContainer = LazyOptional.of(() -> new SimpleHeatContainer(heatCapacity));
+	private final SimpleHeatContainer heatContainer = new SimpleHeatContainer() {
+		@Override
+		public double getCapacity() {
+			return ModConfigs.getHeatPipeHeatCapacity();
+		}
+	};
+
+	private final LazyOptional<HeatContainer> heatContainerCap = LazyOptional.of(() -> heatContainer);
 
 	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		if (cap == CapabilityHeat.HEAT_CAPABILITY) {
-			return heatContainer.cast();
+			Direction facing = getBlockState().get(FACING).getOpposite();
+			if (side != facing)
+				return heatContainerCap.cast();
+			else return LazyOptional.empty();
 		}
 		return super.getCapability(cap, side);
 	}
 
 	@Override
 	public void tick() {
-		if (checkConnection = true) {
-			updateConnection();
-			checkConnection = false;
-		}
-
 		if (world.getWorldInfo().getGameTime() % 3 == 0) {
-			double temp = this.heatContainer.orElse(null).getTemp();
-			double heatCurrent = HeatUtils.getHeatCurrent(neighborMap, temp, conductivity);
+			double temp = heatContainer.getTemp();
+			double heatCurrent = HeatUtils.getHeatCurrent(world, pos, heatContainer.getNeighbors(), temp, conductivity);
 
 			setPowerWithInteraction(temp);
 			double power = 0;
@@ -80,14 +79,14 @@ public class HeatExchangerTileEntity extends SyncedTileEntity implements IHeatab
 				exchangeTime--;
 			}
 
-			temp += (heatCurrent + power) / heatCapacity;
-			this.heatContainer.orElse(null).setTemp(temp);
+			temp += (heatCurrent + power) / heatContainer.getCapacity();
+			heatContainer.setTemp(temp);
 			markDirty();
 		}
 	}
 
 	public void setPowerWithInteraction(double temp) {
-		Direction facing = world.getBlockState(pos).get(FACING);
+		Direction facing = getBlockState().get(FACING);
 		BlockPos offsetPos = pos.offset(facing.getOpposite());
 		Block offsetBlock = world.getBlockState(offsetPos).getBlock();
 		ItemStack itemStack = new ItemStack(offsetBlock.asItem());
@@ -114,44 +113,45 @@ public class HeatExchangerTileEntity extends SyncedTileEntity implements IHeatab
 			.filter(RecipeConditions.firstIngredientMatches(itemStack))
 			.collect(Collectors.toList());
 	}
-
-	@Override
-	public void markConnection() {
-		checkConnection = true;
+	
+	public boolean isValidDirection(@Nonnull Direction direction, Direction facing) {
+		if (direction != facing.getOpposite())
+			return false;
+		return true;
+	}
+	
+	public void updateAllNeighbors(BlockState state) {
+		Direction facing = state.get(FACING);
+		for (Direction direction : Direction.values()) {
+			if (isValidDirection(direction, facing)) {
+				TileEntity te = world.getTileEntity(pos.offset(direction));
+				if (te != null) {
+					LazyOptional<HeatContainer> neighborContainer = te.getCapability(CapabilityHeat.HEAT_CAPABILITY, direction.getOpposite());
+					if (neighborContainer.isPresent())
+						heatContainer.putNeighbor(direction, 1);
+					else
+						heatContainer.removeNeighbor(direction);
+				}
+			}
+		}
 	}
 	
 	@Override
     public CompoundNBT write(CompoundNBT tag) {
-		tag = heatContainer.orElse(null).serializeNBT();
+		tag = heatContainer.serializeNBT();
         return super.write(tag);
     }
     
 	@Override
 	public void read(CompoundNBT tag) {
-		heatContainer.orElse(null).deserializeNBT(tag);
+		heatContainer.deserializeNBT(tag);
 		super.read(tag);
 	}
-
-	@Override
-	public Map<IHeatableTileEntity, FacingDistance> findNeighborNode() {
-		return HeatUtils.findAdjacentNeighborNodes(world, pos, Arrays.asList(Direction.values()));
-	}
-
-	@Override
-	public void updateConnection() {
-		neighborMap = findNeighborNode();
-		for (IHeatableTileEntity neighbor : neighborMap.keySet())
-			neighbor.markConnection();
-	}
-
-	@Override
-	public boolean isNode() {
-		return true;
-	}
-
-	@Override
-	public Map<IHeatableTileEntity, FacingDistance> getNeighborMap() {
-		return neighborMap;
+	
+	class HeatExchangerInventory extends RecipeWrapper {
+		public HeatExchangerInventory() {
+			super(new ItemStackHandler(1));
+		}
 	}
 
 }

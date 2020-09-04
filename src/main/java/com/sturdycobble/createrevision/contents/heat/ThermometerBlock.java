@@ -19,6 +19,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 
 public class ThermometerBlock extends Block {
+	
+	private static final VoxelShaper THERMOMETER_SHAPER = VoxelShaper.forDirectional(
+			Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 2.0D, 13.0D), Direction.UP);
 
 	public ThermometerBlock(Properties properties) {
 		super(properties);
@@ -43,7 +46,7 @@ public class ThermometerBlock extends Block {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-		return VoxelShaper.forDirectional(Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 2.0D, 13.0D), Direction.UP).get(state.get(FACING));
+		return THERMOMETER_SHAPER.get(state.get(FACING));
 	}
 
 	@Override

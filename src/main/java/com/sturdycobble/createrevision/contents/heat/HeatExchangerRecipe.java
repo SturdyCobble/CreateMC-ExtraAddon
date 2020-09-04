@@ -3,22 +3,18 @@ package com.sturdycobble.createrevision.contents.heat;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.content.contraptions.processing.ProcessingIngredient;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-import com.sturdycobble.createrevision.api.heat.HeatableRecipe;
-import com.sturdycobble.createrevision.contents.heat.HeatExchangerRecipe.HeatExchangerInventory;
+import com.sturdycobble.createrevision.api.heat.HeatRecipe;
+import com.sturdycobble.createrevision.contents.heat.HeatExchangerTileEntity.HeatExchangerInventory;
 import com.sturdycobble.createrevision.init.ModRecipeTypes;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-@ParametersAreNonnullByDefault
-public class HeatExchangerRecipe extends HeatableRecipe<HeatExchangerInventory>{
+public class HeatExchangerRecipe extends HeatRecipe<HeatExchangerInventory>{
 
 	public HeatExchangerRecipe(ResourceLocation idIn, String groupIn, List<ProcessingIngredient> ingredientsIn,
 			List<ProcessingOutput> resultsIn, @Nullable List<FluidStack> fluidIngredients, 
@@ -37,16 +33,6 @@ public class HeatExchangerRecipe extends HeatableRecipe<HeatExchangerInventory>{
 			return false;
 		return ingredients.get(0)
 			.test(inv.getStackInSlot(0));
-	}
-
-	@Override
-	protected int getMaxOutputCount() {
-		return 4;
-	}
-	class HeatExchangerInventory extends RecipeWrapper {
-		public HeatExchangerInventory() {
-			super(new ItemStackHandler(1));
-		}
 	}
 
 }

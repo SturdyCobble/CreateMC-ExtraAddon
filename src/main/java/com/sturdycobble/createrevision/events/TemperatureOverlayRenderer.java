@@ -5,15 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.sturdycobble.createrevision.CreateRevision;
+import com.sturdycobble.createrevision.api.heat.CapabilityHeat;
+import com.sturdycobble.createrevision.api.heat.HeatContainer;
 import com.sturdycobble.createrevision.contents.heat.ThermometerTileEntity;
 import com.sturdycobble.createrevision.init.ModItems;
-import com.sturdycobble.createrevision.utils.HeatUtils.FacingDistance;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -26,7 +31,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid = CreateRevision.MODID, value = Dist.CLIENT)
-public class ThermometerOverlayRenderer {
+public class TemperatureOverlayRenderer {
 	@SubscribeEvent
 	public static void showThermometerTooltip(RenderGameOverlayEvent.Post event) {
 		if (event.getType() != ElementType.HOTBAR)
@@ -59,8 +64,8 @@ public class ThermometerOverlayRenderer {
 		}
 		tooltip.add("");
 		
-		for ( FacingDistance distVector : thermoTE.getNodes())
-			tooltip.add("     Distance : " + distVector.getDistance());		
+		for ( int distance : thermoTE.getNodes())
+			tooltip.add("     Distance : " + distance);		
 	
 		if (tooltip.isEmpty())
 			return;
@@ -78,7 +83,6 @@ public class ThermometerOverlayRenderer {
 		RenderSystem.popMatrix();
 	}
 	
-
 	private static final class TooltipScreen extends Screen {
 		private TooltipScreen(ITextComponent text) {
 			super(text);

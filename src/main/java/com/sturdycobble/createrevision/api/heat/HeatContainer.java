@@ -1,26 +1,15 @@
 package com.sturdycobble.createrevision.api.heat;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.common.util.INBTSerializable;
+import java.util.Map;
 
-public interface HeatContainer extends INBTSerializable<CompoundNBT> {
+import net.minecraft.util.Direction;
 
-	public abstract double getTemp();
+public interface HeatContainer {
 
-	public abstract void setTemp(double tempIn);
-
-	public abstract double getCapacity();
-	
-	@Override
-	default CompoundNBT serializeNBT() {
-		CompoundNBT nbt = new CompoundNBT();
-		nbt.putDouble("temp", getTemp());
-		return nbt;
-	}
-
-	@Override
-	default void deserializeNBT(CompoundNBT nbt) {
-		setTemp(nbt.getDouble("temp"));
-	}
+	double getTemp();
+	void setTemp(double temp);
+	double getCapacity();
+	void addHeat(double heat);
+	public Map<Direction, Integer> getNeighbors();
 
 }

@@ -2,7 +2,9 @@ package com.sturdycobble.createrevision.contents.heat;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import com.sturdycobble.createrevision.api.heat.CapabilityHeat;
 import com.sturdycobble.createrevision.init.ModBlocks;
 
@@ -25,7 +27,7 @@ import net.minecraft.world.ILightReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class HeatPipeBlock extends SixWayBlock implements IWaterLoggable {
+public class HeatPipeBlock extends SixWayBlock implements IWaterLoggable, ITE<HeatPipeTileEntity> {
 
 	public HeatPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
@@ -144,13 +146,21 @@ public class HeatPipeBlock extends SixWayBlock implements IWaterLoggable {
 				FACING_TO_PROPERTY_MAP.get(preferredDirection.getOpposite()), true);
 	}
 
-	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-		if (world.isRemote)
+	private void blockUpdate(BlockState state, World world, BlockPos pos) {
+		if (world instanceof WrappedWorld || world.isRemote)
 			return;
-		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof HeatPipeTileEntity)
-			((HeatPipeTileEntity) te).updateConnection();
+		withTileEntityDo(world, pos, te -> te.notifyNeighbors());
+		withTileEntityDo(world, pos, te -> te.updateAllNeighbors());
+	}
+
+	@Override
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+		blockUpdate(state, world, pos);
+	}
+
+	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		blockUpdate(state, world, pos);
 	}
 
 	@Override
@@ -161,6 +171,11 @@ public class HeatPipeBlock extends SixWayBlock implements IWaterLoggable {
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new HeatPipeTileEntity();
+	}
+
+	@Override
+	public Class<HeatPipeTileEntity> getTileEntityClass() {
+		return HeatPipeTileEntity.class;
 	}
 
 }

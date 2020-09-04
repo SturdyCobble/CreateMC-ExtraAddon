@@ -23,7 +23,7 @@ public class CapabilityHeat {
 			
 			@Override
 			public void readNBT(Capability<HeatContainer> capability, HeatContainer instance, Direction side, INBT nbt) { }
-		}, () -> new SimpleHeatContainer(10));
+		}, SimpleHeatContainer::new);
 	}
 	
 }

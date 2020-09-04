@@ -21,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class HeatableRecipe<T extends IInventory> implements IRecipe<T> {
+public abstract class HeatRecipe<T extends IInventory> implements IRecipe<T> {
 
 	protected final List<ProcessingIngredient> ingredients;
 	protected final ResourceLocation id;
@@ -36,7 +36,7 @@ public abstract class HeatableRecipe<T extends IInventory> implements IRecipe<T>
 	private final IRecipeType<?> type;
 	private final IRecipeSerializer<?> serializer;
 	
-	public HeatableRecipe(ModRecipeTypes typeIn, ResourceLocation idIn, String groupIn, List<ProcessingIngredient> ingredientsIn,
+	public HeatRecipe(ModRecipeTypes typeIn, ResourceLocation idIn, String groupIn, List<ProcessingIngredient> ingredientsIn,
 			List<ProcessingOutput> resultsIn, @Nullable List<FluidStack> fluidIngredientsIn, @Nullable List<FluidStack> fluidResultsIn, 
 			float heatIn, float tempMinIn, float tempMaxIn, int durationIn) {
 		type = typeIn.type;
@@ -53,7 +53,7 @@ public abstract class HeatableRecipe<T extends IInventory> implements IRecipe<T>
 		tempMax = tempMaxIn;
 	}
 	
-	public HeatableRecipe(ModRecipeTypes typeIn, ResourceLocation idIn, String groupIn, List<ProcessingIngredient> ingredientsIn,
+	public HeatRecipe(ModRecipeTypes typeIn, ResourceLocation idIn, String groupIn, List<ProcessingIngredient> ingredientsIn,
 			List<ProcessingOutput> resultsIn, float heatIn, float tempMinIn, float tempMaxIn, int durationIn) {
 		type = typeIn.type;
 		serializer = typeIn.serializer;
@@ -124,19 +124,7 @@ public abstract class HeatableRecipe<T extends IInventory> implements IRecipe<T>
 	public IRecipeType<?> getType() {
 		return type;
 	}
-
-	protected int getMaxInputCount() {
-		return 1;
-	}
-
-	protected int getMaxOutputCount() {
-		return 15;
-	}
-
-	protected boolean canHaveCatalysts() {
-		return false;
-	}
-
+	
 	public List<ProcessingOutput> getRollableItemResults() {
 		return results;
 	}
@@ -155,14 +143,6 @@ public abstract class HeatableRecipe<T extends IInventory> implements IRecipe<T>
 
 	public List<ItemStack> getPossibleOutputs() {
 		return getRollableItemResults().stream().map(ProcessingOutput::getStack).collect(Collectors.toList());
-	}
-
-	protected boolean canHaveFluidIngredient() {
-		return false;
-	}
-
-	protected boolean canHaveFluidOutput() {
-		return false;
 	}
 	
 }

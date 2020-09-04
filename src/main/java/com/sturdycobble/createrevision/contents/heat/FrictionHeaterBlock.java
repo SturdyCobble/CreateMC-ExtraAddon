@@ -1,8 +1,8 @@
 package com.sturdycobble.createrevision.contents.heat;
 
-import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.Block;
@@ -21,6 +21,9 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<FrictionHeaterTileEntity> {
+	
+	private static final VoxelShaper FRICTION_HEATER_SHAPER = VoxelShaper.forDirectional(
+			Block.makeCuboidShape(0.0D, 0.1D, 0.0D, 16.0D, 14.0D, 16.0D), Direction.UP);
 
 	public FrictionHeaterBlock(Properties properties) {
 		super(properties);
@@ -46,16 +49,10 @@ public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<
 		return face == state.get(FACING).getOpposite();
 	}
 	
-	protected void blockUpdate(BlockState state, World world, BlockPos pos) {
+	private void blockUpdate(BlockState state, World world, BlockPos pos) {
 		if (world instanceof WrappedWorld || world.isRemote)
 			return;
-		withTileEntityDo(world, pos, te -> te.updateConnection());
-	}
-	
-	@Override
-	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
-		blockUpdate(newState, context.getWorld(), context.getPos());
-		return newState;
+		withTileEntityDo(world, pos, te -> te.updateAllNeighbors(world.getBlockState(pos)));
 	}
 
 	@Override
@@ -66,6 +63,12 @@ public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<
 	@Override
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		blockUpdate(state, world, pos);
+	}
+	
+	@Override
+	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
+		blockUpdate(newState, context.getWorld(), context.getPos());
+		return newState;
 	}
 
 	@Override
@@ -100,7 +103,7 @@ public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<
 	
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-		return AllShapes.CASING_12PX.get(state.get(FACING));
+		return FRICTION_HEATER_SHAPER.get(state.get(FACING));
 	}
 	
 }

@@ -22,6 +22,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class HeatExchangerBlock extends Block implements ITE<HeatExchangerTileEntity> {
+	
+	private static final VoxelShaper HEAT_EXCHANGER_SHAPER = VoxelShaper.forDirectional(Block.makeCuboidShape(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D), Direction.UP);
 
 	public HeatExchangerBlock(Properties properties) {
 		super(properties);
@@ -44,11 +46,11 @@ public class HeatExchangerBlock extends Block implements ITE<HeatExchangerTileEn
 	public BlockRenderType getRenderType(BlockState iBlockState) {
 		return BlockRenderType.MODEL;
 	}
-
-	protected void blockUpdate(BlockState state, World world, BlockPos pos) {
+	
+	private void blockUpdate(BlockState state, World world, BlockPos pos) {
 		if (world instanceof WrappedWorld || world.isRemote)
 			return;
-		withTileEntityDo(world, pos, te -> te.updateConnection());
+		withTileEntityDo(world, pos, te -> te.updateAllNeighbors(world.getBlockState(pos)));
 	}
 
 	@Override
@@ -88,7 +90,7 @@ public class HeatExchangerBlock extends Block implements ITE<HeatExchangerTileEn
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-		return VoxelShaper.forDirectional(Block.makeCuboidShape(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D), Direction.UP).get(state.get(FACING));
+		return HEAT_EXCHANGER_SHAPER.get(state.get(FACING));
 	}
 
 }

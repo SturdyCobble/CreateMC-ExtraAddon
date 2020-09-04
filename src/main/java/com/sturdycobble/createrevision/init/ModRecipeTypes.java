@@ -4,9 +4,9 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
 import com.sturdycobble.createrevision.CreateRevision;
-import com.sturdycobble.createrevision.api.heat.HeatableRecipe;
-import com.sturdycobble.createrevision.api.heat.HeatableRecipeSerializer;
-import com.sturdycobble.createrevision.api.heat.HeatableRecipeSerializer.IRecipeFactory;
+import com.sturdycobble.createrevision.api.heat.HeatRecipe;
+import com.sturdycobble.createrevision.api.heat.HeatRecipeSerializer;
+import com.sturdycobble.createrevision.api.heat.HeatRecipeSerializer.IRecipeFactory;
 import com.sturdycobble.createrevision.contents.heat.HeatExchangerRecipe;
 
 import net.minecraft.inventory.IInventory;
@@ -53,8 +53,8 @@ public enum ModRecipeTypes {
 		});
 	}
 
-	private static Supplier<IRecipeSerializer<?>> processingSerializer(IRecipeFactory<? extends HeatableRecipe<?>> factory) {
-		return () -> new HeatableRecipeSerializer<>(factory);
+	private static Supplier<IRecipeSerializer<?>> processingSerializer(IRecipeFactory<? extends HeatRecipe<?>> factory) {
+		return () -> new HeatRecipeSerializer<>(factory);
 	}
 
 	@SuppressWarnings("unchecked")

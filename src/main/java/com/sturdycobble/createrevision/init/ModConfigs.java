@@ -9,12 +9,32 @@ import net.minecraftforge.fml.config.ModConfig;
 
 public class ModConfigs  {
 	
-	public static DoubleValue frictionHeaterStress;
+	private static DoubleValue frictionHeaterStress;
 	
-	public static DoubleValue heatPipeConductivity;
-	public static DoubleValue heatPipeHeatCapacity;
-	public static DoubleValue frictionHeaterHeatCapacity;
-	public static DoubleValue frictionHeaterConductivity;
+	private static DoubleValue heatPipeConductivity;
+	private static DoubleValue heatPipeHeatCapacity;
+	private static DoubleValue frictionHeaterHeatCapacity;
+	private static DoubleValue frictionHeaterConductivity;
+	
+	public static float getFrictionHeaterStress() {
+		return frictionHeaterStress.get().floatValue();
+	}
+	
+	public static double getHeatPipeConductivity() {
+		return heatPipeConductivity.get();
+	}
+	
+	public static double getHeatPipeHeatCapacity() {
+		return heatPipeHeatCapacity.get();
+	}
+	
+	public static double getFrictionHeaterHeatCapacity() {
+		return frictionHeaterHeatCapacity.get();
+	}
+	
+	public static double getFrictionHeaterConductivity() {
+		return frictionHeaterConductivity.get();
+	}
 	
 	public static void register() {
 		ForgeConfigSpec.Builder common = new ForgeConfigSpec.Builder();
