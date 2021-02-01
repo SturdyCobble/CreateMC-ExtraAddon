@@ -63,9 +63,6 @@ public class TemperatureOverlayRenderer {
 			tooltip.add("      " + deciamlFormat.format(thermoTE.getTemp()) + "K");
 		}
 		tooltip.add("");
-		
-		for ( int distance : thermoTE.getNodes())
-			tooltip.add("     Distance : " + distance);		
 	
 		if (tooltip.isEmpty())
 			return;
@@ -83,6 +80,71 @@ public class TemperatureOverlayRenderer {
 		RenderSystem.popMatrix();
 	}
 	
+	@SubscribeEvent
+	public static void showIRGoggleOverlay(RenderGameOverlayEvent.Post event) {
+		if (event.getType() != ElementType.HOTBAR)
+			return;
+
+		RayTraceResult objectMouseOver = Minecraft.getInstance().objectMouseOver;
+		if (!(objectMouseOver instanceof BlockRayTraceResult))
+			return;
+
+		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
+		Minecraft mc = Minecraft.getInstance();
+		ClientWorld world = mc.world;
+		BlockPos pos = result.getPos();
+		ItemStack goggles = mc.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+		TileEntity te = world.getTileEntity(pos);
+
+		if (ModItems.IR_GOGGLES.get() != goggles.getItem())
+			return;
+		
+		List<String> tooltip = new ArrayList<>();
+		tooltip.add("    Goggle Temperature Information");
+		
+		if (te != null) {
+			HeatContainer heatContainer = te.getCapability(CapabilityHeat.HEAT_CAPABILITY, null).orElseGet(null);
+			if (heatContainer != null)
+				tooltip.add("    TEMP" + heatContainer.getTemp());
+		}
+		
+		tooltip.add("    Goggle Kinetics Information");
+		
+		boolean goggleInformation = te instanceof IHaveGoggleInformation;
+		boolean hoveringInformation = te instanceof IHaveHoveringInformation;
+
+		if (goggleInformation) {
+			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
+			if (!gte.addToGoggleTooltip(tooltip, mc.player.isSneaking()))
+				goggleInformation = false;
+		}
+		
+		if (hoveringInformation) {
+			boolean goggleAddedInformation = !tooltip.isEmpty();
+			if (goggleAddedInformation)
+				tooltip.add("");
+			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
+			if (!hte.addToTooltip(tooltip, mc.player.isSneaking()))
+				hoveringInformation = false;
+			if (goggleAddedInformation && !hoveringInformation)
+				tooltip.remove(tooltip.size() - 1);
+		}
+		
+		if (tooltip.isEmpty())
+			return;
+
+		RenderSystem.pushMatrix();
+		Screen tooltipScreen = new TooltipScreen(null);
+		int posX = tooltipScreen.width / 2 ;
+		int posY = tooltipScreen.height / 2;
+		tooltipScreen.init(mc, mc.getMainWindow().getScaledWidth(), mc.getMainWindow().getScaledHeight());
+		tooltipScreen.renderTooltip(tooltip, posX, posY);
+
+		ItemStack item = new ItemStack(ModItems.IR_GOGGLES.get());
+		GuiGameElement.of(item).at(posX + 10, posY - 16).render();
+		RenderSystem.popMatrix();
+	}
+
 	private static final class TooltipScreen extends Screen {
 		private TooltipScreen(ITextComponent text) {
 			super(text);

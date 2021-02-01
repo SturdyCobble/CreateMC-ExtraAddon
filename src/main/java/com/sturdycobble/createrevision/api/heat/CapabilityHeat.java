@@ -19,11 +19,11 @@ public class CapabilityHeat {
 			@Override
 			public INBT writeNBT(Capability<HeatContainer> capability, HeatContainer instance, Direction side) {
 				return null;
-			}
+			}	
 			
 			@Override
 			public void readNBT(Capability<HeatContainer> capability, HeatContainer instance, Direction side, INBT nbt) { }
-		}, SimpleHeatContainer::new);
+		}, () -> { throw new UnsupportedOperationException(); });
 	}
 	
 }

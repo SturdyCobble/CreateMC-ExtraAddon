@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillBlock;
 import com.sturdycobble.createrevision.init.ModBlockPartials;
 
 import net.minecraft.block.BlockState;
@@ -41,7 +40,7 @@ public class FrictionHeaterRenderer extends KineticTileEntityRenderer {
 		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
 		BlockState state = context.state;
 		SuperByteBuffer superBuffer = ModBlockPartials.FRICTION_PLATE.renderOnDirectional(state);
-		Direction facing = state.get(ObsidianDrillBlock.FACING);
+		Direction facing = state.get(FACING);
 
 		float speed = (float) (context.contraption.stalled
 				|| !VecHelper.isVecPointingTowards(context.relativeMotion, state.get(FACING).getOpposite())

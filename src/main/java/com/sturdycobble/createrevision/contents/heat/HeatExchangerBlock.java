@@ -4,7 +4,6 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.VoxelShaper;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -46,21 +45,15 @@ public class HeatExchangerBlock extends Block implements ITE<HeatExchangerTileEn
 	public BlockRenderType getRenderType(BlockState iBlockState) {
 		return BlockRenderType.MODEL;
 	}
-	
-	private void blockUpdate(BlockState state, World world, BlockPos pos) {
-		if (world instanceof WrappedWorld || world.isRemote)
-			return;
+
+	@Override
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		withTileEntityDo(world, pos, te -> te.updateAllNeighbors(world.getBlockState(pos)));
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		blockUpdate(state, world, pos);
-	}
-
-	@Override
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		blockUpdate(state, world, pos);
+		withTileEntityDo(world, pos, te -> te.updateAllNeighbors(world.getBlockState(pos)));
 	}
 
 	@Override

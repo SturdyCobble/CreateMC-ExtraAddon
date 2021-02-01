@@ -90,11 +90,6 @@ public class FrictionHeaterBlock extends DirectionalKineticBlock implements ITE<
 	public TileEntity createTileEntity(BlockState state, IBlockReader blockReader) {
 		return new FrictionHeaterTileEntity();
 	}
-
-	@Override
-	protected boolean hasStaticPart() {
-		return true;
-	}
 	
 	@Override
 	public boolean hasTileEntity(BlockState state) {

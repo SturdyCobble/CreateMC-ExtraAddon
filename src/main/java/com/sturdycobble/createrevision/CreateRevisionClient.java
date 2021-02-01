@@ -7,9 +7,6 @@ import java.util.function.Function;
 
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
-import com.sturdycobble.createrevision.contents.geo.bedrock.BedrockAnvilPressRenderer;
-import com.sturdycobble.createrevision.contents.geo.bedrock.ObsidianDrillRenderer;
-import com.sturdycobble.createrevision.contents.geo.fan.GeothermalFanRenderer;
 import com.sturdycobble.createrevision.contents.heat.FrictionHeaterRenderer;
 import com.sturdycobble.createrevision.contents.heat.HeatPipeModel;
 import com.sturdycobble.createrevision.contents.heat.ThermometerRenderer;
@@ -46,8 +43,6 @@ public class CreateRevisionClient {
 		bufferCache.registerCompartment(ModBlockPartials.DIRECTIONAL_PARTIAL);
 		bufferCache.registerCompartment(ModBlockPartials.PARTIAL);
 
-		ModBlocks.blockRenderLayer();
-
 		for (Direction d : Direction.values())
 			ModBlockPartials.HEAT_PIPE_RIMS.put(d, ModBlockPartials.getBlockPartial("heat_pipe/rim/" + d.getName()));
 	}
@@ -81,9 +76,6 @@ public class CreateRevisionClient {
 
 	@SubscribeEvent
 	public static void registerRenderers(ModelRegistryEvent event) {
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.GEOTHERMAL_FAN.get(), GeothermalFanRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.OBSIDIAN_DRILL.get(), ObsidianDrillRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BEDROCK_ANVIL.get(), BedrockAnvilPressRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.FRICTION_HEATER.get(), FrictionHeaterRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.THERMOMETER.get(), ThermometerRenderer::new);
 	}

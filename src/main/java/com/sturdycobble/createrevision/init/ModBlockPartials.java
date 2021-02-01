@@ -27,9 +27,11 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldReader;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -42,9 +44,7 @@ public class ModBlockPartials {
 	private static final List<ModBlockPartials> all = new ArrayList<>();
 	private ResourceLocation modelLocation;
 	private IBakedModel bakedModel;
-	
-	public static final ModBlockPartials OBSIDIAN_DRILL_HEAD = getBlockPartial("obsidian_drill_head");
-	public static final ModBlockPartials BEDROCK_ANVIL_PRESS = getBlockPartial("bedrock_anvil_press");
+
 	public static final ModBlockPartials HEAT_PIPE_CASING = getBlockPartial("heat_pipe/casing");
 	public static final ModBlockPartials FRICTION_PLATE = getBlockPartial("friction_plate");
 	public static final ModBlockPartials THERMOMETER_NEEDLE = getBlockPartial("thermometer_needle");

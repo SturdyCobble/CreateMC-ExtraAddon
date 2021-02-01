@@ -1,14 +1,9 @@
 {
-	"block.createrevision.compact_wool" : "Compact Wool",
-	"block.createrevision.geothermal_fan" : "Geothermal Fan",
-	"block.createrevision.bedrock_slate" : "Bedrock Slate",
-	"block.createrevision.bedrock_anvil" : "Bedrock Anvil",
 	"block.createrevision.heat_pipe" : "Heat Pipe",
 	"block.createrevision.thermometer" : "Thermometer",
 	"block.createrevision.friction_heater" : "Friction Heater",
 	"block.createrevision.heat_exchanger" : "Heat Exchanger",
-	"item.createrevision.bedrock_powder" : "Bedrock Powder",
-	"block.createrevision.obsidian_drill" : "Obsidian Coated Mechanical Drill",
+	"block.createrevision.heat_engine" : "Heat Engine",
 	"createrevision.recipe.heat_exchanger": "Heat Exchanging",
 	"itemGroup.createrevision" : "Create MC Revision Addon"
 }
