@@ -29,7 +29,8 @@ public enum ModRecipeTypes {
 		this(supplier, null);
 	}
 
-	ModRecipeTypes(Supplier<IRecipeSerializer<?>> supplier, IRecipeType<? extends IRecipe<? extends IInventory>> existingType) {
+	ModRecipeTypes(Supplier<IRecipeSerializer<?>> supplier,
+			IRecipeType<? extends IRecipe<? extends IInventory>> existingType) {
 		this.supplier = supplier;
 		this.type = existingType;
 	}
@@ -46,14 +47,16 @@ public enum ModRecipeTypes {
 	}
 
 	private static <T extends IRecipe<?>> IRecipeType<T> customType(String id) {
-		return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(CreateRevision.MODID, id), new IRecipeType<T>() {
-			public String toString() {
-				return CreateRevision.MODID + ":" + id;
-			}
-		});
+		return Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(CreateRevision.MODID, id),
+				new IRecipeType<T>() {
+					public String toString() {
+						return CreateRevision.MODID + ":" + id;
+					}
+				});
 	}
 
-	private static Supplier<IRecipeSerializer<?>> processingSerializer(IRecipeFactory<? extends HeatRecipe<?>> factory) {
+	private static Supplier<IRecipeSerializer<?>> processingSerializer(
+			IRecipeFactory<? extends HeatRecipe<?>> factory) {
 		return () -> new HeatRecipeSerializer<>(factory);
 	}
 

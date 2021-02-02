@@ -34,10 +34,11 @@ public abstract class HeatRecipe<T extends IInventory> implements IRecipe<T> {
 	protected final float tempMax;
 	private final IRecipeType<?> type;
 	private final IRecipeSerializer<?> serializer;
-	
+
 	public HeatRecipe(ModRecipeTypes typeIn, ResourceLocation idIn, NonNullList<Ingredient> ingredientsIn,
-			NonNullList<ProcessingOutput> resultsIn, @Nullable NonNullList<FluidIngredient> fluidIngredientsIn, @Nullable NonNullList<FluidStack> fluidResultsIn, 
-			float heatIn, float tempMinIn, float tempMaxIn, int durationIn) {
+			NonNullList<ProcessingOutput> resultsIn, @Nullable NonNullList<FluidIngredient> fluidIngredientsIn,
+			@Nullable NonNullList<FluidStack> fluidResultsIn, float heatIn, float tempMinIn, float tempMaxIn,
+			int durationIn) {
 		type = typeIn.type;
 		serializer = typeIn.serializer;
 		id = idIn;
@@ -50,7 +51,7 @@ public abstract class HeatRecipe<T extends IInventory> implements IRecipe<T> {
 		tempMin = tempMinIn;
 		tempMax = tempMaxIn;
 	}
-	
+
 	public HeatRecipe(ModRecipeTypes typeIn, ResourceLocation idIn, NonNullList<Ingredient> ingredientsIn,
 			NonNullList<ProcessingOutput> resultsIn, float heatIn, float tempMinIn, float tempMaxIn, int durationIn) {
 		type = typeIn.type;
@@ -66,47 +67,21 @@ public abstract class HeatRecipe<T extends IInventory> implements IRecipe<T> {
 		tempMax = tempMaxIn;
 	}
 
-	protected abstract int getMaxInputCount();
-
-	protected abstract int getMaxOutputCount();
-
-	protected boolean canRequireHeat() {
-		return false;
-	}
-
-	protected boolean canSpecifyDuration() {
-		return true;
-	}
-
-	protected int getMaxFluidInputCount() {
-		return 0;
-	}
-
-	protected int getMaxFluidOutputCount() {
-		return 0;
-	}
-
 	@Override
 	public NonNullList<Ingredient> getIngredients() {
 		return ingredients;
 	}
-	
+
 	public NonNullList<FluidIngredient> getFluidIngredients() {
 		return fluidIngredients;
 	}
-	
+
 	public NonNullList<ProcessingOutput> getRollableResults() {
 		return results;
 	}
-	
+
 	public NonNullList<FluidStack> getFluidResults() {
 		return fluidResults;
-	}
-
-	public List<ItemStack> getRollableResultsAsItemStacks() {
-		return getRollableResults().stream()
-			.map(ProcessingOutput::getStack)
-			.collect(Collectors.toList());
 	}
 
 	public List<ItemStack> rollResults() {
@@ -122,7 +97,7 @@ public abstract class HeatRecipe<T extends IInventory> implements IRecipe<T> {
 	public int getProcessingDuration() {
 		return processingDuration;
 	}
-	
+
 	@Override
 	public ItemStack getCraftingResult(T inv) {
 		return getRecipeOutput();
@@ -135,9 +110,7 @@ public abstract class HeatRecipe<T extends IInventory> implements IRecipe<T> {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		return getRollableResults().isEmpty() ? ItemStack.EMPTY
-			: getRollableResults().get(0)
-				.getStack();
+		return getRollableResults().isEmpty() ? ItemStack.EMPTY : getRollableResults().get(0).getStack();
 	}
 
 	@Override
@@ -159,13 +132,13 @@ public abstract class HeatRecipe<T extends IInventory> implements IRecipe<T> {
 	public IRecipeType<?> getType() {
 		return type;
 	}
-	
+
 	public double getHeatProduction() {
 		return heatProduction;
 	}
-	
+
 	public Tuple<Float, Float> getTempRange() {
 		return new Tuple<Float, Float>(tempMin, tempMax);
 	}
-	
+
 }

@@ -25,13 +25,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class FrictionHeaterTileEntity extends KineticTileEntity implements ITickableTileEntity {
-	
+
 	private final SimpleWritableHeatContainer heatContainer = new SimpleWritableHeatContainer() {
 		@Override
 		public double getCapacity() {
 			return ModConfigs.getHeatPipeHeatCapacity();
 		}
-		
+
 		@Override
 		public double getConductivity() {
 			return ModConfigs.getFrictionHeaterConductivity();
@@ -40,15 +40,15 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements ITick
 
 	private final HeatNode node = new HeatNode(this, heatContainer);
 	private double sourcePower = 0.2;
-	
+
 	public FrictionHeaterTileEntity() {
 		super(ModTileEntityTypes.FRICTION_HEATER.get());
 	}
-	
+
 	private boolean isValidSide(@Nullable Direction side) {
 		return side == null ? true : side.getAxis() != getBlockState().get(FACING).getAxis();
 	}
-	
+
 	public void updateAllNeighbors(BlockState state) {
 		for (Direction direction : Direction.values()) {
 			if (isValidSide(direction)) {
@@ -56,9 +56,11 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements ITick
 			}
 		}
 	}
-	
+
 	public double getPower() {
-		return isFrontBlocked() ? MathHelper.clamp(sourcePower * Math.abs(getSpeed()) - 0.12 * (heatContainer.getTemp() - 300), 0, 100) : 0;
+		return isFrontBlocked()
+				? MathHelper.clamp(sourcePower * Math.abs(getSpeed()) - 0.12 * (heatContainer.getTemp() - 300), 0, 100)
+				: 0;
 	}
 
 	public boolean isFrontBlocked() {
@@ -71,66 +73,68 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements ITick
 		float impact = ModConfigs.getFrictionHeaterStress();
 		return impact;
 	}
-	
+
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
 	}
-	
+
 	@Override
 	public void tick() {
-		if (world.getWorldInfo().getGameTime() % 10 == 0) {
+		if (world.getWorldInfo().getGameTime() % HeatNode.HEAT_UPDATE_TICK == 0) {
 			heatContainer.addHeat(getPower());
 			node.updateTemp();
 			markDirty();
 		}
 	}
-	
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
 	}
-	
+
 	@Override
 	protected void write(CompoundNBT tag, boolean clientPacket) {
 		tag.put("heat", heatContainer.serializeNBT());
 		super.write(tag, clientPacket);
 	}
-	
+
 	@Override
 	protected void read(CompoundNBT tag, boolean clientPacket) {
 		heatContainer.deserializeNBT(tag.getCompound("heat"));
 		super.read(tag, clientPacket);
 	}
-	
+
 	@Override
 	public CompoundNBT getUpdateTag() {
 		CompoundNBT nbt = super.getUpdateTag();
-	    nbt.put("heat", heatContainer.serializeNBT());
-	    return nbt;
+		nbt.put("heat", heatContainer.serializeNBT());
+		return nbt;
 	}
-	
+
 	@Override
 	public void handleUpdateTag(CompoundNBT nbt) {
 		super.handleUpdateTag(nbt);
 		heatContainer.deserializeNBT(nbt.getCompound("heat"));
 	}
-	
-	@Override public SUpdateTileEntityPacket getUpdatePacket(){
-	    CompoundNBT nbt = super.getUpdatePacket().getNbtCompound();
-	    
-	    nbt.put("heat", heatContainer.serializeNBT());
-	    return new SUpdateTileEntityPacket(pos, 0, nbt);
+
+	@Override
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = super.getUpdatePacket().getNbtCompound();
+
+		nbt.put("heat", heatContainer.serializeNBT());
+		return new SUpdateTileEntityPacket(pos, 0, nbt);
 	}
-	
-	@Override public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-	    CompoundNBT nbt = pkt.getNbtCompound();
-	    heatContainer.deserializeNBT(nbt.getCompound("heat"));
-	    super.onDataPacket(net, pkt);
+
+	@Override
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		CompoundNBT nbt = pkt.getNbtCompound();
+		heatContainer.deserializeNBT(nbt.getCompound("heat"));
+		super.onDataPacket(net, pkt);
 	}
-	
+
 	private final LazyOptional<HeatContainer> heatContainerCap = LazyOptional.of(() -> heatContainer);
-	
+
 	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {

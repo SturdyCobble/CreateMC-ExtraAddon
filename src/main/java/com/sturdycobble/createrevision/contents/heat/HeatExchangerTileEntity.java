@@ -73,7 +73,7 @@ public class HeatExchangerTileEntity extends SyncedTileEntity implements ITickab
 
 	@Override
 	public void tick() {
-		if (world.getWorldInfo().getGameTime() % 10 == 0) {
+		if (world.getWorldInfo().getGameTime() % HeatNode.HEAT_UPDATE_TICK == 0) {
 			setPowerWithInteraction(heatContainer.getTemp());
 			if (exchangeTime > 0) {
 				heatContainer.addHeat(heatExchanged);

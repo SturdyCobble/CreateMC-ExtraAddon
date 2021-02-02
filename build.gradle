@@ -1,12 +1,12 @@
 buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-    }
+	repositories {
+		maven { url = 'https://files.minecraftforge.net/maven' }
+		jcenter()
+		mavenCentral()
+	}
+	dependencies {
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+	}
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
@@ -19,88 +19,88 @@ archivesBaseName = 'createrevision'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' 
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200514-1.15.1'
-    runs {
-        client {
-            workingDirectory project.file('run')
+	mappings channel: 'snapshot', version: '20200514-1.15.1'
+	runs {
+		client {
+			workingDirectory project.file('run')
 			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 			property 'forge.logging.console.level', 'debug'
 
-            mods {
-                createrevision {
-                    source sourceSets.main
-                }
-            }
-        }
+			mods {
+				createrevision {
+					source sourceSets.main
+				}
+			}
+		}
 
-        server {
-            workingDirectory project.file('run')
-            
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                createrevision {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            
+		server {
+			workingDirectory project.file('run')
+			
 			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
+			property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'createrevision', '--all', '--output', file('src/generated/resources/')
+			mods {
+				createrevision {
+					source sourceSets.main
+				}
+			}
+		}
 
-            mods {
-                createrevision {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+		data {
+			workingDirectory project.file('run')
+			
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'debug'
+
+			args '--mod', 'createrevision', '--all', '--output', file('src/generated/resources/')
+
+			mods {
+				createrevision {
+					source sourceSets.main
+				}
+			}
+		}
+	}
 }
 
 repositories {
-    maven {
-        url "https://www.cursemaven.com"
-    }
+	maven {
+		url "https://www.cursemaven.com"
+	}
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.31'
+	minecraft 'net.minecraftforge:forge:1.15.2-31.2.31'
 
-    implementation fg.deobf("curse.maven:jei-238222:3039710")
-    implementation fg.deobf("curse.maven:create-328085:3167528")
+	implementation fg.deobf("curse.maven:jei-238222:3039710")
+	implementation fg.deobf("curse.maven:create-328085:3167528")
 }
 
 jar {
-    manifest {
-        attributes([
-            "Specification-Title": "Create Revision Addon",
-            "Specification-Vendor": "SturdyCobble",
-            "Specification-Version": "1", 
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"SturdyCobble",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+	manifest {
+		attributes([
+			"Specification-Title": "Create Revision Addon",
+			"Specification-Vendor": "SturdyCobble",
+			"Specification-Version": "1", 
+			"Implementation-Title": project.name,
+			"Implementation-Version": "${version}",
+			"Implementation-Vendor" :"SturdyCobble",
+			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+		])
+	}
 }
 jar.finalizedBy('reobfJar') 
 
 /*
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
-    }
+	publications {
+		mavenJava(MavenPublication) {
+			artifact jar
+		}
+	}
+	repositories {
+		maven {
+			url "file:///${project.projectDir}/mcmodsrepo"
+		}
+	}
 }*/

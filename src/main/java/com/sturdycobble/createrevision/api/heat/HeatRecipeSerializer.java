@@ -18,7 +18,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class HeatRecipeSerializer<T extends HeatRecipe<?>> extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<T> {
+public class HeatRecipeSerializer<T extends HeatRecipe<?>> extends ForgeRegistryEntry<IRecipeSerializer<?>>
+		implements IRecipeSerializer<T> {
 
 	protected final IRecipeFactory<T> factory;
 
@@ -64,8 +65,9 @@ public class HeatRecipeSerializer<T extends HeatRecipe<?>> extends ForgeRegistry
 		float tempMin = JSONUtils.getFloat(json, "tempMin", 0);
 		float tempMax = JSONUtils.getFloat(json, "tempMax", 10000);
 		int processingDuration = JSONUtils.getInt(json, "processingTime", 0);
-		
-		return this.factory.create(recipeId, ingredients, results, fluidIngredients, fluidResults, heatProduction, tempMin, tempMax, processingDuration);
+
+		return this.factory.create(recipeId, ingredients, results, fluidIngredients, fluidResults, heatProduction,
+				tempMin, tempMax, processingDuration);
 	}
 
 	private void addFluidToList(NonNullList<FluidStack> fluidStacks, JsonObject entry) {
@@ -77,7 +79,7 @@ public class HeatRecipeSerializer<T extends HeatRecipe<?>> extends ForgeRegistry
 		if (fluid != null && amount > 0)
 			fluidStacks.add(new FluidStack(fluid, amount));
 	}
-	
+
 	private void addFluidIngredientToList(NonNullList<FluidIngredient> fluidStacks, JsonObject entry) {
 		Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(JSONUtils.getString(entry, "fluid")));
 		int amount = 1;
@@ -114,8 +116,9 @@ public class HeatRecipeSerializer<T extends HeatRecipe<?>> extends ForgeRegistry
 		float tempMin = buffer.readFloat();
 		float tempMax = buffer.readFloat();
 		int processingDuration = buffer.readInt();
-	
-		return this.factory.create(recipeId, ingredients, results, fluidIngredients, fluidResults, heatProduction, tempMin, tempMax, processingDuration);
+
+		return this.factory.create(recipeId, ingredients, results, fluidIngredients, fluidResults, heatProduction,
+				tempMin, tempMax, processingDuration);
 	}
 
 	@Override
@@ -138,20 +141,20 @@ public class HeatRecipeSerializer<T extends HeatRecipe<?>> extends ForgeRegistry
 		} else {
 			buffer.writeInt(0);
 		}
-		
+
 		buffer.writeFloat(recipe.heatProduction);
 		buffer.writeFloat(recipe.tempMin);
 		buffer.writeFloat(recipe.tempMax);
 		buffer.writeInt(recipe.processingDuration);
-		
+
 	}
 
 	public interface IRecipeFactory<T extends HeatRecipe<?>> {
-		
-		T create(ResourceLocation recipeId, NonNullList<Ingredient> ingredients,
-				NonNullList<ProcessingOutput> results, NonNullList<FluidIngredient> fluidIngredients,
-			NonNullList<FluidStack> fluidResults, float heatProduction, float tempMin, float tempMax, int processingDuration);
-		
+
+		T create(ResourceLocation recipeId, NonNullList<Ingredient> ingredients, NonNullList<ProcessingOutput> results,
+				NonNullList<FluidIngredient> fluidIngredients, NonNullList<FluidStack> fluidResults,
+				float heatProduction, float tempMin, float tempMax, int processingDuration);
+
 	}
 
 }

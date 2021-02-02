@@ -35,14 +35,4 @@ public class HeatExchangerRecipe extends HeatRecipe<HeatExchangerInventory>{
 			.test(inv.getStackInSlot(0));
 	}
 
-	@Override
-	protected int getMaxInputCount() {
-		return 5;
-	}
-
-	@Override
-	protected int getMaxOutputCount() {
-		return 5;
-	}
-
 }

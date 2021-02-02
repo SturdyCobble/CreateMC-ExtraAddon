@@ -25,8 +25,9 @@ public class HeatEngineTileEntity extends EngineTileEntity implements ITickableT
 
 	@Override
 	public void tick() {
-		if (world.isRemote) return;
-		if (world.getWorldInfo().getGameTime() % 10 == 0) {
+		if (world.isRemote)
+			return;
+		if (world.getWorldInfo().getGameTime() % HeatNode.HEAT_UPDATE_TICK == 0) {
 			updateAdjacentHeatContainers();
 		}
 		super.lazyTick();
@@ -35,9 +36,9 @@ public class HeatEngineTileEntity extends EngineTileEntity implements ITickableT
 	public void updateAdjacentHeatContainers() {
 		TileEntity teHot = world.getTileEntity(EngineBlock.getBaseBlockPos(getBlockState(), pos));
 		TileEntity teCool = world.getTileEntity(pos.offset(Direction.UP));
-		
+
 		Direction facing = getBlockState().get(HORIZONTAL_FACING);
-		
+
 		if ((teHot instanceof HeatExchangerTileEntity && teCool instanceof HeatExchangerTileEntity)) {
 			hotContainerCap = teHot.getCapability(CapabilityHeat.HEAT_CAPABILITY, facing.getOpposite());
 			coolContainerCap = teCool.getCapability(CapabilityHeat.HEAT_CAPABILITY, Direction.DOWN);
@@ -45,10 +46,10 @@ public class HeatEngineTileEntity extends EngineTileEntity implements ITickableT
 			hotContainerCap = LazyOptional.empty();
 			coolContainerCap = LazyOptional.empty();
 		}
-		
+
 		updateEngine();
 	}
-	
+
 	public void updateEngine() {
 		if (world.isRemote)
 			return;
@@ -60,7 +61,7 @@ public class HeatEngineTileEntity extends EngineTileEntity implements ITickableT
 			refreshWheelSpeed();
 			return;
 		}
-		
+
 		double tempHot = hotContainer.getTemp();
 		double tempCool = coolContainer.getTemp();
 		double heatFlowFromHot = tempHot * (tempHot - tempCool) / (tempHot + tempCool);
@@ -74,9 +75,6 @@ public class HeatEngineTileEntity extends EngineTileEntity implements ITickableT
 		appliedCapacity = capacity;
 		appliedSpeed = speed;
 		refreshWheelSpeed();
-		
-		System.out.println(tempHot-tempCool);
-		System.out.println(speed);
 	}
 
 }

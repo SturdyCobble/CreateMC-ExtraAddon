@@ -6,7 +6,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 public class SimpleWritableHeatContainer implements WritableHeatContainer, INBTSerializable<CompoundNBT> {
 
 	private double temp = 300;
-	
+
 	@Override
 	public double getTemp() {
 		return temp;
@@ -26,7 +26,7 @@ public class SimpleWritableHeatContainer implements WritableHeatContainer, INBTS
 	public void setTemp(double temp) {
 		this.temp = temp;
 	}
-	
+
 	@Override
 	public CompoundNBT serializeNBT() {
 		CompoundNBT nbt = new CompoundNBT();

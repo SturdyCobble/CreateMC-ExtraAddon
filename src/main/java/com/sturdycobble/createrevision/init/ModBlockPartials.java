@@ -27,11 +27,9 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -48,9 +46,9 @@ public class ModBlockPartials {
 	public static final ModBlockPartials HEAT_PIPE_CASING = getBlockPartial("heat_pipe/casing");
 	public static final ModBlockPartials FRICTION_PLATE = getBlockPartial("friction_plate");
 	public static final ModBlockPartials THERMOMETER_NEEDLE = getBlockPartial("thermometer_needle");
-	
+
 	public static final Map<Direction, ModBlockPartials> HEAT_PIPE_RIMS = new HashMap<>();
-	
+
 	public static void onModelRegistry(ModelRegistryEvent event) {
 		for (ModBlockPartials partial : all)
 			ModelLoader.addSpecialModel(partial.modelLocation);
@@ -78,7 +76,7 @@ public class ModBlockPartials {
 		return CreateRevisionClient.bufferCache.get(DIRECTIONAL_PARTIAL, Pair.of(dir, this),
 				() -> new SuperByteBuffer(renderDirectionalPartial(this, state)));
 	}
-	
+
 	public SuperByteBuffer renderOn(BlockState state) {
 		return CreateRevisionClient.bufferCache.get(PARTIAL, this,
 				() -> new SuperByteBuffer(renderPartial(this, state)));
@@ -102,7 +100,7 @@ public class ModBlockPartials {
 		builder.finishDrawing();
 		return builder;
 	}
-	
+
 	public BufferBuilder renderPartial(ModBlockPartials partial, BlockState state) {
 		MatrixStack ms = new MatrixStack();
 
@@ -116,5 +114,5 @@ public class ModBlockPartials {
 		builder.finishDrawing();
 		return builder;
 	}
-	
+
 }
