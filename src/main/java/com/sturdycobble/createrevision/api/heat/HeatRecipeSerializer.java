@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
+import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -126,35 +127,36 @@ public class HeatRecipeSerializer<T extends HeatRecipe<?>> extends ForgeRegistry
 		NonNullList<Ingredient> ingredList = recipe.getIngredients();
 		buffer.writeInt(ingredList.size());
 		ingredList.forEach(i -> i.write(buffer));
-		if (recipe.fluidIngredients != null) {
-			buffer.writeInt(recipe.fluidIngredients.size());
-			recipe.fluidIngredients.forEach(fluidStack -> fluidStack.write(buffer));
+		if (recipe.getFluidIngredients() != null) {
+			buffer.writeInt(recipe.getFluidIngredients().size());
+			recipe.getFluidIngredients().forEach(fluidStack -> fluidStack.write(buffer));
 		} else {
 			buffer.writeInt(0);
 		}
 
 		buffer.writeInt(recipe.getRollableResults().size());
 		recipe.getRollableResults().forEach(i -> i.write(buffer));
-		if (recipe.fluidResults != null) {
-			buffer.writeInt(recipe.fluidResults.size());
-			recipe.fluidResults.forEach(fluidStack -> fluidStack.writeToPacket(buffer));
+		if (recipe.getFluidResults() != null) {
+			buffer.writeInt(recipe.getFluidResults().size());
+			recipe.getFluidResults().forEach(fluidStack -> fluidStack.writeToPacket(buffer));
 		} else {
 			buffer.writeInt(0);
 		}
 
-		buffer.writeFloat(recipe.heatProduction);
-		buffer.writeFloat(recipe.tempMin);
-		buffer.writeFloat(recipe.tempMax);
-		buffer.writeInt(recipe.processingDuration);
+		buffer.writeFloat((float) recipe.getHeatProduction());
+		buffer.writeFloat((float) recipe.getTempMin());
+		buffer.writeFloat((float) recipe.getTempMax());
+		buffer.writeInt(recipe.getDuration());
 
 	}
 
+	@FunctionalInterface
 	public interface IRecipeFactory<T extends HeatRecipe<?>> {
 
 		T create(ResourceLocation recipeId, NonNullList<Ingredient> ingredients, NonNullList<ProcessingOutput> results,
 				NonNullList<FluidIngredient> fluidIngredients, NonNullList<FluidStack> fluidResults,
 				float heatProduction, float tempMin, float tempMax, int processingDuration);
-
+		
 	}
 
 }

@@ -4,10 +4,8 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
 import com.sturdycobble.createrevision.CreateRevision;
-import com.sturdycobble.createrevision.api.heat.HeatRecipe;
-import com.sturdycobble.createrevision.api.heat.HeatRecipeSerializer;
-import com.sturdycobble.createrevision.api.heat.HeatRecipeSerializer.IRecipeFactory;
 import com.sturdycobble.createrevision.contents.heat.HeatExchangerRecipe;
+import com.sturdycobble.createrevision.contents.heat.HeatExchangerRecipeSerializer;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
@@ -19,7 +17,7 @@ import net.minecraftforge.event.RegistryEvent;
 
 public enum ModRecipeTypes {
 
-	HEAT_EXCHANGER(processingSerializer(HeatExchangerRecipe::new));
+	HEAT_EXCHANGER(() -> new HeatExchangerRecipeSerializer(HeatExchangerRecipe::new));
 
 	public IRecipeSerializer<?> serializer;
 	public Supplier<IRecipeSerializer<?>> supplier;
@@ -55,13 +53,8 @@ public enum ModRecipeTypes {
 				});
 	}
 
-	private static Supplier<IRecipeSerializer<?>> processingSerializer(
-			IRecipeFactory<? extends HeatRecipe<?>> factory) {
-		return () -> new HeatRecipeSerializer<>(factory);
-	}
-
 	@SuppressWarnings("unchecked")
-	public <T extends IRecipeType<?>> T getType() {
+	public <T extends IRecipeType<? extends IRecipe<?>>> T getType() {
 		return (T) type;
 	}
 

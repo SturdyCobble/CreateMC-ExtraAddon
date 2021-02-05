@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.components.flywheel.engine.Engin
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineTileEntity;
 import com.sturdycobble.createrevision.api.heat.CapabilityHeat;
 import com.sturdycobble.createrevision.api.heat.HeatContainer;
+import com.sturdycobble.createrevision.api.heat.HeatNode;
 import com.sturdycobble.createrevision.api.heat.WritableHeatContainer;
 import com.sturdycobble.createrevision.init.ModTileEntityTypes;
 
@@ -67,7 +68,7 @@ public class HeatEngineTileEntity extends EngineTileEntity implements ITickableT
 		double heatFlowFromHot = tempHot * (tempHot - tempCool) / (tempHot + tempCool);
 		double heatFlowToCool = tempCool * (tempHot - tempCool) / (tempHot + tempCool);
 		double power = heatFlowFromHot - heatFlowToCool;
-		float speed = (float) MathHelper.clamp(power * 0.5, -256, 256);
+		float speed = (float) MathHelper.clamp(Math.round(power * 2), -256, 256);
 		float capacity = (speed == 0) ? 0 : 32;
 		hotContainer.addHeat(-heatFlowFromHot);
 		coolContainer.addHeat(heatFlowToCool);
