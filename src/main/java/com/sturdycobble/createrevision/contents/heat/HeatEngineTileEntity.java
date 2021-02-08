@@ -42,7 +42,7 @@ public class HeatEngineTileEntity extends EngineTileEntity implements ITickableT
 
 		if ((teHot instanceof HeatExchangerTileEntity && teCool instanceof HeatExchangerTileEntity)) {
 			hotContainerCap = teHot.getCapability(CapabilityHeat.HEAT_CAPABILITY, facing.getOpposite());
-			coolContainerCap = teCool.getCapability(CapabilityHeat.HEAT_CAPABILITY, Direction.DOWN);
+			coolContainerCap = teCool.getCapability(CapabilityHeat.HEAT_CAPABILITY, Direction.UP);
 		} else {
 			hotContainerCap = LazyOptional.empty();
 			coolContainerCap = LazyOptional.empty();

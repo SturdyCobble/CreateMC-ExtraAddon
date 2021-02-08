@@ -1,7 +1,5 @@
 package com.sturdycobble.createrevision.api.heat;
 
-import java.util.List;
-
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 

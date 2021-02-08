@@ -6,7 +6,6 @@ import com.sturdycobble.createrevision.api.heat.HeatRecipe;
 import com.sturdycobble.createrevision.init.ModRecipeTypes;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

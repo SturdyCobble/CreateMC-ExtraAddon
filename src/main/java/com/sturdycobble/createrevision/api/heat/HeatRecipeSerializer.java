@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
-import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -156,7 +155,7 @@ public class HeatRecipeSerializer<T extends HeatRecipe<?>> extends ForgeRegistry
 		T create(ResourceLocation recipeId, NonNullList<Ingredient> ingredients, NonNullList<ProcessingOutput> results,
 				NonNullList<FluidIngredient> fluidIngredients, NonNullList<FluidStack> fluidResults,
 				float heatProduction, float tempMin, float tempMax, int processingDuration);
-		
+
 	}
 
 }
