@@ -39,8 +39,6 @@ public class HeatExchangerTileEntity extends SyncedTileEntity implements ITickab
 
 	private static final Object heatRecipesKey = new Object();
 
-	private static final double BURNER_HEAT_KINDLED = 6;
-	private static final double BURNER_HEAT_SEETHING = 15;
 	private static final double MAX_BURNER_KINDLED_TEMP = 500;
 	private static final double MAX_BURNER_SEETHING_TEMP = 1500;
 
@@ -106,11 +104,11 @@ public class HeatExchangerTileEntity extends SyncedTileEntity implements ITickab
 
 		if (offsetBlock.equals(AllBlocks.BLAZE_BURNER.get()) && facing.equals(Direction.UP)) {
 			HeatLevel burnerLevel = getHeatLevelOf(world.getBlockState(offsetPos));
-			if (burnerLevel == HeatLevel.KINDLED && temp < MAX_BURNER_KINDLED_TEMP) {
-				heatExchanged = BURNER_HEAT_KINDLED;
+			if (burnerLevel == HeatLevel.KINDLED && temp < ModConfigs.getKindledBlazeBurnerMaxTemp()) {
+				heatExchanged = ModConfigs.getKindledBlazeBurnerPower();
 				exchangeTime = HeatNode.HEAT_UPDATE_TICK;
-			} else if (burnerLevel == HeatLevel.SEETHING && temp < MAX_BURNER_SEETHING_TEMP) {
-				heatExchanged = BURNER_HEAT_SEETHING;
+			} else if (burnerLevel == HeatLevel.SEETHING && temp < ModConfigs.getSeethingBlazeBurnerMaxTemp()) {
+				heatExchanged = ModConfigs.getSeethingBlazeBurnerPower();
 				exchangeTime = HeatNode.HEAT_UPDATE_TICK;
 			}
 		}
