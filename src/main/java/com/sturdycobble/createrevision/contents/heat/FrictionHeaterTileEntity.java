@@ -110,10 +110,8 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements ITick
 	}
 
 	public TransportedResult applyProcessing(TransportedItemStack transported, World world) {
-		System.out.println("PROCESSING " + transported.processingTime);
 		Optional<FrictionRecipe> recipe = getRecipe(transported);
 		if (isValidRecipe(recipe)) {
-			System.out.println("DURATION " + recipe.orElse(null).getProcessingDuration());
 			if (transported.processingTime > recipe.orElse(null).getProcessingDuration()) {
 				List<ItemStack> stacks = applyRecipeOn(transported.stack, recipe.get());
 				List<TransportedItemStack> transportedStacks = new ArrayList<>();
