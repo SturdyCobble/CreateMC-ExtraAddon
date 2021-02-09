@@ -24,6 +24,7 @@ public class IRGogglesItem extends Item {
 		return EquipmentSlotType.HEAD;
 	}
 
+	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		EquipmentSlotType equipmentslottype = MobEntity.getSlotForItemStack(itemstack);

@@ -18,8 +18,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -27,6 +29,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -46,102 +49,76 @@ public class TemperatureOverlayRenderer {
 		ClientWorld world = mc.world;
 		BlockPos pos = result.getPos();
 		TileEntity te = world.getTileEntity(pos);
-		
+		ItemStack headSlot = mc.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+		Direction lookingAtSide = Direction.getFacingDirections(mc.player)[0].getOpposite();
+		Item displayIconItem = ModItems.IR_GOGGLES.get();
+
+		boolean wearingGoggles = ModItems.IR_GOGGLES.get() == headSlot.getItem();
+
 		List<String> tooltip = new ArrayList<>();
-		
-		if (!(te instanceof ThermometerTileEntity) || te == null)
-			return;
-		
-		tooltip.add("    Temperature Information");
-		
-		ThermometerTileEntity thermoTE = (ThermometerTileEntity) te;
-		
-		DecimalFormat deciamlFormat = new DecimalFormat("#,###");
-		if (thermoTE.getTemp() == -1) {
-			tooltip.add("       No Temp Data");
-		} else {
-			tooltip.add("      " + deciamlFormat.format(thermoTE.getTemp()) + "K");
-		}
-		tooltip.add("");
-	
-		if (tooltip.isEmpty())
+
+		if (te == null)
 			return;
 
-		RenderSystem.pushMatrix();
-		Screen tooltipScreen = new TooltipScreen(null);
-		tooltipScreen.init(mc, mc.getMainWindow().getScaledWidth(), mc.getMainWindow().getScaledHeight());
-		
-		int posX = tooltipScreen.width / 2 ;
-		int posY = tooltipScreen.height / 2;
+		LazyOptional<HeatContainer> lookingTileCap = te.getCapability(CapabilityHeat.HEAT_CAPABILITY, lookingAtSide);
 
-		tooltipScreen.renderTooltip(tooltip, posX, posY);
-		
-		GuiGameElement.of(ModItems.THERMOMETER.get()).at(posX + 10, posY - 16).render();
-		RenderSystem.popMatrix();
-	}
-	
-	@SubscribeEvent
-	public static void showIRGoggleOverlay(RenderGameOverlayEvent.Post event) {
-		if (event.getType() != ElementType.HOTBAR)
-			return;
-
-		RayTraceResult objectMouseOver = Minecraft.getInstance().objectMouseOver;
-		if (!(objectMouseOver instanceof BlockRayTraceResult))
-			return;
-
-		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
-		Minecraft mc = Minecraft.getInstance();
-		ClientWorld world = mc.world;
-		BlockPos pos = result.getPos();
-		ItemStack goggles = mc.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-		TileEntity te = world.getTileEntity(pos);
-
-		if (ModItems.IR_GOGGLES.get() != goggles.getItem())
-			return;
-		
-		List<String> tooltip = new ArrayList<>();
-		tooltip.add("    Goggle Temperature Information");
-		
-		if (te != null) {
-			HeatContainer heatContainer = te.getCapability(CapabilityHeat.HEAT_CAPABILITY, null).orElseGet(null);
-			if (heatContainer != null)
-				tooltip.add("    TEMP" + heatContainer.getTemp());
-		}
-		
-		tooltip.add("    Goggle Kinetics Information");
-		
-		boolean goggleInformation = te instanceof IHaveGoggleInformation;
-		boolean hoveringInformation = te instanceof IHaveHoveringInformation;
-
-		if (goggleInformation) {
-			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
-			if (!gte.addToGoggleTooltip(tooltip, mc.player.isSneaking()))
-				goggleInformation = false;
-		}
-		
-		if (hoveringInformation) {
-			boolean goggleAddedInformation = !tooltip.isEmpty();
-			if (goggleAddedInformation)
+		if (wearingGoggles) {
+			if (lookingTileCap.isPresent() && !mc.player.isSneaking()) {
+				tooltip.add("    Temperature Information");
+				DecimalFormat deciamlFormat = new DecimalFormat("#,###");
+				tooltip.add("      " + deciamlFormat.format(lookingTileCap.orElse(null).getTemp()) + "K");
 				tooltip.add("");
-			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
-			if (!hte.addToTooltip(tooltip, mc.player.isSneaking()))
-				hoveringInformation = false;
-			if (goggleAddedInformation && !hoveringInformation)
-				tooltip.remove(tooltip.size() - 1);
+			}
+
+			boolean goggleInformation = te instanceof IHaveGoggleInformation;
+			boolean hoveringInformation = te instanceof IHaveHoveringInformation;
+
+			if (goggleInformation) {
+				IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
+				if (!gte.addToGoggleTooltip(tooltip, mc.player.isSneaking()))
+					goggleInformation = false;
+			}
+
+			if (hoveringInformation) {
+				boolean goggleAddedInformation = !tooltip.isEmpty();
+				if (goggleAddedInformation)
+					tooltip.add("");
+				IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
+				if (!hte.addToTooltip(tooltip, mc.player.isSneaking()))
+					hoveringInformation = false;
+				if (goggleAddedInformation && !hoveringInformation)
+					tooltip.remove(tooltip.size() - 1);
+			}
 		}
-		
+
+		if (te instanceof ThermometerTileEntity) {
+			tooltip.add("    Temperature Information");
+
+			ThermometerTileEntity thermoTE = (ThermometerTileEntity) te;
+
+			DecimalFormat deciamlFormat = new DecimalFormat("#,###");
+			if (thermoTE.getTemp() == -1) {
+				tooltip.add("       No Temp Data");
+			} else {
+				tooltip.add("      " + deciamlFormat.format(thermoTE.getTemp()) + "K");
+			}
+			tooltip.add("");
+			displayIconItem = ModItems.THERMOMETER.get();
+		}
+
 		if (tooltip.isEmpty())
 			return;
 
 		RenderSystem.pushMatrix();
 		Screen tooltipScreen = new TooltipScreen(null);
-		int posX = tooltipScreen.width / 2 ;
-		int posY = tooltipScreen.height / 2;
 		tooltipScreen.init(mc, mc.getMainWindow().getScaledWidth(), mc.getMainWindow().getScaledHeight());
+
+		int posX = tooltipScreen.width / 2;
+		int posY = tooltipScreen.height / 2;
+
 		tooltipScreen.renderTooltip(tooltip, posX, posY);
 
-		ItemStack item = new ItemStack(ModItems.IR_GOGGLES.get());
-		GuiGameElement.of(item).at(posX + 10, posY - 16).render();
+		GuiGameElement.of(displayIconItem).at(posX + 10, posY - 16).render();
 		RenderSystem.popMatrix();
 	}
 
