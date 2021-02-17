@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "createrevision:block/heat_exchanger", "x":180 },
+		"facing=east": { "model": "createrevision:block/heat_exchanger", "y": 270 },
+		"facing=south": { "model": "createrevision:block/heat_exchanger", "x":180, "y": 180 },
+		"facing=west": { "model": "createrevision:block/heat_exchanger", "y": 90 },
+		"facing=up": { "model": "createrevision:block/heat_exchanger", "x": 90 },
+		"facing=down": { "model": "createrevision:block/heat_exchanger", "x": 270 }
+	}
+}

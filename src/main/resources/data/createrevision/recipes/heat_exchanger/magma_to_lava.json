@@ -1,0 +1,13 @@
+{
+	"type": "createrevision:heat_exchanger",
+	"input": {
+		"block": "minecraft:magma_block"
+	},
+	"output": {
+		"block": "minecraft:lava"
+	},
+	"heatProduction": -3,
+	"tempMin": 900,
+	"tempMax": 5000,
+	"processingTime": -3
+}

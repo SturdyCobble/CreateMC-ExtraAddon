@@ -1,0 +1,13 @@
+{
+	"type": "createrevision:heat_exchanger",
+	"input": {
+		"block": "minecraft:cobblestone"
+	},
+	"output": {
+		"block": "minecraft:magma_block"
+	},
+	"heatProduction": -3,
+	"tempMin": 620,
+	"tempMax": 5000,
+	"processingTime": -3
+}

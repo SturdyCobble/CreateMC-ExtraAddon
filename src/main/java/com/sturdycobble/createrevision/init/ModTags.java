@@ -28,5 +28,5 @@ public class ModTags {
 
 	public static void register() {
 	}
-	
+
 }

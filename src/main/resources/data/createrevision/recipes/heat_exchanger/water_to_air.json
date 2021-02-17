@@ -1,0 +1,13 @@
+{
+	"type": "createrevision:heat_exchanger",
+	"input": {
+		"block": "minecraft:water"
+	},
+	"output": {
+		"block": "minecraft:air"
+	},
+	"heatProduction": -5,
+	"tempMin": 373,
+	"tempMax": 5000,
+	"processingTime": -3
+}

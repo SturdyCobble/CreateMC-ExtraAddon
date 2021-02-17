@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "createrevision:block/friction_heater", "x":180 },
+		"facing=east": { "model": "createrevision:block/friction_heater", "y": 270 },
+		"facing=south": { "model": "createrevision:block/friction_heater", "x":180, "y": 180 },
+		"facing=west": { "model": "createrevision:block/friction_heater", "y": 90 },
+		"facing=up": { "model": "createrevision:block/friction_heater", "x": 90 },
+		"facing=down": { "model": "createrevision:block/friction_heater", "x": 270 }
+	}
+}

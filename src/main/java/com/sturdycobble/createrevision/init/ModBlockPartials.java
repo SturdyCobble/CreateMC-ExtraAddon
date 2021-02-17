@@ -3,6 +3,7 @@ package com.sturdycobble.createrevision.init;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -41,10 +42,13 @@ public class ModBlockPartials {
 	private static final List<ModBlockPartials> all = new ArrayList<>();
 	private ResourceLocation modelLocation;
 	private IBakedModel bakedModel;
-	
-	public static final ModBlockPartials OBSIDIAN_DRILL_HEAD = getBlockPartial("obsidian_drill_head");
-	public static final ModBlockPartials BEDROCK_ANVIL_PRESS = getBlockPartial("bedrock_anvil_press");
-	
+
+	public static final ModBlockPartials HEAT_PIPE_CASING = getBlockPartial("heat_pipe/casing");
+	public static final ModBlockPartials FRICTION_PLATE = getBlockPartial("friction_plate");
+	public static final ModBlockPartials THERMOMETER_NEEDLE = getBlockPartial("thermometer_needle");
+
+	public static final Map<Direction, ModBlockPartials> HEAT_PIPE_RIMS = new HashMap<>();
+
 	public static void onModelRegistry(ModelRegistryEvent event) {
 		for (ModBlockPartials partial : all)
 			ModelLoader.addSpecialModel(partial.modelLocation);
@@ -72,7 +76,7 @@ public class ModBlockPartials {
 		return CreateRevisionClient.bufferCache.get(DIRECTIONAL_PARTIAL, Pair.of(dir, this),
 				() -> new SuperByteBuffer(renderDirectionalPartial(this, state)));
 	}
-	
+
 	public SuperByteBuffer renderOn(BlockState state) {
 		return CreateRevisionClient.bufferCache.get(PARTIAL, this,
 				() -> new SuperByteBuffer(renderPartial(this, state)));
@@ -96,7 +100,7 @@ public class ModBlockPartials {
 		builder.finishDrawing();
 		return builder;
 	}
-	
+
 	public BufferBuilder renderPartial(ModBlockPartials partial, BlockState state) {
 		MatrixStack ms = new MatrixStack();
 
@@ -110,5 +114,5 @@ public class ModBlockPartials {
 		builder.finishDrawing();
 		return builder;
 	}
-	
+
 }

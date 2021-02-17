@@ -1,8 +1,0 @@
-{
-	"variants": {
-		"facing=north": { "model": "createrevision:block/bedrock_anvil" },
-		"facing=east": { "model": "createrevision:block/bedrock_anvil", "y": 90},
-		"facing=south": { "model": "createrevision:block/bedrock_anvil", "y": 180 },
-		"facing=west": { "model": "createrevision:block/bedrock_anvil", "y": 270 }
-	}
-}
