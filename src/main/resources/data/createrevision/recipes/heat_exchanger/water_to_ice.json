@@ -1,13 +1,13 @@
 {
-	"type": "createrevision:heat_exchanger",
-	"input": {
-		"block": "minecraft:water"
-	},
-	"output": {
-		"block": "minecraft:ice"
-	},
-	"heatProduction": 3,
-	"tempMin": 0,
-	"tempMax": 273,
-	"processingTime": -3
+  "type": "createrevision:heat_exchanger",
+  "input": {
+    "block": "minecraft:water"
+  },
+  "output": {
+    "block": "minecraft:ice"
+  },
+  "heatProduction": 3,
+  "tempMin": 0,
+  "tempMax": 273,
+  "processingTime": -3
 }

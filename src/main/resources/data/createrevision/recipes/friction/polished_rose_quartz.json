@@ -1,17 +1,17 @@
 {
-	"type": "createrevision:friction",
-	"ingredients": [
-		{
-			"item": "create:rose_quartz"
-		}
-	],
-	"results": [
-		{
-			"item": "create:polished_rose_quartz"
-		}
-	],
-	"heatProduction": 1,
-	"tempMin": 500,
-	"tempMax": 5000,
-	"processingTime": 20
+  "type": "createrevision:friction",
+  "ingredients": [
+    {
+      "item": "create:rose_quartz"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:polished_rose_quartz"
+    }
+  ],
+  "heatProduction": 1,
+  "tempMin": 500,
+  "tempMax": 5000,
+  "processingTime": 20
 }
