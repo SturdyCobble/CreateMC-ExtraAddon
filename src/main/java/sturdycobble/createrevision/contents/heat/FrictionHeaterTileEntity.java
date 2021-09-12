@@ -203,6 +203,11 @@ public class FrictionHeaterTileEntity extends KineticTileEntity implements ITick
         super.onDataPacket(net, pkt);
     }
 
+    @Override
+    public boolean shouldRenderNormally() {
+        return true;
+    }
+
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {

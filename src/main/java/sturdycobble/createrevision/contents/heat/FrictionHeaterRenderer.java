@@ -2,10 +2,14 @@ package sturdycobble.createrevision.contents.heat;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import net.minecraft.util.math.BlockPos;
+import sturdycobble.createrevision.CreateRevision;
 import sturdycobble.createrevision.init.ModBlockPartials;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -19,18 +23,17 @@ public class FrictionHeaterRenderer extends SafeTileEntityRenderer<FrictionHeate
     }
 
     @Override
-    protected void renderSafe(FrictionHeaterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
-                              int overlay) {
-
+    protected void renderSafe(FrictionHeaterTileEntity te, float partialTicks, MatrixStack ms,
+                              IRenderTypeBuffer buffer, int light, int overlay) {
         SuperByteBuffer superByteBuffer = PartialBufferer.getFacing(ModBlockPartials.FRICTION_PLATE, te.getBlockState());
         IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 
-        float time = AnimationTickHolder.getRenderTime(te.getLevel());
-        float angle = (time * te.getSpeed() * 3.0F / 10.0F) % 360.0F / 180.0F * 3.1415927F;
+        BlockPos pos = te.getBlockPos();
+        Direction.Axis axis = ((IRotate) te.getBlockState().getBlock()).getRotationAxis(te.getBlockState());
 
-        superByteBuffer
-                .rotate(Direction.NORTH, angle)
-                .light(light).renderInto(ms, vb);
+        KineticTileEntityRenderer.kineticRotationTransform(
+                        superByteBuffer, te, axis, KineticTileEntityRenderer.getAngleForTe(te, pos, axis), light)
+                .renderInto(ms, vb);
     }
 
 }
