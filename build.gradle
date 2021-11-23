@@ -2,15 +2,18 @@ buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
+		maven { url = 'https://repo.spongepowered.org/maven' }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
 
 version = '1.0'
 group = 'sturdycobble.createrevision'
@@ -92,7 +95,12 @@ dependencies {
 	implementation fg.deobf("curse.maven:jei-238222:3438494")
 	implementation fg.deobf("curse.maven:create-328085:3419412")
     implementation fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.2.3.44")
+	implementation ("org.spongepowered:mixin:0.8.2")
 
+}
+
+mixin {
+	add sourceSets.main, "main.refmap.json"
 }
 
 jar {
