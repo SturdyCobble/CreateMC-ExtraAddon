@@ -1,9 +1,3 @@
 {
-	"block.createrevision.compact_wool" : "Compact Wool",
-	"block.createrevision.geothermal_fan" : "Geothermal Fan",
-	"block.createrevision.bedrock_slate" : "Bedrock Slate",
-	"block.createrevision.bedrock_anvil" : "Bedrock Anvil",
-	"item.createrevision.bedrock_powder" : "Bedrock Powder",
-	"block.createrevision.obsidian_drill" : "Obsidian Coated Mechanical Drill",
-	"itemGroup.createrevision" : "Create MC Revision Addon"
+
 }
