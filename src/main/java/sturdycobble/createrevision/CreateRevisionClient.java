@@ -30,9 +30,6 @@ public class CreateRevisionClient{
 	public static void onModelBake(ModelBakeEvent event){
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
 
-		getCustomBlockModels().foreach((block, modelFunc) ->
-				swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
-
 	}
 
 	private static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
