@@ -1,13 +1,13 @@
 package sturdycobble.createrevision.init;
 
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
 public class ModItemGroups{
 
-	public static class ModItemGroup extends ItemGroup{
+	public static class ModItemGroup extends CreativeModeTab{
 
 		private final Supplier<ItemStack> iconSupplier;
 

@@ -19,12 +19,12 @@ version = '1.0'
 group = 'sturdycobble.createrevision'
 archivesBaseName = 'createrevision'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft {
-    mappings channel: 'official', version: '1.16.5'
+    mappings channel: 'official', version: '1.18.1'
     runs {
         client {
             workingDirectory project.file('run')
@@ -81,22 +81,16 @@ repositories {
     maven {
         url "https://www.cursemaven.com"
     }
-
-    maven {
-        // Location of the maven for mixed mappings, Registrate, and Flywheel
-        name = "tterrag maven"
-        url = "https://maven.tterrag.com/"
-    }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.2.0'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.44'
 
-    implementation fg.deobf("curse.maven:jei-238222:3438494")
-    implementation fg.deobf("curse.maven:create-328085:3536025")
-    implementation fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.2.3.44")
+    implementation fg.deobf("curse.maven:jei-238222:3599262")
+    implementation fg.deobf("curse.maven:create-328085:3600402")
+    implementation fg.deobf("curse.maven:flywheel-486392:3600401")
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 mixin {
