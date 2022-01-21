@@ -1,10 +1,9 @@
 package sturdycobble.createrevision.init;
 
-import sturdycobble.createrevision.CreateRevision;
-
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import sturdycobble.createrevision.CreateRevision;
 
 public class ModContainerTypes {
 

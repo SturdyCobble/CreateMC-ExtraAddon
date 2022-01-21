@@ -1,0 +1,21 @@
+{
+  "type": "createrevision:custom_fan_recipe",
+  "source": {
+    "block": "minecraft:powder_snow"
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:water_bucket"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:bucket",
+      "count": 1
+    },
+    {
+      "item": "minecraft:snowball",
+      "count": 4
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "createrevision:custom_fan_recipe",
+  "source": {
+    "fluid": "create:honey"
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:diorite"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:ochrum",
+      "chance": 0.4
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 package sturdycobble.createrevision.init;
 
-public class ModBlockPartials{
+public class ModBlockPartials {
 
 }

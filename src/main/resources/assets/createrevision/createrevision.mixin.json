@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "sturdycobble.createrevision.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "createrevision.refmap.json",
+  "mixins": [
+    "MixinAirCurrent",
+    "MixinRecipeManager",
+    "MixinTransportedItemStack"
+  ]
+}

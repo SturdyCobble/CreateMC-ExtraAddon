@@ -5,22 +5,22 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
-public class ModItemGroups{
+public class ModItemGroups {
 
-	public static class ModItemGroup extends CreativeModeTab{
+    public static class ModItemGroup extends CreativeModeTab {
 
-		private final Supplier<ItemStack> iconSupplier;
+        private final Supplier<ItemStack> iconSupplier;
 
-		public ModItemGroup(final String name, final Supplier<ItemStack> iconSupplier){
-			super(name);
-			this.iconSupplier = iconSupplier;
-		}
+        public ModItemGroup(final String name, final Supplier<ItemStack> iconSupplier) {
+            super(name);
+            this.iconSupplier = iconSupplier;
+        }
 
-		@Override
-		public ItemStack makeIcon(){
-			return iconSupplier.get();
-		}
+        @Override
+        public ItemStack makeIcon() {
+            return iconSupplier.get();
+        }
 
-	}
+    }
 
 }

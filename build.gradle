@@ -95,6 +95,7 @@ dependencies {
 
 mixin {
     add sourceSets.main, "createrevision.refmap.json"
+    config "assets/createrevision/createrevision.mixin.json"
 }
 
 jar {
