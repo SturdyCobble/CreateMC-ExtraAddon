@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.mixin.Mixin;
@@ -77,7 +78,7 @@ public abstract class MixinAirCurrent {
             BlockState newTypeBlockState = world.getBlockState(currentPos);
             Block newTypeBlock = newTypeBlockState.getBlock();
             Fluid newTypeFluid = world.getFluidState(currentPos).getType();
-            Fluid newSourceFluid = newTypeFluid instanceof FlowingFluid ? newTypeFluid : ((FlowingFluid) newTypeFluid).getSource();
+            Fluid newSourceFluid = !(newTypeFluid instanceof FlowingFluid) ? newTypeFluid : ((FlowingFluid) newTypeFluid).getSource();
 
 
             if (newSourceFluid.is(ModTags.CUSTOM_FAN_SOURCE_FLUID)) {
