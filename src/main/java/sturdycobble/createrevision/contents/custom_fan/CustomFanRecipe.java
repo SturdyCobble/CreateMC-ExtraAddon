@@ -1,4 +1,4 @@
-package sturdycobble.createrevision.contents;
+package sturdycobble.createrevision.contents.custom_fan;
 
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import net.minecraft.core.NonNullList;
@@ -15,8 +15,9 @@ import sturdycobble.createrevision.utils.FluidOrBlock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class CustomFanRecipe<C extends Container> extends SimpleCustomBlockRecipe<C> {
+public class CustomFanRecipe extends SimpleCustomBlockRecipe<Container> {
 
     protected FluidOrBlock sourceType;
     protected ResourceLocation id;
@@ -50,8 +51,18 @@ public class CustomFanRecipe<C extends Container> extends SimpleCustomBlockRecip
         return results;
     }
 
+    public List<ItemStack> getRollableResultsAsItemStacks() {
+        return getRollableResults().stream()
+                .map(ProcessingOutput::getStack)
+                .collect(Collectors.toList());
+    }
+
+    public FluidOrBlock getSourceType() {
+        return sourceType;
+    }
+
     @Override
-    public boolean matches(C container, Level world, FluidOrBlock type) {
+    public boolean matches(Container container, Level world, FluidOrBlock type) {
         if (container.isEmpty())
             return false;
         Ingredient ingredient0 = Ingredient.EMPTY;
@@ -62,14 +73,14 @@ public class CustomFanRecipe<C extends Container> extends SimpleCustomBlockRecip
     }
 
     @Override
-    public boolean matches(C container, Level world) {
+    public boolean matches(Container container, Level world) {
         if (container.isEmpty())
             return false;
         return ingredients.get(0).test(container.getItem(0));
     }
 
     @Override
-    public ItemStack assemble(C container) {
+    public ItemStack assemble(Container container) {
         return getResultItem();
     }
 
@@ -94,7 +105,7 @@ public class CustomFanRecipe<C extends Container> extends SimpleCustomBlockRecip
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType getType() {
         return ModRecipeTypes.CUSTOM_FAN_RECIPE.getType();
     }
 

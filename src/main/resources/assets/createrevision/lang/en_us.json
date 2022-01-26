@@ -1,3 +1,9 @@
 {
-
+  "block.createrevision.reinforced_depot": "Reinforced Depot",
+  "itemGroup.createrevision": "CreateRevision",
+  "item.createrevision.glittering_amethyst_shard": "Glittering Amethyst Shard",
+  "item.createrevision.deepslate_alloy": "Deepslate Alloy",
+  "item.createrevision.deepslate_alloy_sheet": "Deepslate Alloy Sheet",
+  "createrevision.recipe.custom_fan_recipe": "Custom Fan Processing",
+  "createrevision.recipe.beacon_depot_recipe": "Radiance Projection"
 }

@@ -1,6 +1,7 @@
 package sturdycobble.createrevision.init;
 
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -11,28 +12,37 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.RegistryEvent;
 import sturdycobble.createrevision.CreateRevision;
-import sturdycobble.createrevision.contents.CustomFanRecipe;
-import sturdycobble.createrevision.contents.CustomFanRecipeSerializer;
+import sturdycobble.createrevision.api.depot_recipe.BeaconRecipe;
+import sturdycobble.createrevision.api.depot_recipe.BeaconRecipeSerializer;
+import sturdycobble.createrevision.api.depot_recipe.SimpleBeaconRecipe;
+import sturdycobble.createrevision.contents.custom_fan.CustomFanRecipe;
+import sturdycobble.createrevision.contents.custom_fan.CustomFanRecipeSerializer;
+import sturdycobble.createrevision.contents.reinforced_depot.BeaconDepotRecipe;
 import sturdycobble.createrevision.mixin.MixinRecipeManager;
 import sturdycobble.createrevision.utils.FluidOrBlock;
+import sturdycobble.createrevision.utils.RGBColor;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public enum ModRecipeTypes {
+public enum ModRecipeTypes implements IRecipeTypeInfo {
 
-    CUSTOM_FAN_RECIPE(() -> new CustomFanRecipeSerializer(CustomFanRecipe::new));
+    CUSTOM_FAN_RECIPE(() -> new CustomFanRecipeSerializer(CustomFanRecipe::new)),
+    BEACON_DEPOT_RECIPE(() -> new BeaconRecipeSerializer(BeaconDepotRecipe::new));
 
-    public RecipeSerializer<?> serializer;
-    public Supplier<RecipeSerializer<?>> supplier;
+    public RecipeSerializer<? extends Recipe> serializer;
+    public Supplier<RecipeSerializer> supplier;
     public RecipeType<? extends Recipe<? extends Container>> type;
 
-    ModRecipeTypes(Supplier<RecipeSerializer<?>> supplier) {
+    private final ResourceLocation id;
+
+    ModRecipeTypes(Supplier<RecipeSerializer> supplier) {
         this(supplier, null);
     }
 
-    ModRecipeTypes(Supplier<RecipeSerializer<?>> supplier,
+    ModRecipeTypes(Supplier<RecipeSerializer> supplier,
                    RecipeType<? extends Recipe<? extends Container>> existingType) {
+        this.id = new ResourceLocation(CreateRevision.MODID, Lang.asId(name()));
         this.supplier = supplier;
         this.type = existingType;
     }
@@ -60,13 +70,33 @@ public enum ModRecipeTypes {
     public static <C extends Container> Optional<CustomFanRecipe> findCustomFanRecipe(C inv, Level world, FluidOrBlock type) {
         RecipeType recipeType = CUSTOM_FAN_RECIPE.getType();
         return ((MixinRecipeManager) world.getRecipeManager()).invokeToByType(recipeType).values().stream().flatMap(r -> {
-            return Util.toStream(((CustomFanRecipe<C>) r).matches(inv, world, type) ?
-                    Optional.of((CustomFanRecipe<C>) r) : Optional.empty());
+            return Util.toStream(((CustomFanRecipe) r).matches(inv, world, type) ?
+                    Optional.of((CustomFanRecipe) r) : Optional.empty());
         }).findFirst();
     }
 
+    public static <C extends Container> Optional<SimpleBeaconRecipe> findBeaconRecipe(ModRecipeTypes type, C inv, Level world, int power, RGBColor color) {
+        RecipeType recipeType = type.getType();
+        return ((MixinRecipeManager) world.getRecipeManager()).invokeToByType(recipeType).values().stream().flatMap(r -> {
+            return Util.toStream(((BeaconRecipe<C>) r).matches(inv, world, power, color) ?
+                    Optional.of((BeaconRecipe<C>) r) : Optional.empty());
+        }).findFirst();
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return id;
+    }
+
     @SuppressWarnings("unchecked")
-    public <T extends RecipeType<? extends Recipe<?>>> T getType() {
+    @Override
+    public <T extends RecipeSerializer<?>> T getSerializer() {
+        return (T) serializer;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends RecipeType<?>> T getType() {
         return (T) type;
     }
 

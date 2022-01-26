@@ -12,11 +12,9 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,8 +22,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import sturdycobble.createrevision.contents.CustomFanProcess;
-import sturdycobble.createrevision.contents.CustomFanProcess.CustomAirCurrentSegment;
+import sturdycobble.createrevision.contents.custom_fan.CustomFanProcess;
+import sturdycobble.createrevision.contents.custom_fan.CustomFanProcess.CustomAirCurrentSegment;
 import sturdycobble.createrevision.init.ModTags;
 import sturdycobble.createrevision.utils.FluidOrBlock;
 
@@ -76,7 +74,6 @@ public abstract class MixinAirCurrent {
         for (int i = searchStart; i * searchStep <= searchEnd * searchStep; i += searchStep) {
             BlockPos currentPos = start.relative(((AirCurrent) (Object) this).direction, i);
             BlockState newTypeBlockState = world.getBlockState(currentPos);
-            Block newTypeBlock = newTypeBlockState.getBlock();
             Fluid newTypeFluid = world.getFluidState(currentPos).getType();
             Fluid newSourceFluid = !(newTypeFluid instanceof FlowingFluid) ? newTypeFluid : ((FlowingFluid) newTypeFluid).getSource();
 
@@ -84,10 +81,10 @@ public abstract class MixinAirCurrent {
             if (newSourceFluid.is(ModTags.CUSTOM_FAN_SOURCE_FLUID)) {
                 type = new FluidOrBlock(newSourceFluid);
             } else if (newTypeBlockState.is(ModTags.CUSTOM_FAN_SOURCE_BLOCK)) {
-                type = new FluidOrBlock(newTypeBlock);
+                type = new FluidOrBlock(newTypeBlockState.getBlock());
             }
 
-            if (currentCustomSegment.type == null || !currentCustomSegment.type.equals(type) || currentCustomSegment.startOffset == 0) {
+            if (currentCustomSegment.type.isEmpty() || !currentCustomSegment.type.equals(type) || currentCustomSegment.startOffset == 0) {
                 currentCustomSegment.endOffset = i;
                 if (currentCustomSegment.startOffset != 0) {
                     this.customSegments.add(currentCustomSegment);

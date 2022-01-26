@@ -3,6 +3,7 @@ package sturdycobble.createrevision.utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -55,6 +56,10 @@ public class FluidOrBlock {
 
     public boolean isBlock() {
         return !block.equals(Blocks.AIR) && fluid.equals(Fluids.EMPTY);
+    }
+
+    public BlockState getBlockState() {
+        return isBlock() ? block.defaultBlockState() : fluid.defaultFluidState().createLegacyBlock();
     }
 
     @Override

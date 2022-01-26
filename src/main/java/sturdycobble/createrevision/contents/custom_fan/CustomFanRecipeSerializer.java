@@ -1,4 +1,4 @@
-package sturdycobble.createrevision.contents;
+package sturdycobble.createrevision.contents.custom_fan;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,7 +19,7 @@ import sturdycobble.createrevision.utils.FluidOrBlock;
 import javax.annotation.Nullable;
 
 public class CustomFanRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>>
-        implements RecipeSerializer<CustomFanRecipe<?>> {
+        implements RecipeSerializer<CustomFanRecipe> {
 
     protected final IRecipeFactory factory;
 
@@ -28,7 +28,7 @@ public class CustomFanRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
     }
 
     @Override
-    public CustomFanRecipe<?> fromJson(ResourceLocation recipeId, JsonObject json) {
+    public CustomFanRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
         JsonObject sourceEntry = GsonHelper.getAsJsonObject(json, "source");
         FluidOrBlock sourceFluidOrBlock = FluidOrBlock.empty();
 
@@ -47,15 +47,9 @@ public class CustomFanRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
         NonNullList<ProcessingOutput> results = NonNullList.create();
         for (JsonElement e : GsonHelper.getAsJsonArray(json, "results")) {
             JsonObject entry = e.getAsJsonObject();
-            String itemId = GsonHelper.getAsString(entry, "item");
-            int cnt = GsonHelper.getAsInt(entry, "count", 1);
-            float chance = 1;
-            if (GsonHelper.isValidNode(entry, "chance"))
-                chance = GsonHelper.getAsFloat(entry, "chance");
-            ItemStack itemstack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), cnt);
-            results.add(new ProcessingOutput(itemstack, chance));
+            results.add(ProcessingOutput.deserialize(entry));
         }
-        return this.factory.create(recipeId, ingredients, results, sourceFluidOrBlock);
+        return factory.create(recipeId, ingredients, results, sourceFluidOrBlock);
     }
 
     private Block getBlockFromJson(JsonObject entry) {
@@ -68,8 +62,8 @@ public class CustomFanRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 
     @Nullable
     @Override
-    public CustomFanRecipe<?> fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-        FluidOrBlock source = FluidOrBlock.fromString(buffer.toString());
+    public CustomFanRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        FluidOrBlock source = FluidOrBlock.fromString(buffer.readUtf());
 
         NonNullList<Ingredient> ingredients = NonNullList.create();
         int ingredientCount = buffer.readInt();
@@ -80,11 +74,11 @@ public class CustomFanRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
         int outputCount = buffer.readInt();
         for (int i = 0; i < outputCount; i++)
             results.add(ProcessingOutput.read(buffer));
-        return this.factory.create(recipeId, ingredients, results, source);
+        return factory.create(recipeId, ingredients, results, source);
     }
 
     @Override
-    public void toNetwork(FriendlyByteBuf buffer, CustomFanRecipe<?> recipe) {
+    public void toNetwork(FriendlyByteBuf buffer, CustomFanRecipe recipe) {
         buffer.writeUtf(recipe.sourceType.toString());
 
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
@@ -98,7 +92,7 @@ public class CustomFanRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
     @FunctionalInterface
     public interface IRecipeFactory {
 
-        CustomFanRecipe<?> create(ResourceLocation recipeId, NonNullList<Ingredient> ingredients,
+        CustomFanRecipe create(ResourceLocation recipeId, NonNullList<Ingredient> ingredients,
                                   NonNullList<ProcessingOutput> results, FluidOrBlock source);
 
     }

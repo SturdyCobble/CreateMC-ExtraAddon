@@ -30,7 +30,7 @@ public class CreateRevision {
         modEventBus.addGenericListener(RecipeSerializer.class, ModRecipeTypes::register);
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
-        ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+        ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
     }
 
     @SubscribeEvent

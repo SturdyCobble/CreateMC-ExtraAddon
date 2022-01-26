@@ -1,0 +1,15 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    [
+      {
+        "item": "createrevision:deepslate_alloy"
+      }
+    ]
+  ],
+  "results": [
+    {
+      "item": "createrevision:deepslate_alloy_sheet"
+    }
+  ]
+}

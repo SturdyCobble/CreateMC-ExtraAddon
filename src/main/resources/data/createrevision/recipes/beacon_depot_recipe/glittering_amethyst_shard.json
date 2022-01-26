@@ -1,0 +1,17 @@
+{
+  "type": "createrevision:beacon_depot_recipe",
+  "color": {
+    "name": "purple"
+  },
+  "power": 2,
+  "ingredients": [
+    {
+      "item": "minecraft:amethyst_shard"
+    }
+  ],
+  "results": [
+    {
+      "item": "createrevision:glittering_amethyst_shard"
+    }
+  ]
+}

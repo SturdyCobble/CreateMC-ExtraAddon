@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BA",
+    "AB"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:deepslate"
+    },
+    "B": {
+      "tag": "forge:nuggets/iron"
+    }
+  },
+  "result": {
+    "item": "createrevision:deepslate_alloy"
+  }
+}

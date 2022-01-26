@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "createrevision:item/glittering_amethyst_shard"
+  }
+}

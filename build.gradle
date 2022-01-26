@@ -81,12 +81,24 @@ repositories {
     maven {
         url "https://www.cursemaven.com"
     }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.1-39.0.44'
 
-    implementation fg.deobf("curse.maven:jei-238222:3599262")
+    compileOnly fg.deobf("mezz.jei:jei-1.18.1:9.2.1.69:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.1:9.2.1.69")
+
     implementation fg.deobf("curse.maven:create-328085:3600402")
     implementation fg.deobf("curse.maven:flywheel-486392:3600401")
 

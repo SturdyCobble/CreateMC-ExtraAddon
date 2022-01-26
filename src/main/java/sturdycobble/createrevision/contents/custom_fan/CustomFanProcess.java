@@ -1,4 +1,4 @@
-package sturdycobble.createrevision.contents;
+package sturdycobble.createrevision.contents.custom_fan;
 
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import sturdycobble.createrevision.contents.MixinTransportedItemStackAccess;
 import sturdycobble.createrevision.init.ModRecipeTypes;
 import sturdycobble.createrevision.utils.FluidOrBlock;
 
@@ -158,7 +159,7 @@ public class CustomFanProcess {
                     for (ItemStack previouslyRolled : stacks) {
                         if (stack.isEmpty())
                             continue;
-                        if (ItemHandlerHelper.canItemStacksStack(stack, previouslyRolled))
+                        if (!ItemHandlerHelper.canItemStacksStack(stack, previouslyRolled))
                             continue;
 
                         int amount = Math.min(previouslyRolled.getMaxStackSize() - previouslyRolled.getCount(), stack.getCount());
@@ -189,7 +190,7 @@ public class CustomFanProcess {
 
     public static class CustomAirCurrentSegment {
 
-        public FluidOrBlock type;
+        public FluidOrBlock type = FluidOrBlock.empty();
         public int startOffset;
         public int endOffset;
 
