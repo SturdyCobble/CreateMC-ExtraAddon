@@ -1,5 +1,6 @@
 package sturdycobble.createrevision.compat.jei.category;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
@@ -13,27 +14,30 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import sturdycobble.createrevision.CreateRevision;
 import sturdycobble.createrevision.contents.reinforced_depot.BeaconDepotRecipe;
 import sturdycobble.createrevision.init.ModBlocks;
 import sturdycobble.createrevision.init.ModItems;
+import sturdycobble.createrevision.utils.ColorCondition;
+import sturdycobble.createrevision.utils.ColorConditions;
+import sturdycobble.createrevision.utils.ColorGlassCombination;
 import sturdycobble.createrevision.utils.RGBColor;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class BeaconDepotRecipeCategory extends CreateRecipeCategory<BeaconDepotRecipe> {
 
     protected static final String NAME = "beacon_depot_recipe";
 
-    private RGBColor color;
+    private ColorCondition color;
     private int power;
 
     public BeaconDepotRecipeCategory() {
@@ -49,7 +53,7 @@ public class BeaconDepotRecipeCategory extends CreateRecipeCategory<BeaconDepotR
         int size = recipe.getRollableResultsAsItemStacks().size();
 
         AllGuiTextures.JEI_SLOT.render(poseStack, 6, 27);
-        AllGuiTextures.JEI_LONG_ARROW.render(poseStack, 37, 30);
+        AllGuiTextures.JEI_LONG_ARROW.render(poseStack, 37, 32);
 
         if (size == 1) {
             getRenderedSlot(recipe, 0).render(poseStack, 118, 27);
@@ -98,34 +102,76 @@ public class BeaconDepotRecipeCategory extends CreateRecipeCategory<BeaconDepotR
 
         addStochasticTooltip(itemStacks, results);
 
-        color = recipe.getColor();
+        color = recipe.getColorCondition();
         power = recipe.getPower();
     }
 
     @Override
     public void draw(@Nullable BeaconDepotRecipe recipe, @Nullable PoseStack poseStack, double mouseX, double mouseY) {
         Font font = Minecraft.getInstance().font;
-        String colorInHex = color.toHex();
+        Component[] components = color.getDescription();
 
         if (poseStack != null) {
             renderWidgets(poseStack, recipe);
             poseStack.pushPose();
-            Component component1 = new TextComponent("Color: #" + colorInHex).withStyle(ChatFormatting.BOLD);
-            font.drawShadow(poseStack, component1, (177 - font.width(component1)) / 2, 5, color.toInt());
-            Component component2 = new TextComponent("Minimum Level: " + power).withStyle(ChatFormatting.BOLD);
-            font.drawShadow(poseStack, component2, (177 - font.width(component2)) / 2, 60, 0x888888);
+            if (components.length > 0) {
+                Component component1 = components[0];
+                font.draw(poseStack, component1, (177 - font.width(component1)) / 2, 1, 0x888888);
+            }
+            if (components.length > 1) {
+                Component component2 = components[1];
+                font.draw(poseStack, component2, (177 - font.width(component2)) / 2, 9, 0x888888);
+            }
+            Component component3 = new TranslatableComponent("createrevision.jei.beacon_depot.level.desc", power).withStyle(ChatFormatting.BOLD);
+            font.draw(poseStack, component3, (177 - font.width(component3)) / 2, 60, 0x888888);
             poseStack.mulPose(Vector3f.XP.rotationDegrees(-12.5F));
             poseStack.mulPose(Vector3f.YP.rotationDegrees(22.5F));
             GuiGameElement.of(ModBlocks.REINFORCED_DEPOT.get().defaultBlockState())
                     .scale(12)
-                    .atLocal(6, 2.3, 2)
+                    .atLocal(5.7, 2.4, 2)
                     .render(poseStack);
             GuiGameElement.of(Blocks.BEACON.defaultBlockState())
                     .scale(12)
-                    .atLocal(6, 4.3, 2)
+                    .atLocal(5.7, 4.4, 2)
                     .render(poseStack);
             poseStack.popPose();
         }
+    }
+
+    @Override
+    public List<Component> getTooltipStrings(BeaconDepotRecipe recipe, double mouseX, double mouseY) {
+        int cnt = 0;
+
+        if (mouseX < 150 && mouseX > 27 && mouseY > 2 && mouseY < 16) {
+            if (recipe.getColorCondition().getID().equals(ColorConditions.RANDOM.getID())) {
+                TranslatableComponent randomComponent = new TranslatableComponent(CreateRevision.MODID + ".jei.beacon_depot.tooltip.random");
+                return ImmutableList.of(randomComponent);
+            } else if (recipe.getColorCondition().getID().equals(ColorConditions.NONE.getID())) {
+                return Collections.emptyList();
+            }
+
+            TranslatableComponent headComponent = new TranslatableComponent(CreateRevision.MODID + ".jei.beacon_depot.tooltip.combination");
+            MutableComponent mutableComponent = new TextComponent("");
+            for (int[] triple : ColorGlassCombination.MIXED_COLORS) {
+                if (recipe.getColorCondition().test(new RGBColor(triple[0]))) {
+                    if (cnt % 5 == 0)
+                        mutableComponent.append(new TextComponent("\n| "));
+                    cnt++;
+                    mutableComponent.append(new TextComponent("\u2588").withStyle(
+                            Style.EMPTY.applyFormat(ChatFormatting.BLACK).withColor(DyeColor.byId(triple[1]).getTextColor())));
+                    mutableComponent.append(new TextComponent("\u2588").withStyle(
+                            Style.EMPTY.applyFormat(ChatFormatting.BLACK).withColor(DyeColor.byId(triple[2]).getTextColor())));
+                    mutableComponent.append(new TextComponent(" | "));
+                    if (cnt >= 33) {
+                        mutableComponent.append(new TextComponent(" \u2022\u2022\u2022"));
+                        break;
+                    }
+                }
+            }
+            if (cnt > 0)
+                return ImmutableList.of(headComponent, mutableComponent);
+        }
+        return Collections.emptyList();
     }
 
 }

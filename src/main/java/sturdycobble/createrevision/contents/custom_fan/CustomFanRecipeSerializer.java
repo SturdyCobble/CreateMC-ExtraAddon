@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import sturdycobble.createrevision.CreateRevision;
 import sturdycobble.createrevision.utils.FluidOrBlock;
 
 import javax.annotation.Nullable;

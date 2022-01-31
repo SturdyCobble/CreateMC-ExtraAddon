@@ -1,8 +1,6 @@
 {
   "type": "createrevision:beacon_depot_recipe",
-  "color": {
-    "name": "purple"
-  },
+  "mixed colors": ["purple", "magenta"],
   "power": 2,
   "ingredients": [
     {

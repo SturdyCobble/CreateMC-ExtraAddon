@@ -1,19 +1,25 @@
 package sturdycobble.createrevision.api.depot_recipe;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
+import sturdycobble.createrevision.CreateRevision;
+import sturdycobble.createrevision.utils.ColorCondition;
+import sturdycobble.createrevision.utils.ColorConditions;
 import sturdycobble.createrevision.utils.RGBColor;
+
+import javax.json.Json;
 
 public class BeaconRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SimpleBeaconRecipe<?>> {
 
@@ -31,14 +37,61 @@ public class BeaconRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
             power = GsonHelper.getAsInt(json, "power");
         }
 
-        RGBColor color = RGBColor.white();
+        ColorCondition color = ColorConditions.NONE.create(null);
 
         if (GsonHelper.isValidNode(json, "color")) {
-            JsonObject colorEntry = GsonHelper.getAsJsonObject(json, "color");
-            if (GsonHelper.isValidNode(colorEntry, "name")) {
-                color = RGBColor.byName(GsonHelper.getAsString(colorEntry, "name"));
-            } else if (GsonHelper.isValidNode(colorEntry, "red")) {
-                color = RGBColor.fromJsonFloat(colorEntry);
+            String colorString = GsonHelper.getAsString(json, "color");
+            color = RGBColor.getColorMatchConditionFromString(colorString);
+        } else if (GsonHelper.isValidNode(json, "mixed colors")) {
+            JsonArray mixedArr = GsonHelper.getAsJsonArray(json, "mixed colors");
+            RGBColor result = RGBColor.byName(mixedArr.get(0).getAsString());
+            for (JsonElement e : mixedArr) {
+                String c = e.getAsString();
+                result = result.mixWith(RGBColor.byName(c));
+            }
+            color = ColorConditions.COLOR.create(result);
+        } else if (GsonHelper.isValidNode(json, "color condition")) {
+            JsonObject colorEntry = json.getAsJsonObject("color condition");
+            if (GsonHelper.isValidNode(colorEntry, "type")) {
+                String condString = GsonHelper.getAsString(colorEntry, "type");
+                ColorConditions condition = ColorConditions.fromName(condString);
+                RGBColor.RequiredType type = condition.requiredType();
+
+                if (type == RGBColor.RequiredType.COLOR && GsonHelper.isValidNode(colorEntry, "color")){
+                    String centerString = GsonHelper.getAsString(json, "color");
+                    RGBColor center = RGBColor.byString(centerString);
+                    color = condition.create(center);
+                } else if (type == RGBColor.RequiredType.LONG2 && GsonHelper.isValidNode(colorEntry, "seeds")) {
+                    JsonArray array = GsonHelper.getAsJsonArray(colorEntry, "seeds");
+                    long[] seeds = new long[2];
+                    for (int i = 0; i < 2; i++) {
+                        long lv = array.get(i).getAsLong();
+                        seeds[i] = lv;
+                    }
+                    color = condition.create(seeds);
+                } else if (type == RGBColor.RequiredType.CUBE_RANGE && GsonHelper.isValidNode(colorEntry, "ranges")) {
+                    JsonArray array = GsonHelper.getAsJsonArray(colorEntry, "ranges");
+                    float[] ranges = new float[6];
+                    for (int i = 0; i < 6; i++) {
+                        float fv = array.get(i).getAsFloat();
+                        ranges[i] = fv;
+                    }
+                    color = condition.create(ranges);
+                } else if (type == RGBColor.RequiredType.RANGE && GsonHelper.isValidNode(colorEntry, "range")) {
+                    JsonArray array = GsonHelper.getAsJsonArray(colorEntry, "range");
+                    float[] range = new float[2];
+                    for (int i = 0; i < 2; i++) {
+                        float fv = array.get(i).getAsFloat();
+                        range[i] = fv;
+                    }
+                    color = condition.create(range);
+                } else if (type == RGBColor.RequiredType.RADIUS && GsonHelper.isValidNode(colorEntry, "color") && GsonHelper.isValidNode(colorEntry, "radius") ) {
+                    float radius = GsonHelper.getAsFloat(colorEntry, "radius");
+                    RGBColor center = RGBColor.byString(GsonHelper.getAsString(colorEntry, "color"));
+                    color = condition.create(Pair.of(center, radius));
+                } else {
+                    color = condition.create(null);
+                }
             }
         }
 
@@ -61,7 +114,11 @@ public class BeaconRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
     @Override
     public SimpleBeaconRecipe<?> fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
         int power = buffer.readInt();
-        RGBColor color = new RGBColor(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
+        int colorOrdinal = buffer.readInt();
+        float[] arr = new float[ColorCondition.SERIAL_SIZE];
+        for (int i = 0; i < ColorCondition.SERIAL_SIZE; i++)
+            arr[i] = buffer.readFloat();
+        ColorCondition color = ColorCondition.deserialize(Pair.of(colorOrdinal, arr));
 
         NonNullList<Ingredient> ingredients = NonNullList.create();
         int ingredientCount = buffer.readInt();
@@ -78,8 +135,10 @@ public class BeaconRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
     @Override
     public void toNetwork(FriendlyByteBuf buffer, SimpleBeaconRecipe<?> recipe) {
         buffer.writeInt(recipe.power);
-        for (float c : recipe.color.asFloatArray())
-            buffer.writeFloat(c);
+        Pair<Integer, float[]> pair = recipe.colorCondition.serialize();
+        buffer.writeInt(pair.getFirst());
+        for (int i = 0; i < ColorCondition.SERIAL_SIZE; i++)
+            buffer.writeFloat(pair.getSecond()[i]);
 
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         buffer.writeInt(ingredients.size());
@@ -92,7 +151,7 @@ public class BeaconRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
     @FunctionalInterface
     public interface IRecipeFactory {
 
-        SimpleBeaconRecipe<?> create(ResourceLocation recipeId, NonNullList<Ingredient> ingredients, NonNullList<ProcessingOutput> results, int power, RGBColor color);
+        SimpleBeaconRecipe<?> create(ResourceLocation recipeId, NonNullList<Ingredient> ingredients, NonNullList<ProcessingOutput> results, int power, ColorCondition color);
 
     }
 

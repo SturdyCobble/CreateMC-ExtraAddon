@@ -54,9 +54,8 @@ public class ReinforcedDepotBlockEntity extends SmartTileEntity {
                 break;
             if (currentState.getBlock().equals(Blocks.BEACON)) {
                 BlockEntity currentTile = level.getBlockEntity(testPos);
-                if (!(currentTile instanceof BeaconBlockEntity))
+                if (!(currentTile instanceof BeaconBlockEntity beaconTile))
                     break;
-                BeaconBlockEntity beaconTile = (BeaconBlockEntity) currentTile;
 
                 List<BeaconBlockEntity.BeaconBeamSection> beamSections = beaconTile.getBeamSections();
                 if (!(beamSections.isEmpty())) {

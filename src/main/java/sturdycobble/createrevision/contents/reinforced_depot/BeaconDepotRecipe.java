@@ -8,23 +8,26 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.PrimaryLevelData;
+import sturdycobble.createrevision.CreateRevision;
 import sturdycobble.createrevision.api.depot_recipe.SimpleBeaconRecipe;
 import sturdycobble.createrevision.init.ModRecipeTypes;
+import sturdycobble.createrevision.utils.ColorCondition;
 import sturdycobble.createrevision.utils.RGBColor;
 
 public class BeaconDepotRecipe extends SimpleBeaconRecipe<Container> {
 
     public BeaconDepotRecipe(ResourceLocation recipeId, NonNullList<Ingredient> ingredients, NonNullList<ProcessingOutput> results,
-                             int power, RGBColor color) {
+                             int power, ColorCondition colorCondition) {
         this.id = recipeId;
         this.ingredients = ingredients;
         this.results = results;
         this.power = power;
-        this.color = color;
+        this.colorCondition = colorCondition;
     }
 
-    public RGBColor getColor() {
-        return color;
+    public ColorCondition getColorCondition() {
+        return colorCondition;
     }
 
     public int getPower() {
@@ -45,7 +48,7 @@ public class BeaconDepotRecipe extends SimpleBeaconRecipe<Container> {
     public boolean matches(Container container, Level world, int beaconLevel, RGBColor beaconColor) {
         if (container.isEmpty() || beaconLevel < power)
             return false;
-        if (RGBColor.squareDistance(color, beaconColor) < 0.27) {
+        if (colorCondition.test(beaconColor)) {
             Ingredient ingredient0 = Ingredient.EMPTY;
             if (ingredients.size() > 0) {
                 ingredient0 = ingredients.get(0);

@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
+import sturdycobble.createrevision.utils.ColorCondition;
 import sturdycobble.createrevision.utils.RGBColor;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public abstract class SimpleBeaconRecipe<C extends Container> implements Recipe<
     protected NonNullList<Ingredient> ingredients;
     protected NonNullList<ProcessingOutput> results;
     protected int power;
-    protected RGBColor color;
+    protected ColorCondition colorCondition;
 
     boolean matches(C container, Level world, int beaconLevel, DyeColor color) {
         return matches(container, world, beaconLevel, new RGBColor(color));
