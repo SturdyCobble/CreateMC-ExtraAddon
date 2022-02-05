@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import java.util.Map;
 
 @Mixin(RecipeManager.class)
-public interface MixinRecipeManager {
+public interface RecipeManagerInvoker {
 
     @Invoker("byType")
     <C extends Container, T extends Recipe<C>> Map<ResourceLocation, Recipe<C>> invokeToByType(RecipeType<T> recipe);

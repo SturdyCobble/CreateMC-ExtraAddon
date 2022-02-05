@@ -16,58 +16,53 @@ import java.util.function.Predicate;
 
 public enum ColorConditions {
 
-    NONE(pre(0, "none", RequiredType.NONE, c -> true).addDescriptionGenerator(textDescription("none.desc"))),
-    HAS_HIGH_CHROMA(pre(1, "high_chroma", RequiredType.NONE, c -> c.asHSBFloatArray()[1] >= ModConfigs.getHighChromaThreshold()).addDescriptionGenerator(
-            o -> new Component[]{translate("high_chroma.desc").withStyle(ChatFormatting.BLUE)}
-    )),
-    HAS_LOW_CHROMA(pre(2, "low_chroma", RequiredType.NONE, c -> c.asHSBFloatArray()[1] <= ModConfigs.getLowChromaThreshold()).addDescriptionGenerator(
-            o -> new Component[]{translate("low_chroma.desc").withStyle(ChatFormatting.BLACK)}
-    )),
-    HAS_HIGH_BRIGHTNESS(pre(3, "high_value", RequiredType.NONE, c -> c.asHSBFloatArray()[2] >= ModConfigs.getHighValueThreshold()).addDescriptionGenerator(
-            o -> new Component[]{translate("high_value.desc").withStyle(ChatFormatting.WHITE)}
-    )),
-    HAS_LOW_BRIGHTNESS(pre(4, "low_value", RequiredType.NONE, c -> c.asHSBFloatArray()[2] <= ModConfigs.getLowValueThreshold()).addDescriptionGenerator(
-            o -> new Component[]{translate("low_value.desc").withStyle(ChatFormatting.BLACK)}
-    )),
-    COLOR(pre(5, "color", RequiredType.COLOR, (c, d) -> RGBColor.squareRGBDistance(c, (RGBColor) d) <= ModConfigs.getMinimumDistinguishableRGBDistanceSquared()).addDescriptionGenerator(
-            o -> new Component[]{translate("color.desc", ((RGBColor) o).toHex()).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(((RGBColor) o).toInt()))}
-    )),
-    COLOR_RADIUS(pre(6, "color_radius", RequiredType.RADIUS, (c, r) -> {
+    NONE(RequiredType.NONE, c -> true, textDescription("none.desc")),
+    HIGH_CHROMA(RequiredType.NONE, c -> c.asHSBFloatArray()[1] >= ModConfigs.getHighChromaThreshold(),
+            o -> new Component[]{translate("high_chroma.desc").withStyle(ChatFormatting.BLUE)}),
+    LOW_CHROMA(RequiredType.NONE, c -> c.asHSBFloatArray()[1] <= ModConfigs.getLowChromaThreshold(),
+            o -> new Component[]{translate("low_chroma.desc").withStyle(ChatFormatting.BLACK)}),
+    HIGH_VALUE(RequiredType.NONE, c -> c.asHSBFloatArray()[2] >= ModConfigs.getHighValueThreshold(),
+            o -> new Component[]{translate("high_value.desc").withStyle(ChatFormatting.WHITE)}),
+    LOW_VALUE(RequiredType.NONE, c -> c.asHSBFloatArray()[2] <= ModConfigs.getLowValueThreshold(),
+            o -> new Component[]{translate("low_value.desc").withStyle(ChatFormatting.BLACK)}),
+    COLOR(RequiredType.COLOR, (c, d) -> RGBColor.squareRGBDistance(c, (RGBColor) d) <= ModConfigs.getDiscernibleRGBDistanceSquared(),
+            o -> new Component[]{translate("color.desc", ((RGBColor) o).toHex()).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(((RGBColor) o).toInt()))}),
+    COLOR_RADIUS(RequiredType.RADIUS, (c, r) -> {
         Pair<RGBColor, Float> pair = (Pair<RGBColor, Float>) r;
         return RGBColor.squareRGBDistance(c, pair.getFirst()) <= pair.getSecond();
-    }).addDescriptionGenerator(
+    },
             o -> {
                 Pair<RGBColor, Float> pair = (Pair<RGBColor, Float>) o;
                 return new Component[]{
                         translate("color_radius.desc1", pair.getFirst().toHex()).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(pair.getFirst().toInt())),
                         translate("color_radius.desc2", Math.sqrt(pair.getSecond())).withStyle(ChatFormatting.BOLD)};
             }
-    )),
-    HUE_RANGE(pre(7, "hue_range", RequiredType.RANGE, (c, r) -> inRange(c.asHSBFloatArray()[0], (float[]) r)).addDescriptionGenerator(
+    ),
+    HUE_RANGE(RequiredType.RANGE, (c, r) -> inRange(c.asHSBFloatArray()[0], (float[]) r),
             o -> {
                 float[] pair = (float[]) o;
                 return new Component[]{
                         translate("range.desc_from_hue", Math.round(pair[0] * 360)).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(getRepresentativeHue(pair[0]))),
                         translate("range.desc_to_degree", Math.round(pair[1] * 360)).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(getRepresentativeHue(pair[1])))};
             }
-    )),
-    SAT_RANGE(pre(8, "saturation_range", RequiredType.RANGE, (c, r) -> inRange(c.asHSBFloatArray()[0], ((float[]) r))).addDescriptionGenerator(
+    ),
+    SAT_RANGE(RequiredType.RANGE, (c, r) -> inRange(c.asHSBFloatArray()[0], ((float[]) r)),
             o -> {
                 float[] pair = (float[]) o;
                 return new Component[]{
                         translate("range.desc_from_sat", Math.round(pair[0] * 100)).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(getRepresentativeSat(pair[0]))),
                         translate("range.desc_to_percent", Math.round(pair[1] * 100)).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(getRepresentativeSat(pair[1])))};
             }
-    )),
-    VAL_RANGE(pre(9, "value_range", RequiredType.RANGE, (c, r) -> inRange(c.asHSBFloatArray()[2], ((float[]) r))).addDescriptionGenerator(
+    ),
+    VAL_RANGE(RequiredType.RANGE, (c, r) -> inRange(c.asHSBFloatArray()[2], ((float[]) r)),
             o -> {
                 float[] pair = (float[]) o;
                 return new Component[]{
                         translate("range.desc_from_val", Math.round(pair[0] * 100)).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(getRepresentativeVal(pair[0]))),
                         translate("range.desc_to_percent", Math.round(pair[1] * 100)).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(getRepresentativeVal(pair[1])))};
             }
-    )),
-    HSB_RANGE(pre(10, "hsb_range", RequiredType.CUBE_RANGE, (c, r) -> inCubeRange(c.asHSBFloatArray(), (float[]) r)).addDescriptionGenerator(
+    ),
+    HSB_RANGE(RequiredType.CUBE_RANGE, (c, r) -> inCubeRange(c.asHSBFloatArray(), (float[]) r),
             o -> {
                 float[] ranges = (float[]) o;
                 float[] color1 = new float[]{ranges[0], ranges[2], ranges[4]};
@@ -76,23 +71,27 @@ public enum ColorConditions {
                         translate("range.desc_from_hsb", RGBColor.fromHSBFloatArray(color1).toHex()).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(getRepresentativeHSB(color1))),
                         translate("range.desc_to_hsb", RGBColor.fromHSBFloatArray(color2).toHex()).withStyle(Style.EMPTY.applyFormat(ChatFormatting.BOLD).withColor(getRepresentativeHSB(color2)))};
             }
-    )),
-    RANDOM(pre(11, "random", RequiredType.LONG2, (c, d) -> {
-        return RGBColor.squareRGBDistance(c, RGBColor.getRandomColor(((long[]) d)[0], ((long[]) d)[1])) <= ModConfigs.getMinimumDistinguishableRGBDistanceSquared();
-    }).addDescriptionGenerator(textDescription("random.desc")));
+    ),
+    RANDOM(RequiredType.SEED, (c, d, w) -> {
+        return RGBColor.squareRGBDistance(c, RGBColor.getRandomColor((long) d, w)) <= ModConfigs.getDiscernibleRGBDistanceSquared();
+    }, textDescription("random.desc"));
 
-    private final Precondition precondition;
+    private final RequiredType required;
+    private final ColorCondition.ColorFunction func;
+    private Function<Object, Component[]> descriptor;
 
-    ColorConditions(Precondition pre) {
-        precondition = pre;
+    ColorConditions(RequiredType required, Predicate<RGBColor> func, Function<Object, Component[]> descriptor) {
+        this(required, (c, o, w) -> func.test(c), descriptor);
     }
 
-    private static Precondition pre(int ordinal, String id, RequiredType required, Predicate<RGBColor> func) {
-        return new Precondition(id, required, (a, b) -> func.test(a), ordinal);
+    ColorConditions(RequiredType required, ColorOnlyFunction func, Function<Object, Component[]> descriptor) {
+        this(required, (c, o, w) -> func.apply(c, o), descriptor);
     }
 
-    private static Precondition pre(int ordinal, String id, RequiredType required, ColorCondition.ColorFunction func) {
-        return new Precondition(id, required, func, ordinal);
+    ColorConditions(RequiredType required, ColorCondition.ColorFunction func, Function<Object, Component[]> descriptor) {
+        this.required = required;
+        this.func = func;
+        this.descriptor = descriptor;
     }
 
     public static Function<Object, Component[]> textDescription(String key) {
@@ -108,11 +107,12 @@ public enum ColorConditions {
     }
 
     public static ColorConditions fromName(String name) {
-        for (ColorConditions val : ColorConditions.values()) {
-            if (val.precondition.getId().equals(name))
-                return val;
+        String parsedId = name.toUpperCase().replace(" ", "_");
+        try {
+            return ColorConditions.valueOf(parsedId);
+        } catch (IllegalArgumentException ex) {
+            return ColorConditions.NONE;
         }
-        return ColorConditions.NONE;
     }
 
     private static boolean inRange(float value, float[] range) {
@@ -149,58 +149,39 @@ public enum ColorConditions {
         return RGBColor.fromHSBFloatArray(hsb).toInt();
     }
 
-    public ColorCondition create(@Nullable Object subcondition) {
-        if (precondition.required == RequiredType.NONE)
-            subcondition = null;
-        if (!matchDetailType(subcondition)) {
+    public ColorCondition create(@Nullable Object subCondition) {
+        if (required == RequiredType.NONE)
+            subCondition = null;
+        if (!matchDetailType(subCondition)) {
             CreateRevision.LOGGER.warn("ColorCondition's Sub-condition Type does not match.");
         }
-        return new ColorCondition(precondition.ordinal, precondition.id, precondition.required, precondition.func, subcondition)
-                .addDescription(precondition.getDescription(subcondition));
+        return new ColorCondition(ordinal(), name(), required, func, subCondition)
+                .addDescription(getDescription(subCondition));
+    }
+
+    public Component[] getDescription(Object obj) {
+        if (required.isValidType(obj))
+            return descriptor.apply(obj);
+        else
+            return new Component[]{new TextComponent("")};
     }
 
     public boolean matchDetailType(Object obj) {
-        return precondition.required.isValidType(obj);
+        return required.isValidType(obj);
     }
 
     public RequiredType requiredType() {
-        return precondition.required;
+        return required;
     }
 
-    public String getID() {
-        return precondition.id;
+    public String getName() {
+        return name();
     }
 
-    private static class Precondition {
+    @FunctionalInterface
+    public interface ColorOnlyFunction {
 
-        public String id;
-        public RequiredType required;
-        public ColorCondition.ColorFunction func;
-        public int ordinal;
-        private Function<Object, Component[]> descriptionGenerator;
-
-        public Precondition(String id, RequiredType required, ColorCondition.ColorFunction func, int ordinal) {
-            this.id = id;
-            this.required = required;
-            this.func = func;
-            this.ordinal = ordinal;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public Component[] getDescription(Object obj) {
-            if (required.isValidType(obj))
-                return descriptionGenerator.apply(obj);
-            else
-                return new Component[]{new TextComponent("")};
-        }
-
-        public Precondition addDescriptionGenerator(Function<Object, Component[]> descriptionGenerator) {
-            this.descriptionGenerator = descriptionGenerator;
-            return this;
-        }
+        boolean apply(RGBColor color, Object object);
 
     }
 

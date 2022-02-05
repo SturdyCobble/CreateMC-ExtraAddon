@@ -35,7 +35,7 @@ public class ModConfigs {
         return lowValue.get().floatValue();
     }
 
-    public static float getMinimumDistinguishableRGBDistanceSquared() {
+    public static float getDiscernibleRGBDistanceSquared() {
         return resolution.get().floatValue();
     }
 

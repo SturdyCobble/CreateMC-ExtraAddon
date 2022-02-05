@@ -2,28 +2,31 @@ package sturdycobble.createrevision.utils;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import sturdycobble.createrevision.CreateRevision;
+import sturdycobble.createrevision.init.ModConfigs;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.function.Predicate;
 
-public class ColorCondition implements Predicate<RGBColor> {
+public class ColorCondition {
 
     public static final int SERIAL_SIZE = 6;
 
     private final String id;
     private final ColorFunction func;
     @Nullable
-    private final Object subcondition;
+    private final Object subCondition;
     private final RGBColor.RequiredType required;
     private final int ordinal;
 
     private Component[] description = new Component[]{};
 
-    public ColorCondition(int ordinal, String id, RGBColor.RequiredType required, ColorFunction func, Object subcondition) {
+    public ColorCondition(int ordinal, String id, RGBColor.RequiredType required, ColorFunction func, Object subCondition) {
         this.id = id;
         this.func = func;
-        this.subcondition = subcondition;
+        this.subCondition = subCondition;
         this.required = required;
         this.ordinal = ordinal;
     }
@@ -70,36 +73,42 @@ public class ColorCondition implements Predicate<RGBColor> {
         float[] rhs = new float[SERIAL_SIZE];
         Arrays.fill(rhs, -1.0F);
         if (required == RGBColor.RequiredType.COLOR) {
-            float[] arr = ((RGBColor) subcondition).asFloatArray();
+            float[] arr = ((RGBColor) subCondition).asFloatArray();
             for (int i = 0; i < 3; i++)
                 rhs[i] = arr[i];
         } else if (required == RGBColor.RequiredType.RADIUS) {
-            Pair<RGBColor, Float> pair = (Pair<RGBColor, Float>) subcondition;
+            Pair<RGBColor, Float> pair = (Pair<RGBColor, Float>) subCondition;
             float[] arr = pair.getFirst().asFloatArray();
             for (int i = 0; i < 3; i++)
                 rhs[i] = arr[i];
             rhs[3] = pair.getSecond();
         } else if (required == RGBColor.RequiredType.CUBE_RANGE) {
-            float[] arr = (float[]) subcondition;
+            float[] arr = (float[]) subCondition;
             for (int i = 0; i < 6; i++)
                 rhs[i] = arr[i];
         } else if (required == RGBColor.RequiredType.RANGE) {
-            float[] arr = (float[]) subcondition;
+            float[] arr = (float[]) subCondition;
             for (int i = 0; i < 2; i++)
                 rhs[i] = arr[i];
         }
         return Pair.of(lhs, rhs);
     }
 
-    @Override
+    public boolean test(RGBColor rgbColor, Level world) {
+        return func.apply(rgbColor, subCondition, world);
+    }
+
     public boolean test(RGBColor rgbColor) {
-        return func.apply(rgbColor, subcondition);
+        if (id != ColorConditions.RANDOM.getName())
+            return func.apply(rgbColor, subCondition, null);
+        else
+            return false;
     }
 
     @FunctionalInterface
     public interface ColorFunction {
 
-        boolean apply(RGBColor color, Object object);
+        boolean apply(RGBColor color, Object object, Level world);
 
     }
 

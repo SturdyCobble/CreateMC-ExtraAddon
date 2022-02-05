@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(BeaconBlockEntity.class)
-public interface MixinBeaconBlockEntity {
+public interface BeaconBlockEntityAccessor {
 
     @Accessor("levels")
     int getPower();

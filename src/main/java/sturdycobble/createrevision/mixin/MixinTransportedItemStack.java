@@ -15,7 +15,7 @@ public class MixinTransportedItemStack implements MixinTransportedItemStackAcces
     public FluidOrBlock customProcessedBy;
     public int customProcessingTime;
 
-    @Inject(method = "getSimilar", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILEXCEPTION, remap = false, cancellable = true)
+    @Inject(method = "getSimilar", at = @At(value = "RETURN"), remap = false, cancellable = true)
     public void onGetSimilar(CallbackInfoReturnable<TransportedItemStack> cir) {
         MixinTransportedItemStack copy = (MixinTransportedItemStack) (Object) cir.getReturnValue();
         copy.customProcessedBy = this.customProcessedBy;

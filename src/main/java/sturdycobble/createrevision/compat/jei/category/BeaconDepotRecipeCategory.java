@@ -143,10 +143,10 @@ public class BeaconDepotRecipeCategory extends CreateRecipeCategory<BeaconDepotR
         int cnt = 0;
 
         if (mouseX < 150 && mouseX > 27 && mouseY > 2 && mouseY < 16) {
-            if (recipe.getColorCondition().getID().equals(ColorConditions.RANDOM.getID())) {
+            if (recipe.getColorCondition().getID().equals(ColorConditions.RANDOM.getName())) {
                 TranslatableComponent randomComponent = new TranslatableComponent(CreateRevision.MODID + ".jei.beacon_depot.tooltip.random");
                 return ImmutableList.of(randomComponent);
-            } else if (recipe.getColorCondition().getID().equals(ColorConditions.NONE.getID())) {
+            } else if (recipe.getColorCondition().getID().equals(ColorConditions.NONE.getName())) {
                 return Collections.emptyList();
             }
 

@@ -2,6 +2,8 @@ package sturdycobble.createrevision.utils;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
+import sturdycobble.createrevision.init.ModConfigs;
 
 import java.awt.*;
 import java.util.Random;
@@ -77,14 +79,26 @@ public class RGBColor {
         return ColorConditions.COLOR.create(RGBColor.byString(color));
     }
 
-    public static RGBColor getRandomColor(long seed1, long seed2) {
-        Random gen1 = new Random(seed1);
+    public static RGBColor getRandomColor(long seed, Level world) {
+        Long worldSeed = world.getServer().getWorldData().worldGenSettings().seed();
+        Random gen1 = new Random(worldSeed + seed);
         int result1 = gen1.nextInt(15);
         RGBColor color1 = new RGBColor(DyeColor.byId(result1));
-        Random gen2 = new Random(seed2);
+        Random gen2 = new Random(worldSeed - seed);
         int result2 = gen2.nextInt(15);
         RGBColor color2 = new RGBColor(DyeColor.byId(result2));
         return color1.mixWith(color2);
+    }
+
+    public static RandomHint getHint(RGBColor color, long seed, Level world) {
+        RGBColor randomColor = getRandomColor(seed, world);
+        float dist = squareRGBDistance(randomColor, color);
+        if (dist <= ModConfigs.getDiscernibleRGBDistanceSquared() * 2) {
+            return RandomHint.VERY_CLOSE;
+        } else if (dist <= ModConfigs.getDiscernibleRGBDistanceSquared() * 10) {
+            return RandomHint.CLOSE;
+        }
+        return RandomHint.FAR;
     }
 
     public float[] asFloatArray() {
@@ -124,7 +138,7 @@ public class RGBColor {
         RADIUS(o -> o instanceof Pair && ((Pair) o).getFirst() instanceof RGBColor && ((Pair) o).getSecond() instanceof Float),
         RANGE(o -> o instanceof float[] && ((float[]) o).length == 2),
         CUBE_RANGE(o -> o instanceof float[] && ((float[]) o).length == 6),
-        LONG2(o -> o instanceof long[] && ((long[]) o).length == 2);
+        SEED(o -> o instanceof Long);
 
         private final Predicate<Object> isValid;
 
@@ -135,6 +149,14 @@ public class RGBColor {
         public boolean isValidType(Object obj) {
             return isValid.test(obj);
         }
+
+    }
+
+    public enum RandomHint {
+
+        VERY_CLOSE,
+        CLOSE,
+        FAR
 
     }
 

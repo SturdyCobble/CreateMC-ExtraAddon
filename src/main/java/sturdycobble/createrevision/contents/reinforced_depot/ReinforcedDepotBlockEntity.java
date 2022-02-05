@@ -19,11 +19,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import sturdycobble.createrevision.CreateRevision;
 import sturdycobble.createrevision.api.depot_recipe.SimpleBeaconRecipe;
 import sturdycobble.createrevision.init.ModBlockEntityTypes;
 import sturdycobble.createrevision.init.ModConfigs;
 import sturdycobble.createrevision.init.ModRecipeTypes;
-import sturdycobble.createrevision.mixin.MixinBeaconBlockEntity;
+import sturdycobble.createrevision.mixin.BeaconBlockEntityAccessor;
 import sturdycobble.createrevision.utils.RGBColor;
 
 import java.util.List;
@@ -83,7 +84,7 @@ public class ReinforcedDepotBlockEntity extends SmartTileEntity {
     public int getBeaconLevel() {
         if (getBeacon().isPresent()) {
             BeaconBlockEntity beaconTile = getBeacon().get();
-            return ((MixinBeaconBlockEntity) beaconTile).getPower();
+            return ((BeaconBlockEntityAccessor) beaconTile).getPower();
         }
         return -1;
     }

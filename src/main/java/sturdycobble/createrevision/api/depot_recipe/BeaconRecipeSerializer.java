@@ -3,7 +3,6 @@ package sturdycobble.createrevision.api.depot_recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import net.minecraft.core.NonNullList;
@@ -14,12 +13,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
-import sturdycobble.createrevision.CreateRevision;
 import sturdycobble.createrevision.utils.ColorCondition;
 import sturdycobble.createrevision.utils.ColorConditions;
 import sturdycobble.createrevision.utils.RGBColor;
-
-import javax.json.Json;
 
 public class BeaconRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SimpleBeaconRecipe<?>> {
 
@@ -42,16 +38,16 @@ public class BeaconRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
         if (GsonHelper.isValidNode(json, "color")) {
             String colorString = GsonHelper.getAsString(json, "color");
             color = RGBColor.getColorMatchConditionFromString(colorString);
-        } else if (GsonHelper.isValidNode(json, "mixed colors")) {
-            JsonArray mixedArr = GsonHelper.getAsJsonArray(json, "mixed colors");
+        } else if (GsonHelper.isValidNode(json, "mixed color")) {
+            JsonArray mixedArr = GsonHelper.getAsJsonArray(json, "mixed color");
             RGBColor result = RGBColor.byName(mixedArr.get(0).getAsString());
             for (JsonElement e : mixedArr) {
                 String c = e.getAsString();
                 result = result.mixWith(RGBColor.byName(c));
             }
             color = ColorConditions.COLOR.create(result);
-        } else if (GsonHelper.isValidNode(json, "color condition")) {
-            JsonObject colorEntry = json.getAsJsonObject("color condition");
+        } else if (GsonHelper.isValidNode(json, "color filter")) {
+            JsonObject colorEntry = json.getAsJsonObject("color filter");
             if (GsonHelper.isValidNode(colorEntry, "type")) {
                 String condString = GsonHelper.getAsString(colorEntry, "type");
                 ColorConditions condition = ColorConditions.fromName(condString);
@@ -61,14 +57,9 @@ public class BeaconRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
                     String centerString = GsonHelper.getAsString(json, "color");
                     RGBColor center = RGBColor.byString(centerString);
                     color = condition.create(center);
-                } else if (type == RGBColor.RequiredType.LONG2 && GsonHelper.isValidNode(colorEntry, "seeds")) {
-                    JsonArray array = GsonHelper.getAsJsonArray(colorEntry, "seeds");
-                    long[] seeds = new long[2];
-                    for (int i = 0; i < 2; i++) {
-                        long lv = array.get(i).getAsLong();
-                        seeds[i] = lv;
-                    }
-                    color = condition.create(seeds);
+                } else if (type == RGBColor.RequiredType.SEED && GsonHelper.isValidNode(colorEntry, "seed")) {
+                    long seed = GsonHelper.getAsLong(colorEntry, "seed");
+                    color = condition.create(seed);
                 } else if (type == RGBColor.RequiredType.CUBE_RANGE && GsonHelper.isValidNode(colorEntry, "ranges")) {
                     JsonArray array = GsonHelper.getAsJsonArray(colorEntry, "ranges");
                     float[] ranges = new float[6];

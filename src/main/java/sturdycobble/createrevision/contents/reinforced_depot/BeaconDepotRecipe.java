@@ -8,8 +8,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.PrimaryLevelData;
-import sturdycobble.createrevision.CreateRevision;
 import sturdycobble.createrevision.api.depot_recipe.SimpleBeaconRecipe;
 import sturdycobble.createrevision.init.ModRecipeTypes;
 import sturdycobble.createrevision.utils.ColorCondition;
@@ -48,7 +46,7 @@ public class BeaconDepotRecipe extends SimpleBeaconRecipe<Container> {
     public boolean matches(Container container, Level world, int beaconLevel, RGBColor beaconColor) {
         if (container.isEmpty() || beaconLevel < power)
             return false;
-        if (colorCondition.test(beaconColor)) {
+        if (colorCondition.test(beaconColor, world)) {
             Ingredient ingredient0 = Ingredient.EMPTY;
             if (ingredients.size() > 0) {
                 ingredient0 = ingredients.get(0);

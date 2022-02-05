@@ -14,7 +14,7 @@
   "createrevision.jei.beacon_depot.low_value.desc": "Dark Enough",
   "createrevision.jei.beacon_depot.color.desc": "Color: #%s",
   "createrevision.jei.beacon_depot.color_radius.desc1": "Around #%s",
-  "createrevision.jei.beacon_depot.color_radius.desc2": "(Resolution: %.3f)",
+  "createrevision.jei.beacon_depot.color_radius.desc2": "(Sensitivity: %.3f)",
   "createrevision.jei.beacon_depot.range.desc_from_hue": "From Hue %d",
   "createrevision.jei.beacon_depot.range.desc_from_sat": "From Saturation %d",
   "createrevision.jei.beacon_depot.range.desc_from_val": "From Brightness %d",

@@ -18,7 +18,7 @@ import sturdycobble.createrevision.api.depot_recipe.SimpleBeaconRecipe;
 import sturdycobble.createrevision.contents.custom_fan.CustomFanRecipe;
 import sturdycobble.createrevision.contents.custom_fan.CustomFanRecipeSerializer;
 import sturdycobble.createrevision.contents.reinforced_depot.BeaconDepotRecipe;
-import sturdycobble.createrevision.mixin.MixinRecipeManager;
+import sturdycobble.createrevision.mixin.RecipeManagerInvoker;
 import sturdycobble.createrevision.utils.FluidOrBlock;
 import sturdycobble.createrevision.utils.RGBColor;
 
@@ -69,7 +69,7 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
 
     public static <C extends Container> Optional<CustomFanRecipe> findCustomFanRecipe(C inv, Level world, FluidOrBlock type) {
         RecipeType recipeType = CUSTOM_FAN_RECIPE.getType();
-        return ((MixinRecipeManager) world.getRecipeManager()).invokeToByType(recipeType).values().stream().flatMap(r -> {
+        return ((RecipeManagerInvoker) world.getRecipeManager()).invokeToByType(recipeType).values().stream().flatMap(r -> {
             return Util.toStream(((CustomFanRecipe) r).matches(inv, world, type) ?
                     Optional.of((CustomFanRecipe) r) : Optional.empty());
         }).findFirst();
@@ -77,7 +77,7 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
 
     public static <C extends Container> Optional<SimpleBeaconRecipe> findBeaconRecipe(ModRecipeTypes type, C inv, Level world, int power, RGBColor color) {
         RecipeType recipeType = type.getType();
-        return ((MixinRecipeManager) world.getRecipeManager()).invokeToByType(recipeType).values().stream().flatMap(r -> {
+        return ((RecipeManagerInvoker) world.getRecipeManager()).invokeToByType(recipeType).values().stream().flatMap(r -> {
             return Util.toStream(((BeaconRecipe<C>) r).matches(inv, world, power, color) ?
                     Optional.of((BeaconRecipe<C>) r) : Optional.empty());
         }).findFirst();
