@@ -145,6 +145,7 @@ public class ReinforcedDepotBehaviour extends TileEntityBehaviour {
     protected boolean tick(TransportedItemStack heldItem) {
         heldItem.prevBeltPosition = heldItem.beltPosition;
         heldItem.prevSideOffset = heldItem.sideOffset;
+        tryClearOutputBufferToward(heldItem.insertedFrom);
         float diff = .5f - heldItem.beltPosition;
         if (diff > 1 / 512f) {
             if (diff > 1 / 32f && !BeltHelper.isItemUpright(heldItem.stack))
@@ -152,6 +153,28 @@ public class ReinforcedDepotBehaviour extends TileEntityBehaviour {
             heldItem.beltPosition += diff / 4f;
         }
         return diff < 1 / 16f;
+    }
+
+    private void tryClearOutputBufferToward(Direction side) {
+        BlockPos nextPos = tileEntity.getBlockPos().relative(side);
+        DirectBeltInputBehaviour nextBehaviour = TileEntityBehaviour.get(tileEntity.getLevel(), nextPos, DirectBeltInputBehaviour.TYPE);
+
+        if (nextBehaviour != null) {
+            for (int slot = 0; slot < processingOutputBuffer.getSlots(); slot++) {
+                ItemStack output = processingOutputBuffer.getStackInSlot(slot);
+                if (output.isEmpty())
+                    continue;
+                if (nextBehaviour.canInsertFromSide(side)) {
+                    ItemStack leftover = nextBehaviour.handleInsertion(output.copy(), side, false);
+                    if (leftover.getCount() != output.getCount()) {
+                        processingOutputBuffer.setStackInSlot(slot, leftover);
+                        tileEntity.notifyUpdate();
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private boolean handleBeltFunnelOutput() {

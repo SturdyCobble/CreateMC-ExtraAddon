@@ -10,7 +10,7 @@ import java.util.List;
 @Mixin(AirCurrent.class)
 public interface AirCurrentAccessor {
 
-    @Accessor("caughtEntities")
+    @Accessor(value = "caughtEntities", remap = false)
     List<Entity> getCaughtEntities();
 
 }
