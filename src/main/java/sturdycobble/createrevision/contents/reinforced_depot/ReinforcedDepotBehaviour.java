@@ -145,7 +145,8 @@ public class ReinforcedDepotBehaviour extends TileEntityBehaviour {
     protected boolean tick(TransportedItemStack heldItem) {
         heldItem.prevBeltPosition = heldItem.beltPosition;
         heldItem.prevSideOffset = heldItem.sideOffset;
-        tryClearOutputBufferToward(heldItem.insertedFrom);
+        if (heldItem.insertedFrom.getAxis() != Direction.Axis.Y)
+            tryClearOutputBufferToward(heldItem.insertedFrom);
         float diff = .5f - heldItem.beltPosition;
         if (diff > 1 / 512f) {
             if (diff > 1 / 32f && !BeltHelper.isItemUpright(heldItem.stack))
